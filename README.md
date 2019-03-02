@@ -15,6 +15,8 @@ ArcPlanner is a three-tiered mobile application, consisting of a client, databas
 
 
 ### File Structure
+* assets
+  * images
 * client
   * src
   * test
