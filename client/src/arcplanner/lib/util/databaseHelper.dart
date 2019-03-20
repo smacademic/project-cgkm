@@ -16,6 +16,12 @@ class DatabaseHelper {
 
   static Database _db;
 
+// constants for attribute lengths
+  static final int uuidSize = 60;
+  static final int nameSize = 60;
+  static final int locSize = 60;
+
+// constants for table and attribute names
   static final String userTable = "User";
   static final String userUID = "UID";
   static final String userFirstName = "FirstName";
@@ -37,6 +43,7 @@ class DatabaseHelper {
   static final String taskDueDate = "DueDate";
   static final String taskLoc = "Location";
 
+// singleton database initialization
   Future<Database> get db async {
     if (_db != null) {
       return _db;
@@ -47,6 +54,7 @@ class DatabaseHelper {
 
   DatabaseHelper.internal();
 
+// initialization implementation
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, "arcplanner_db.db");
@@ -55,36 +63,35 @@ class DatabaseHelper {
   }
 
   void _onCreate(Database db, int version) async {
-
     await db.execute("""
         CREATE TABLE $userTable(
-          $userUID TEXT PRIMARY KEY CHECK(LENGTH($userUID) <= 60),
-          $userFirstName TEXT NOT NULL CHECK(LENGTH($userFirstName) <= 60), 
-          $userLastName TEXT NOT NULL CHECK(LENGTH($userLastName) <= 60), 
-          $userEmail TEXT CHECK(LENGTH($userEmail) <= 319)
+          $userUID TEXT PRIMARY KEY CHECK(LENGTH($userUID) < $uuidSize),
+          $userFirstName TEXT NOT NULL CHECK(LENGTH($userFirstName) < $nameSize), 
+          $userLastName TEXT NOT NULL CHECK(LENGTH($userLastName) < $nameSize), 
+          $userEmail TEXT CHECK(LENGTH($userEmail) < 319)
           )""");
     await db.execute("""
         CREATE TABLE $arcTable(
-          $arcUID TEXT NOT NULL CHECK(LENGTH($arcUID) <= 60), 
-          $arcAID TEXT NOT NULL CHECK(LENGTH($arcAID) <= 60), 
-          $arcTitle TEXT NOT NULL CHECK(LENGTH($arcTitle) <= 60), 
+          $arcUID TEXT NOT NULL CHECK(LENGTH($arcUID) < $uuidSize), 
+          $arcAID TEXT NOT NULL CHECK(LENGTH($arcAID) < $uuidSize), 
+          $arcTitle TEXT NOT NULL CHECK(LENGTH($arcTitle) < $nameSize), 
           $arcDesc TEXT, 
-          $arcPArc TEXT CHECK(LENGTH($arcPArc) <= 60),
+          $arcPArc TEXT CHECK(LENGTH($arcPArc) < $uuidSize),
           FOREIGN KEY ($arcUID) REFERENCES $userTable ($userUID),
           PRIMARY KEY ($arcUID, $arcAID)
           )""");
     await db.execute("""
         CREATE TABLE $taskTable(
-          $taskAID TEXT CHECK(LENGTH($taskAID) <= 60), 
-          $taskTID TEXT CHECK(LENGTH($taskTID) <= 60), 
-          $taskTitle TEXT CHECK(LENGTH($taskTitle) <= 60), 
+          $taskAID TEXT CHECK(LENGTH($taskAID) < $uuidSize), 
+          $taskTID TEXT CHECK(LENGTH($taskTID) < $uuidSize), 
+          $taskTitle TEXT CHECK(LENGTH($taskTitle) < $nameSize), 
           $taskDesc TEXT, 
           $taskDueDate TEXT, 
-          $taskLoc TEXT CHECK(LENGTH($taskLoc) <= 60),
+          $taskLoc TEXT CHECK(LENGTH($taskLoc) < $locSize),
           FOREIGN KEY ($taskAID) REFERENCES $arcTable ($arcAID),
           PRIMARY KEY ($taskAID, $taskTID)
           )""");
-          print("Tables created");
+    print("Tables created");
   }
 
   //TODO add insert, update, remove ops
