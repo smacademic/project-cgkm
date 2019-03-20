@@ -1,3 +1,9 @@
+/** Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 Team CGKM 
+ * 
+ * Provided AS IS. No warranties expressed or implied. Use at your own risk.
+ */
+
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -50,32 +56,31 @@ class DatabaseHelper {
 
   void _onCreate(Database db, int version) async {
 
-    //TODO add constraints
     await db.execute("""
         CREATE TABLE $userTable(
-          $userUID VARCHAR(60) PRIMARY KEY CHECK(LENGTH($userUID) <= 60),
-          $userFirstName VARCHAR(60) NOT NULL CHECK(LENGTH($userFirstName) <= 60), 
-          $userLastName VARCHAR(60) NOT NULL CHECK(LENGTH($userLastName) <= 60), 
-          $userEmail VARCHAR(319) CHECK(LENGTH($userEmail) <= 319)
+          $userUID TEXT PRIMARY KEY CHECK(LENGTH($userUID) <= 60),
+          $userFirstName TEXT NOT NULL CHECK(LENGTH($userFirstName) <= 60), 
+          $userLastName TEXT NOT NULL CHECK(LENGTH($userLastName) <= 60), 
+          $userEmail TEXT CHECK(LENGTH($userEmail) <= 319)
           )""");
     await db.execute("""
         CREATE TABLE $arcTable(
-          $arcUID VARCHAR(60) NOT NULL CHECK(LENGTH($arcUID) <= 60), 
-          $arcAID VARCHAR(60) NOT NULL CHECK(LENGTH($arcAID) <= 60), 
-          $arcTitle VARCHAR(60) NOT NULL CHECK(LENGTH($arcTitle) <= 60), 
+          $arcUID TEXT NOT NULL CHECK(LENGTH($arcUID) <= 60), 
+          $arcAID TEXT NOT NULL CHECK(LENGTH($arcAID) <= 60), 
+          $arcTitle TEXT NOT NULL CHECK(LENGTH($arcTitle) <= 60), 
           $arcDesc TEXT, 
-          $arcPArc VARCHAR(60) CHECK(LENGTH($arcPArc) <= 60),
+          $arcPArc TEXT CHECK(LENGTH($arcPArc) <= 60),
           FOREIGN KEY ($arcUID) REFERENCES $userTable ($userUID),
           PRIMARY KEY ($arcUID, $arcAID)
           )""");
     await db.execute("""
         CREATE TABLE $taskTable(
-          $taskAID VARCHAR(60) CHECK(LENGTH($taskAID) <= 60), 
-          $taskTID VARCHAR(60) CHECK(LENGTH($taskTID) <= 60), 
-          $taskTitle VARCHAR(60) CHECK(LENGTH($taskTitle) <= 60), 
+          $taskAID TEXT CHECK(LENGTH($taskAID) <= 60), 
+          $taskTID TEXT CHECK(LENGTH($taskTID) <= 60), 
+          $taskTitle TEXT CHECK(LENGTH($taskTitle) <= 60), 
           $taskDesc TEXT, 
-          $taskDueDate TIMESTAMP, 
-          $taskLoc VARCHAR(256) CHECK(LENGTH($taskLoc) <= 60),
+          $taskDueDate TEXT, 
+          $taskLoc TEXT CHECK(LENGTH($taskLoc) <= 60),
           FOREIGN KEY ($taskAID) REFERENCES $arcTable ($arcAID),
           PRIMARY KEY ($taskAID, $taskTID)
           )""");
@@ -83,4 +88,5 @@ class DatabaseHelper {
   }
 
   //TODO add insert, update, remove ops
+
 }
