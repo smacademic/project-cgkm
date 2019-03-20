@@ -46,7 +46,9 @@ CREATE UNIQUE INDEX idx_Unique_InstructorEmail
 ON ArcUser(LOWER(TRIM(Email)));
 
 --Define a table to store an Arc
--- Primary Key: UID is the ID of the user that created the arc
+-- Primary Key: (UID, AID)
+-- UID is the ID of the user that created the arc
+-- AID is the ID of the Arc within the table
 CREATE TABLE Arc
 (
    UID VARCHAR(60) NOT NULL CHECK(CHAR_LENGTH(TRIM(UID)) = 60) REFERENCES ArcUser,
@@ -60,7 +62,7 @@ CREATE TABLE Arc
 --Define a table to store a task
 -- Primary Key: AID and TID
 -- AID is the ID of the Arc the task belongs to
--- TID is the ID of the task within this table 
+-- TID is the ID of the Task within this table 
 CREATE TABLE Task
 (
    AID VARCHAR(60) NOT NULL CHECK(CHAR_LENGTH(TRIM(AID)) = 60),
