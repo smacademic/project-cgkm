@@ -20,9 +20,10 @@ class DatabaseHelper {
   static final int uuidSize = 60;
   static final int nameSize = 60;
   static final int locSize = 60;
+  static final int emailSize = 319;
 
 // constants for table and attribute names
-  static final String userTable = "User";
+  static final String userTable = "ArcUser";
   static final String userUID = "UID";
   static final String userFirstName = "FirstName";
   static final String userLastName = "LastName";
@@ -65,31 +66,27 @@ class DatabaseHelper {
   void _onCreate(Database db, int version) async {
     await db.execute("""
         CREATE TABLE $userTable(
-          $userUID TEXT PRIMARY KEY CHECK(LENGTH($userUID) < $uuidSize),
-          $userFirstName TEXT NOT NULL CHECK(LENGTH($userFirstName) < $nameSize), 
-          $userLastName TEXT NOT NULL CHECK(LENGTH($userLastName) < $nameSize), 
-          $userEmail TEXT CHECK(LENGTH($userEmail) < 319)
+          $userUID TEXT PRIMARY KEY CHECK(LENGTH($userUID) == $uuidSize),
+          $userFirstName TEXT NOT NULL CHECK(LENGTH($userFirstName) <= $nameSize), 
+          $userLastName TEXT NOT NULL CHECK(LENGTH($userLastName) <= $nameSize), 
+          $userEmail TEXT CHECK(LENGTH($userEmail) <= $emailSize)
           )""");
     await db.execute("""
         CREATE TABLE $arcTable(
-          $arcUID TEXT NOT NULL CHECK(LENGTH($arcUID) < $uuidSize), 
-          $arcAID TEXT NOT NULL CHECK(LENGTH($arcAID) < $uuidSize), 
-          $arcTitle TEXT NOT NULL CHECK(LENGTH($arcTitle) < $nameSize), 
+          $arcUID TEXT NOT NULL REFERENCES $userTable ($userUID), 
+          $arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($arcAID) == $uuidSize), 
+          $arcTitle TEXT NOT NULL CHECK(LENGTH($arcTitle) <= $nameSize), 
           $arcDesc TEXT, 
-          $arcPArc TEXT CHECK(LENGTH($arcPArc) < $uuidSize),
-          FOREIGN KEY ($arcUID) REFERENCES $userTable ($userUID),
-          PRIMARY KEY ($arcUID, $arcAID)
+          $arcPArc TEXT CHECK(LENGTH($arcPArc) = $uuidSize)
           )""");
     await db.execute("""
         CREATE TABLE $taskTable(
-          $taskAID TEXT CHECK(LENGTH($taskAID) < $uuidSize), 
-          $taskTID TEXT CHECK(LENGTH($taskTID) < $uuidSize), 
-          $taskTitle TEXT CHECK(LENGTH($taskTitle) < $nameSize), 
+          $taskAID TEXT REFERENCES $arcTable ($arcAID), 
+          $taskTID TEXT PRIMARY KEY CHECK(LENGTH($taskTID) == $uuidSize), 
+          $taskTitle TEXT CHECK(LENGTH($taskTitle) <= $nameSize), 
           $taskDesc TEXT, 
           $taskDueDate TEXT, 
-          $taskLoc TEXT CHECK(LENGTH($taskLoc) < $locSize),
-          FOREIGN KEY ($taskAID) REFERENCES $arcTable ($arcAID),
-          PRIMARY KEY ($taskAID, $taskTID)
+          $taskLoc TEXT CHECK(LENGTH($taskLoc) <= $locSize)
           )""");
     print("Tables created");
   }
