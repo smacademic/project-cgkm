@@ -33,6 +33,9 @@
 START TRANSACTION;
 
 
+--Define a table to store an ArcUser
+-- Primary Key: UID
+-- UID is the ID of the user within the table
 CREATE TABLE ArcUser
 (
    UID VARCHAR(60) PRIMARY KEY CHECK(CHAR_LENGTH(TRIM(UID)) = 60),
@@ -46,34 +49,28 @@ CREATE UNIQUE INDEX idx_Unique_InstructorEmail
 ON ArcUser(LOWER(TRIM(Email)));
 
 --Define a table to store an Arc
--- Primary Key: (UID, AID)
--- UID is the ID of the user that created the arc
+-- Primary Key: AID
 -- AID is the ID of the Arc within the table
 CREATE TABLE Arc
 (
-   UID VARCHAR(60) NOT NULL CHECK(CHAR_LENGTH(TRIM(UID)) = 60) REFERENCES ArcUser,
-   AID VARCHAR(60) NOT NULL CHECK(CHAR_LENGTH(TRIM(AID)) = 60),
+   AID VARCHAR(60) NOT NULL PRIMARY KEY CHECK(CHAR_LENGTH(TRIM(AID)) = 60),
+   UID VARCHAR(60) NOT NULL REFERENCES ArcUser,
    Title VARCHAR(60) NOT NULL,
    Description Text, 
-   ParentArc VARCHAR(63) , 
-   PRIMARY KEY (UID, AID)
+   ParentArc VARCHAR(63)
 );
 
 --Define a table to store a task
--- Primary Key: AID and TID
--- AID is the ID of the Arc the task belongs to
+-- Primary Key:TID
 -- TID is the ID of the Task within this table 
 CREATE TABLE Task
 (
-   AID VARCHAR(60) NOT NULL CHECK(CHAR_LENGTH(TRIM(AID)) = 60),
-   UID VARCHAR(60) NOT NULL CHECK(CHAR_LENGTH(TRIM(UID)) = 60),
-   TID VARCHAR(60) NOT NULL CHECK(CHAR_LENGTH(TRIM(TID)) = 60),
+   TID VARCHAR(60) NOT NULL PRIMARY KEY CHECK(CHAR_LENGTH(TRIM(TID)) = 60),
+   AID VARCHAR(60) NOT NULL REFERENCES Arc,
    Title VARCHAR(60) NOT NULL CHECK(CHAR_LENGTH(TRIM(Title)) > 0),
    Description TEXT, 
    DueDate TIMESTAMP,
-   Location VARCHAR(256), 
-   FOREIGN KEY (AID, UID) REFERENCES Arc,
-   PRIMARY Key (AID, TID)
+   Location VARCHAR(256)
 );
 
 
