@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
+import './../model/user.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -91,6 +92,27 @@ class DatabaseHelper {
     print("Tables created");
   }
 
-  //TODO add insert, update, remove ops
+  // Inserts a new user to the DB using a User object as an input
+  Future<int> insertUser(User usr) async {
+    var dbClient = await db;
+    int result = await dbClient.insert("$userTable", usr.toMap());
+    return result;
+  }
 
+  // Deletes a user with the given ID
+  Future<int> deleteUser(int id) async {
+    var dbClient = await db;
+    int result = await dbClient
+        .delete(userTable, where: "$userUID = ?", whereArgs: [id]);
+    return result;
+  }
+
+  // Updates a user in the DB using a User object (with matching UID)
+  Future<int> updateUser(User usr) async {
+    var dbClient = await db;
+    return await dbClient.update(userTable, usr.toMap(),
+        where: "$userUID = ?", whereArgs: [usr.uid]);
+  }
+  
+  //TODO add insert, update, remove ops for arc, and task
 }
