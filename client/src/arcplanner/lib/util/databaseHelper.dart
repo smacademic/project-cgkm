@@ -10,6 +10,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import './../model/user.dart';
+import './../model/task.dart';
+import './../model/arc.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -115,4 +117,56 @@ class DatabaseHelper {
   }
   
   //TODO add insert, update, remove ops for arc, and task
+
+  // -----Insert, update and remove ops for task-----
+
+  // Inserts a new task to the DB using a Task object as an input
+  Future<int> insertTask(Task tsk) async {
+    var dbClient = await db;
+    int result = await dbClient.insert("$taskTable", tsk.toMap());
+    return result;
+  }
+
+  // Deletes a task with the given ID
+  Future<int> deleteTask(int id) async {
+    var dbClient = await db;
+    int result = await dbClient
+        .delete(userTable, where: "$taskTID = ?", whereArgs: [id]);
+    return result;
+  }
+
+  // Updates a task in the DB using a Task object (with matching TID)
+  Future<int> updateTask(Task tsk) async {
+    var dbClient = await db;
+    return await dbClient.update(taskTable, tsk.toMap(),
+        where: "$taskTID = ?", whereArgs: [tsk.tid]);
+  }
+  
+  // -----Insert, update and remove ops for ark-----
+
+  // Inserts a new arc to the DB using a Arc object as an input
+  Future<int> insertArc(Arc ar) async {
+    var dbClient = await db;
+    int result = await dbClient.insert("$arcTable", ar.toMap());
+    return result;
+  }
+
+  // Deletes a arc with the given ID
+  Future<int> deleteArc(int id) async {
+    var dbClient = await db;
+    int result = await dbClient
+        .delete(userTable, where: "$arcAID = ?", whereArgs: [id]);
+    return result;
+  }
+
+  // Updates a arc in the DB using a User object (with matching AID)
+  Future<int> updateArc(Arc ar) async {
+    var dbClient = await db;
+    return await dbClient.update(taskTable, ar.toMap(),
+        where: "$arcAID = ?", whereArgs: [ar.aid]);
+  }
+  
+
+
+  
 }
