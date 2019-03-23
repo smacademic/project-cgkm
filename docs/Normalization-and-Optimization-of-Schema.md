@@ -3,15 +3,15 @@
 | UID | AID | Title | Description | Parent Arc |
 | --- | --- | --- | --- | --- |
 
-**Candidate Keys:** UID is the only candidate key because AID is a FK and the remaining attributes or any combination of AID with the remaining attributes do not guarantee uniqueness.
+**Candidate Keys:** AID is the only candidate key because UID is a FK and the remaining attributes or any combination of AID with the remaining attributes do not guarantee uniqueness.
 
 ### Functional Dependencies:
 
-(UID, AID) -> Tile
+AID -> Tile
 
-(UID, AID) -> Description
+AID -> Description
 
-(UID, AID) -> Parent Arc
+AID -> Parent Arc
 
 **1NF:** Arc is already in first normal form because there are no composite attributes in this table and all non-key attributes depend on a key-attribute.
 
@@ -26,23 +26,23 @@
 | AID | TID | Title | Description | Due Date | Location |
 | --- | --- | --- | --- | --- | --- |
 
-**Candidate Keys:** The combination of AID and TID is the only candidate key.
+**Candidate Keys:** TID is the only candidate key.
 
 ### Functional Dependencies:
 
-(AID, TID) -> Title
+TID -> Title
 
-(AID, TID) -> Description
+TID -> Description
 
-(AID, TID) -> Due Date
+TID -> Due Date
 
-(AID, TID) -> Location
+TID -> Location
 
 **1NF:** Task is in first normal form because there are no composite attributes in this table and all non-key attributes depend on a key-attribute.
 
 **2NF:** There are no partial dependencies because all non-key attributes depend on whole candidate-keys, therefore the Task table is in second normal form.
 
-**3NF:** There are no transitive dependencies because there are no non-key attributes that depend on something other than a candidate key. Title, Description, DueDate, and Location all depend upon the combination of the AID and TID. Therefore, the Task table is in third normal form.
+**3NF:** There are no transitive dependencies because there are no non-key attributes that depend on something other than a candidate key. AID, Title, Description, DueDate, and Location all depend upon TID. Therefore, the Task table is in third normal form.
 
 **BCNF:** There are no key-attribute dependencies because all key attributes do not depend on anything other than a candidate key. Therefore, the Task table is in Boyce-Codd normal form.
 
