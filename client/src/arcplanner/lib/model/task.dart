@@ -21,12 +21,12 @@ class Task extends StatelessWidget{
   // Defines a user map.  Helps with moving info betwen the db
   //   and the app
   Task.map(dynamic obj){
-    this._tid = obj["tid"]; //represents the PK TID from SQLite db
-    this._aid = obj["aid"];
-    this._title = obj["title"];
-    this._description = obj["description"];
-    this._dueDate = obj["duedate"];
-    this._location = obj["location"];
+    _tid = obj["tid"]; //represents the PK TID from SQLite db
+    _aid = obj["aid"];
+    _title = obj["title"];
+    _description = obj["description"];
+    _dueDate = obj["duedate"];
+    _location = obj["location"];
   }
 
   //getters
@@ -55,12 +55,12 @@ class Task extends StatelessWidget{
   // Puts user map data into a user object
   Task.fromMap(Map<String, dynamic> map)
   {
-    this._tid = map["tid"];
-    this._aid = map["aid"];
-    this._title = map["title"];
-    this._description = map["description"];
-    this._dueDate = map["duedate"];
-    this._location = map["location"];
+    _tid = map["tid"];
+    _aid = map["aid"];
+    _title = map["title"];
+    _description = map["description"];
+    _dueDate = map["duedate"];
+    _location = map["location"];
   }
 
   @override
