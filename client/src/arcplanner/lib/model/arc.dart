@@ -20,11 +20,11 @@ class Arc extends StatelessWidget{
   // Defines a user map.  Helps with moving info betwen the db
   //   and the app
   Arc.map(dynamic obj){
-    this._aid = obj["aid"];
-    this._uid = obj["uid"];
-    this._title = obj["title"];
-    this._description = obj["description"];
-    this._parentArc = obj["parentarc"];
+    _aid = obj["aid"];
+    _uid = obj["uid"];
+    _title = obj["title"];
+    _description = obj["description"];
+    _parentArc = obj["parentarc"];
   }
 
   //getters
@@ -51,11 +51,11 @@ class Arc extends StatelessWidget{
   // Puts user map data into a user object
   Arc.fromMap(Map<String, dynamic> map)
   {
-    this._aid = map["aid"];
-    this._uid = map["uid"];
-    this._title = map["title"];
-    this._description = map["description"];
-    this._parentArc = map["parentarc"];
+    _aid = map["aid"];
+    _uid = map["uid"];
+    _title = map["title"];
+    _description = map["description"];
+    _parentArc = map["parentarc"];
   }
 
   @override
