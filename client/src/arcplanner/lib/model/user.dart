@@ -4,9 +4,8 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
-import 'package:flutter/material.dart';
 
-class User extends StatelessWidget{
+class User {
   //in flutter, underscrore denotes private members
   String _uid;
   String _firstName;

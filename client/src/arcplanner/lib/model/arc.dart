@@ -4,9 +4,8 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
-import 'package:flutter/material.dart';
 
-class Arc extends StatelessWidget{
+class Arc{
   //in flutter, underscrore denotes private members
   String _aid;
   String _uid;

@@ -4,9 +4,8 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
-import 'package:flutter/material.dart';
 
-class Task extends StatelessWidget{
+class Task {
   //in flutter, underscrore denotes private members
   String _tid;
   String _aid;
