@@ -136,7 +136,7 @@ class DatabaseHelper {
   Future<int> deleteTask(int id) async {
     var dbClient = await db;
     int result = await dbClient
-        .delete(_userTable, where: "$_taskTID = ?", whereArgs: [id]);
+        .delete(_taskTable, where: "$_taskTID = ?", whereArgs: [id]);
     return result;
   }
 
@@ -167,14 +167,14 @@ class DatabaseHelper {
   Future<int> deleteArc(int id) async {
     var dbClient = await db;
     int result = await dbClient
-        .delete(_userTable, where: "$_arcAID = ?", whereArgs: [id]);
+        .delete(_arcTable, where: "$_arcAID = ?", whereArgs: [id]);
     return result;
   }
 
   // Updates a arc in the DB using a User object (with matching AID)
   Future<int> updateArc(Arc ar) async {
     var dbClient = await db;
-    return await dbClient.update(_taskTable, ar.toMap(),
+    return await dbClient.update(_arcTable, ar.toMap(),
         where: "$_arcAID = ?", whereArgs: [ar.aid]);
   }
   
