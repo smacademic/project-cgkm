@@ -46,7 +46,7 @@ class Task extends StatelessWidget{
     map["duedate"] =_dueDate;
     map["location"] =_location;
 
-    if (_tid != null) {
+    if (tid != null) {
       map["tid"] = _tid;
     }
   }
