@@ -15,7 +15,7 @@ class Arc extends StatelessWidget{
   String _parentArc;
 
   //constructor
-  Arc(this._uid, this._title, this._description, this._parentArc);
+  Arc(this._aid, this._uid, this._title, this._description, this._parentArc);
 
   // Defines a user map.  Helps with moving info betwen the db
   //   and the app
@@ -45,6 +45,7 @@ class Arc extends StatelessWidget{
     if (aid != null) {
       map["aid"] = _aid;
     }
+    return map;
   }
 
   // Puts user map data into a user object
