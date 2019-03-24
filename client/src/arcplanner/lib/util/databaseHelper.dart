@@ -20,32 +20,32 @@ class DatabaseHelper {
   static Database _db;
 
 // constants for attribute lengths
-  static final int uuidSize = 60;
-  static final int nameSize = 60;
-  static final int locSize = 60;
-  static final int emailSize = 319;
+  static final int _uuidSize = 60;
+  static final int _nameSize = 60;
+  static final int _locSize = 60;
+  static final int _emailSize = 319;
 
 // constants for table and attribute names
-  static final String userTable = "ArcUser";
-  static final String userUID = "UID";
-  static final String userFirstName = "FirstName";
-  static final String userLastName = "LastName";
-  static final String userEmail = "Email";
+  static final String _userTable = "ArcUser";
+  static final String _userUID = "UID";
+  static final String _userFirstName = "FirstName";
+  static final String _userLastName = "LastName";
+  static final String _userEmail = "Email";
 
-  static final String arcTable = "Arc";
-  static final String arcUID = "UID";
-  static final String arcAID = "AID";
-  static final String arcTitle = "Title";
-  static final String arcDesc = "Description";
-  static final String arcPArc = "ParentArc";
+  static final String _arcTable = "Arc";
+  static final String _arcUID = "UID";
+  static final String _arcAID = "AID";
+  static final String _arcTitle = "Title";
+  static final String _arcDesc = "Description";
+  static final String _arcPArc = "ParentArc";
 
-  static final String taskTable = "Task";
-  static final String taskAID = "AID";
-  static final String taskTID = "TID";
-  static final String taskTitle = "Title";
-  static final String taskDesc = "Description";
-  static final String taskDueDate = "DueDate";
-  static final String taskLoc = "Location";
+  static final String _taskTable = "Task";
+  static final String _taskAID = "AID";
+  static final String _taskTID = "TID";
+  static final String _taskTitle = "Title";
+  static final String _taskDesc = "Description";
+  static final String _taskDueDate = "DueDate";
+  static final String _taskLoc = "Location";
 
 // singleton database initialization
   Future<Database> get db async {
@@ -68,28 +68,28 @@ class DatabaseHelper {
 
   void _onCreate(Database db, int version) async {
     await db.execute("""
-        CREATE TABLE $userTable(
-          $userUID TEXT PRIMARY KEY CHECK(LENGTH($userUID) == $uuidSize),
-          $userFirstName TEXT NOT NULL CHECK(LENGTH($userFirstName) <= $nameSize), 
-          $userLastName TEXT NOT NULL CHECK(LENGTH($userLastName) <= $nameSize), 
-          $userEmail TEXT CHECK(LENGTH($userEmail) <= $emailSize)
+        CREATE TABLE $_userTable(
+          $_userUID TEXT PRIMARY KEY CHECK(LENGTH($_userUID) == $_uuidSize),
+          $_userFirstName TEXT NOT NULL CHECK(LENGTH($_userFirstName) <= $_nameSize), 
+          $_userLastName TEXT NOT NULL CHECK(LENGTH($_userLastName) <= $_nameSize), 
+          $_userEmail TEXT CHECK(LENGTH($_userEmail) <= $_emailSize)
           )""");
     await db.execute("""
-        CREATE TABLE $arcTable(
-          $arcUID TEXT NOT NULL REFERENCES $userTable ($userUID), 
-          $arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($arcAID) == $uuidSize), 
-          $arcTitle TEXT NOT NULL CHECK(LENGTH($arcTitle) <= $nameSize), 
-          $arcDesc TEXT, 
-          $arcPArc TEXT CHECK(LENGTH($arcPArc) = $uuidSize)
+        CREATE TABLE $_arcTable(
+          $_arcUID TEXT NOT NULL REFERENCES $_userTable ($_userUID), 
+          $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) == $_uuidSize), 
+          $_arcTitle TEXT NOT NULL CHECK(LENGTH($_arcTitle) <= $_nameSize), 
+          $_arcDesc TEXT, 
+          $_arcPArc TEXT CHECK(LENGTH($_arcPArc) = $_uuidSize)
           )""");
     await db.execute("""
-        CREATE TABLE $taskTable(
-          $taskAID TEXT REFERENCES $arcTable ($arcAID), 
-          $taskTID TEXT PRIMARY KEY CHECK(LENGTH($taskTID) == $uuidSize), 
-          $taskTitle TEXT CHECK(LENGTH($taskTitle) <= $nameSize), 
-          $taskDesc TEXT, 
-          $taskDueDate TEXT, 
-          $taskLoc TEXT CHECK(LENGTH($taskLoc) <= $locSize)
+        CREATE TABLE $_taskTable(
+          $_taskAID TEXT REFERENCES $_arcTable ($_arcAID), 
+          $_taskTID TEXT PRIMARY KEY CHECK(LENGTH($_taskTID) == $_uuidSize), 
+          $_taskTitle TEXT CHECK(LENGTH($_taskTitle) <= $_nameSize), 
+          $_taskDesc TEXT, 
+          $_taskDueDate TEXT, 
+          $_taskLoc TEXT CHECK(LENGTH($_taskLoc) <= $_locSize)
           )""");
     print("Tables created");
   }
@@ -97,24 +97,27 @@ class DatabaseHelper {
   // Inserts a new user to the DB using a User object as an input
   Future<int> insertUser(User usr) async {
     var dbClient = await db;
-    int result = await dbClient.insert("$userTable", usr.toMap());
+    int result = await dbClient.insert("$_userTable", usr.toMap());
     return result;
   }
 
   // Deletes a user with the given ID
-  Future<int> deleteUser(int id) async {
+  Future<int> deleteUser(String id) async {
     var dbClient = await db;
     int result = await dbClient
-        .delete(userTable, where: "$userUID = ?", whereArgs: [id]);
+        .delete(_userTable, where: "$_userUID = ?", whereArgs: [id]);
     return result;
   }
 
   // Updates a user in the DB using a User object (with matching UID)
   Future<int> updateUser(User usr) async {
     var dbClient = await db;
-    return await dbClient.update(userTable, usr.toMap(),
-        where: "$userUID = ?", whereArgs: [usr.uid]);
+    return await dbClient.update(_userTable, usr.toMap(),
+        where: "$_userUID = ?", whereArgs: [usr.uid]);
   }
+
+  // Gets a user
+
   
   //TODO add insert, update, remove ops for arc, and task
 
@@ -123,7 +126,7 @@ class DatabaseHelper {
   // Inserts a new task to the DB using a Task object as an input
   Future<int> insertTask(Task tsk) async {
     var dbClient = await db;
-    int result = await dbClient.insert("$taskTable", tsk.toMap());
+    int result = await dbClient.insert("$_taskTable", tsk.toMap());
     return result;
   }
 
@@ -131,15 +134,15 @@ class DatabaseHelper {
   Future<int> deleteTask(int id) async {
     var dbClient = await db;
     int result = await dbClient
-        .delete(userTable, where: "$taskTID = ?", whereArgs: [id]);
+        .delete(_userTable, where: "$_taskTID = ?", whereArgs: [id]);
     return result;
   }
 
   // Updates a task in the DB using a Task object (with matching TID)
   Future<int> updateTask(Task tsk) async {
     var dbClient = await db;
-    return await dbClient.update(taskTable, tsk.toMap(),
-        where: "$taskTID = ?", whereArgs: [tsk.tid]);
+    return await dbClient.update(_taskTable, tsk.toMap(),
+        where: "$_taskTID = ?", whereArgs: [tsk.tid]);
   }
   
   // -----Insert, update and remove ops for ark-----
@@ -147,7 +150,7 @@ class DatabaseHelper {
   // Inserts a new arc to the DB using a Arc object as an input
   Future<int> insertArc(Arc ar) async {
     var dbClient = await db;
-    int result = await dbClient.insert("$arcTable", ar.toMap());
+    int result = await dbClient.insert("$_arcTable", ar.toMap());
     return result;
   }
 
@@ -155,18 +158,21 @@ class DatabaseHelper {
   Future<int> deleteArc(int id) async {
     var dbClient = await db;
     int result = await dbClient
-        .delete(userTable, where: "$arcAID = ?", whereArgs: [id]);
+        .delete(_userTable, where: "$_arcAID = ?", whereArgs: [id]);
     return result;
   }
 
   // Updates a arc in the DB using a User object (with matching AID)
   Future<int> updateArc(Arc ar) async {
     var dbClient = await db;
-    return await dbClient.update(taskTable, ar.toMap(),
-        where: "$arcAID = ?", whereArgs: [ar.aid]);
+    return await dbClient.update(_taskTable, ar.toMap(),
+        where: "$_arcAID = ?", whereArgs: [ar.aid]);
   }
   
 
-
+  Future close() async {
+    var dbClient = await db;
+    return dbClient.close();
+  }
   
 }
