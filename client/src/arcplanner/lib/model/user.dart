@@ -19,10 +19,10 @@ class User extends StatelessWidget{
   // Defines a user map.  Helps with moving info betwen the db
   //   and the app
   User.map(dynamic obj){
-    this._uid = obj["uid"];
-    this._firstName = obj["firstname"];
-    this._lastName = obj["lastname"];
-    this._email = obj["email"];
+    _uid = obj["uid"];
+    _firstName = obj["firstname"];
+    _lastName = obj["lastname"];
+    _email = obj["email"];
   }
 
   //getters
@@ -47,10 +47,10 @@ class User extends StatelessWidget{
   // Puts user map data into a user object
   User.fromMap(Map<String, dynamic> map)
   {
-    this._uid = map["uid"];
-    this._firstName = map["firstname"];
-    this._lastName = map["lastname"];
-    this._email = map["email"];
+    _uid = map["uid"];
+    _firstName = map["firstname"];
+    _lastName = map["lastname"];
+    _email = map["email"];
   }
 
   @override
