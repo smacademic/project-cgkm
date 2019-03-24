@@ -57,11 +57,4 @@ class Arc extends StatelessWidget{
     _description = map["description"];
     _parentArc = map["parentarc"];
   }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
-  }
-
 }
