@@ -42,7 +42,7 @@ class Arc extends StatelessWidget{
     map["description"] =_description;
     map["parentarc"] =_parentArc;
 
-    if (_aid != null) {
+    if (aid != null) {
       map["aid"] = _aid;
     }
   }
