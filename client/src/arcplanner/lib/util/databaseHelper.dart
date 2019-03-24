@@ -69,7 +69,7 @@ class DatabaseHelper {
   void _onCreate(Database db, int version) async {
     await db.execute("""
         CREATE TABLE $_userTable(
-          $_userUID TEXT PRIMARY KEY CHECK(LENGTH($_userUID) == $_uuidSize),
+          $_userUID TEXT PRIMARY KEY CHECK(LENGTH($_userUID) <= $_uuidSize),
           $_userFirstName TEXT NOT NULL CHECK(LENGTH($_userFirstName) <= $_nameSize), 
           $_userLastName TEXT NOT NULL CHECK(LENGTH($_userLastName) <= $_nameSize), 
           $_userEmail TEXT CHECK(LENGTH($_userEmail) <= $_emailSize)
@@ -77,7 +77,7 @@ class DatabaseHelper {
     await db.execute("""
         CREATE TABLE $_arcTable(
           $_arcUID TEXT NOT NULL REFERENCES $_userTable ($_userUID), 
-          $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) == $_uuidSize), 
+          $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) <= $_uuidSize), 
           $_arcTitle TEXT NOT NULL CHECK(LENGTH($_arcTitle) <= $_nameSize), 
           $_arcDesc TEXT, 
           $_arcPArc TEXT CHECK(LENGTH($_arcPArc) = $_uuidSize)
@@ -85,7 +85,7 @@ class DatabaseHelper {
     await db.execute("""
         CREATE TABLE $_taskTable(
           $_taskAID TEXT REFERENCES $_arcTable ($_arcAID), 
-          $_taskTID TEXT PRIMARY KEY CHECK(LENGTH($_taskTID) == $_uuidSize), 
+          $_taskTID TEXT PRIMARY KEY CHECK(LENGTH($_taskTID) <= $_uuidSize), 
           $_taskTitle TEXT CHECK(LENGTH($_taskTitle) <= $_nameSize), 
           $_taskDesc TEXT, 
           $_taskDueDate TEXT, 
@@ -116,10 +116,12 @@ class DatabaseHelper {
         where: "$_userUID = ?", whereArgs: [usr.uid]);
   }
 
-  // Gets a user
-
-  
-  //TODO add insert, update, remove ops for arc, and task
+  // Get count of users
+  Future<int> getUserCount() async {
+    var dbClient = await db;
+    return Sqflite.firstIntValue(
+        await dbClient.rawQuery("SELECT COUNT(*) FROM $_userTable"));
+  }
 
   // -----Insert, update and remove ops for task-----
 
@@ -143,6 +145,13 @@ class DatabaseHelper {
     var dbClient = await db;
     return await dbClient.update(_taskTable, tsk.toMap(),
         where: "$_taskTID = ?", whereArgs: [tsk.tid]);
+  }
+
+  // Get count of tasks
+  Future<int> getTaskCount() async {
+    var dbClient = await db;
+    return Sqflite.firstIntValue(
+        await dbClient.rawQuery("SELECT COUNT(*) FROM $_taskTable"));
   }
   
   // -----Insert, update and remove ops for ark-----
@@ -169,6 +178,12 @@ class DatabaseHelper {
         where: "$_arcAID = ?", whereArgs: [ar.aid]);
   }
   
+  // Get count of tasks
+  Future<int> getArcCount() async {
+    var dbClient = await db;
+    return Sqflite.firstIntValue(
+        await dbClient.rawQuery("SELECT COUNT(*) FROM $_arcTable"));
+  }
 
   Future close() async {
     var dbClient = await db;
