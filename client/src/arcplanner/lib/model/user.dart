@@ -52,11 +52,4 @@ class User extends StatelessWidget{
     _lastName = map["lastname"];
     _email = map["email"];
   }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
-  }
-
 }
