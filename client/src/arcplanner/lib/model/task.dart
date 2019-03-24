@@ -62,11 +62,4 @@ class Task extends StatelessWidget{
     _dueDate = map["duedate"];
     _location = map["location"];
   }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
-  }
-
 }
