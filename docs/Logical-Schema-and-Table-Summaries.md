@@ -1,14 +1,14 @@
-The below is a the logical schema with the associated table summaries
+The below is a the logical schema with the associated table summaries. Bold represents Primary keys.
 
 ## Logical Schema
 
-User ( UID, First Name*, Last Name*, Email Address )
+User ( **UID**, First Name*, Last Name*, Email Address )
 
-Arc ( UID, AID, Title*, Description, Parent Arc )  
+Arc ( **AID**, UID,  Title*, Description, Parent Arc )  
 _UID references User.UID_  
 _Parent Arc references Arc.AID_
 
-Task ( AID, TID, Title*, Description, Due Date, Location )  
+Task ( **TID**, AID, Title*, Description, Due Date, Location )  
 _AID references Arc.AID_
 
 ## **Table User** 
@@ -37,7 +37,7 @@ This table stores the details of Arcs. The table and its attributes have a one-t
 | --- | --- |
 | **Table** | Arc |
 | **ER Origin** | Entity Arc |
-| **Primary Key** | UID, AID |
+| **Primary Key** | AID |
 | **Foreign Keys** | Parent Arc |
 | **Uniqueness Constraint** | None |
 
@@ -56,7 +56,7 @@ This table stores the details of tasks. The table and its attributes have a one-
 | --- | --- |
 | **Table** | Task |
 | **ER Origin** | Entity Task |
-| **Primary Key** | AID, TID |
+| **Primary Key** | TID |
 | **Foreign Keys** | None |
 | **Uniqueness Constraint** | None |
 
