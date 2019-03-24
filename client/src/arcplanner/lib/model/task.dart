@@ -16,7 +16,7 @@ class Task extends StatelessWidget{
   String _location;
 
   //constructor
-  Task(this._aid, this._title, this._description, this._dueDate, this._location);
+  Task(this._tid, this._aid, this._title, this._description, this._dueDate, this._location);
 
   // Defines a user map.  Helps with moving info betwen the db
   //   and the app
@@ -49,6 +49,7 @@ class Task extends StatelessWidget{
     if (tid != null) {
       map["tid"] = _tid;
     }
+    return map;
   }
 
   // Puts user map data into a user object
