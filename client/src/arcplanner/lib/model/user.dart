@@ -38,9 +38,10 @@ class User extends StatelessWidget{
     map["lastname"] = _lastName;
     map["email"] =_email;
 
-    if (_uid != null) {
+    if (uid != null) {
       map["uid"] = _uid;
     }
+    return map;
   }
 
   // Puts user map data into a user object
