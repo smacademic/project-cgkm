@@ -7,7 +7,7 @@
 import 'package:uuid/uuid.dart';
 
 class Task {
-  //in flutter, underscrore denotes private members
+  //In flutter, underscrore denotes private members
   String _tid;
   String _aid;
   String _title;
@@ -15,7 +15,7 @@ class Task {
   String _dueDate; //SQLite will store the dueDate as TEXT type
   String _location;
 
-  //constructor
+  //Constructor
   Task(this._aid, this._title,
       {description = null, dueDate = null, location = null}) {
     this._tid = new Uuid().v4();
@@ -24,8 +24,8 @@ class Task {
     this._location = location;
   }
 
-  // Defines a user map.  Helps with moving info betwen the db
-  //   and the app
+  //Defines a user map.  Helps with moving info betwen the db
+  // and the app
   Task.map(dynamic obj) {
     _tid = obj["tid"]; //represents the PK TID from SQLite db
     _aid = obj["aid"];
@@ -35,7 +35,7 @@ class Task {
     _location = obj["location"];
   }
 
-  //getters
+  //Getters
   String get tid => _tid;
   String get aid => _aid;
   String get title => _title;
@@ -43,7 +43,7 @@ class Task {
   String get duedate => _dueDate;
   String get location => _location;
 
-  // Puts object data onto a user map
+  //Puts object data onto a user map
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map["aid"] = _aid;
@@ -58,7 +58,7 @@ class Task {
     return map;
   }
 
-  // Puts user map data into a user object
+  //Puts user map data into a user object
   Task.fromMap(Map<String, dynamic> map) {
     _tid = map["tid"];
     _aid = map["aid"];

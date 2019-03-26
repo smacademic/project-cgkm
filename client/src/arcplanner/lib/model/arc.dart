@@ -9,7 +9,7 @@ import './../util/databaseHelper.dart';
 import 'package:uuid/uuid.dart';
 
 class Arc {
-  //in flutter, underscrore denotes private members
+  //In flutter, underscrore denotes private members
   String _aid;
   String _uid;
   String _title;
@@ -17,15 +17,15 @@ class Arc {
   String _parentArc;
   List<Task> tasks;
 
-  //constructor
+  //Constructor
   Arc(this._uid, this._title, {description = null, parentArc = null}) { 
     this._aid = new Uuid().v4();
     this._description = description;
     this._parentArc = parentarc;
   }
 
-  // Defines a user map.  Helps with moving info betwen the db
-  //   and the app
+  //Defines a user map.  Helps with moving info betwen the db
+  // and the app
   Arc.map(dynamic obj) {
     _aid = obj["aid"];
     _uid = obj["uid"];
@@ -34,14 +34,14 @@ class Arc {
     _parentArc = obj["parentarc"];
   }
 
-  //getters
+  //Getters
   String get aid => _aid;
   String get uid => _uid;
   String get title => _title;
   String get description => _description;
   String get parentarc => _parentArc;
 
-  // Puts object data onto a user map
+  //Puts object data onto a user map
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map["uid"] = _uid;
@@ -55,7 +55,7 @@ class Arc {
     return map;
   }
 
-  // Puts user map data into a user object
+  //Puts user map data into a user object
   Arc.fromMap(Map<String, dynamic> map) {
     _aid = map["aid"];
     _uid = map["uid"];
