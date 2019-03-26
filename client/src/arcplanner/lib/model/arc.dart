@@ -18,7 +18,11 @@ class Arc {
   List<Task> _tasks;
 
   //constructor
-  Arc(this._aid, this._uid, this._title, this._description, this._parentArc);
+  Arc(this._uid, this._title, {description = null, parentArc = null}) {
+    this._aid = new Uuid().v4();
+    this._description = description;
+    this._parentArc = parentarc;
+  }
 
   // Defines a user map.  Helps with moving info betwen the db
   //   and the app
@@ -82,11 +86,12 @@ class Arc {
       DateTime dueDate = null,
       String location = null}) {
     var db = new DatabaseHelper();
-    var uuid = new Uuid();
 
     try {
-      Task task = new Task(uuid.v4(), this._aid, title, description,
-          dueDate.toString(), location);
+      Task task = new Task(this._aid, title,
+          description: description,
+          dueDate: dueDate.toString(),
+          location: location);
 
       //insert new task into db
       db.insertTask(task);
