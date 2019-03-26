@@ -18,7 +18,7 @@ class Arc {
   List<Task> tasks;
 
   //constructor
-  Arc(this._uid, this._title, {description = null, parentArc = null}) {
+  Arc(this._uid, this._title, {description = null, parentArc = null}) { 
     this._aid = new Uuid().v4();
     this._description = description;
     this._parentArc = parentarc;
@@ -117,10 +117,15 @@ class Arc {
   void removeTask(String taskID) {
     var db = new DatabaseHelper();
 
-    //insert new task into db
-    db.deleteTask(taskID);
+    try {
+      //insert new task into db
+      db.deleteTask(taskID);
 
-    //add the new task to the list of tasks belonging to this arc
-    tasks.removeWhere((task) => task.tid == taskID);
+      //add the new task to the list of tasks belonging to this arc
+      tasks.removeWhere((task) => task.tid == taskID);
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 }
