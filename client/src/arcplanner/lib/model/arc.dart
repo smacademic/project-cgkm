@@ -87,6 +87,7 @@ class Arc
   */
   Task addTask ( String title, {String description = null, DateTime dueDate = null, String location = null })
   {
+    var db = new DatabaseHelper();
     var uuid = new Uuid();
     Task task = new Task(uuid.v4(), this._aid, title, description, dueDate.toString(), location );
    
@@ -94,7 +95,7 @@ class Arc
     _tasks.add(task);
     
     //insert new task into db
-    DatabaseHelper.insertTask(task);
+    db.insertTask(task);
     return task;
   }
 

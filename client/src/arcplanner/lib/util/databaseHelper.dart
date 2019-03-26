@@ -126,7 +126,7 @@ class DatabaseHelper {
   // -----Insert, update and remove ops for task-----
 
   // Inserts a new task to the DB using a Task object as an input
-  static Future<int> insertTask(Task tsk) async {
+  Future<int> insertTask(Task tsk) async {
     var dbClient = await db;
     int result = await dbClient.insert("$_taskTable", tsk.toMap());
     return result;
