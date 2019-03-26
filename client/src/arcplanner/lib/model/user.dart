@@ -4,6 +4,7 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
+import 'package:uuid/uuid.dart';
 
 class User {
   //in flutter, underscrore denotes private members
@@ -13,7 +14,9 @@ class User {
   String _email;
 
   //constructor
-  User(this._firstName, this._lastName, this._email);
+  User(this._firstName, this._lastName, this._email) {
+    this._uid = new Uuid().v4();
+  }
 
   // Defines a user map.  Helps with moving info betwen the db
   //   and the app

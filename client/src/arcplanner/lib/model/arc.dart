@@ -15,7 +15,7 @@ class Arc {
   String _title;
   String _description;
   String _parentArc;
-  List<Task> _tasks;
+  List<Task> tasks;
 
   //constructor
   Arc(this._uid, this._title, {description = null, parentArc = null}) {
@@ -97,7 +97,7 @@ class Arc {
       db.insertTask(task);
 
       //add the new task to the list of tasks belonging to this arc
-      _tasks.add(task);
+      tasks.add(task);
 
       return task;
     } catch (e) {
@@ -121,6 +121,6 @@ class Arc {
     db.deleteTask(taskID);
 
     //add the new task to the list of tasks belonging to this arc
-    _tasks.removeWhere((task) => task.tid == taskID);
+    tasks.removeWhere((task) => task.tid == taskID);
   }
 }
