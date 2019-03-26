@@ -133,7 +133,7 @@ class DatabaseHelper {
   }
 
   // Deletes a task with the given ID
-  Future<int> deleteTask(int id) async {
+  Future<int> deleteTask(String id) async {
     var dbClient = await db;
     int result = await dbClient
         .delete(_taskTable, where: "$_taskTID = ?", whereArgs: [id]);
