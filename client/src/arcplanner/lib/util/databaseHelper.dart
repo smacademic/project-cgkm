@@ -48,7 +48,7 @@ class DatabaseHelper {
   static final String _taskLoc = "Location";
 
 // singleton database initialization
-  Future<Database> get db async {
+  Future<Database> get db async{
     if (_db != null) {
       return _db;
     }
@@ -126,7 +126,7 @@ class DatabaseHelper {
   // -----Insert, update and remove ops for task-----
 
   // Inserts a new task to the DB using a Task object as an input
-  Future<int> insertTask(Task tsk) async {
+  static Future<int> insertTask(Task tsk) async {
     var dbClient = await db;
     int result = await dbClient.insert("$_taskTable", tsk.toMap());
     return result;
