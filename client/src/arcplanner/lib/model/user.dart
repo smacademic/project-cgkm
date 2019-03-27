@@ -4,18 +4,21 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
+import 'package:uuid/uuid.dart';
 
 class User {
-  //in flutter, underscrore denotes private members
+  // In flutter, underscore denotes private members
   String _uid;
   String _firstName;
   String _lastName;
   String _email;
 
-  //constructor
-  User(this._firstName, this._lastName, this._email);
+  // Constructor
+  User(this._firstName, this._lastName, this._email) {
+    this._uid = new Uuid().v4();
+  }
 
-  // Defines a user map.  Helps with moving info betwen the db
+  // Defines a user map.  Helps with moving info between the db
   //   and the app
   User.map(dynamic obj){
     _uid = obj["uid"];
@@ -24,7 +27,7 @@ class User {
     _email = obj["email"];
   }
 
-  //getters
+  // Getters
   String get uid => _uid;
   String get firstName => _firstName;
   String get lastName => _lastName;

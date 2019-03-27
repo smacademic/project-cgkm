@@ -19,13 +19,13 @@ class DatabaseHelper {
 
   static Database _db;
 
-// constants for attribute lengths
+// Constants for attribute lengths
   static final int _uuidSize = 60;
   static final int _nameSize = 60;
   static final int _locSize = 60;
   static final int _emailSize = 319;
 
-// constants for table and attribute names
+// Constants for table and attribute names
   static final String _userTable = "ArcUser";
   static final String _userUID = "UID";
   static final String _userFirstName = "FirstName";
@@ -47,8 +47,8 @@ class DatabaseHelper {
   static final String _taskDueDate = "DueDate";
   static final String _taskLoc = "Location";
 
-// singleton database initialization
-  Future<Database> get db async {
+// Singleton database initialization
+  Future<Database> get db async{
     if (_db != null) {
       return _db;
     }
@@ -58,7 +58,7 @@ class DatabaseHelper {
 
   DatabaseHelper.internal();
 
-// initialization implementation
+// Initialization implementation
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, "arcplanner_db.db");
@@ -133,7 +133,7 @@ class DatabaseHelper {
   }
 
   // Deletes a task with the given ID
-  Future<int> deleteTask(int id) async {
+  Future<int> deleteTask(String id) async {
     var dbClient = await db;
     int result = await dbClient
         .delete(_taskTable, where: "$_taskTID = ?", whereArgs: [id]);
