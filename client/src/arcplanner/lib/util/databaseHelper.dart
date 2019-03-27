@@ -164,7 +164,7 @@ class DatabaseHelper {
   }
 
   // Deletes a arc with the given ID
-  Future<int> deleteArc(int id) async {
+  Future<int> deleteArc(String id) async {
     var dbClient = await db;
     int result = await dbClient
         .delete(_arcTable, where: "$_arcAID = ?", whereArgs: [id]);
