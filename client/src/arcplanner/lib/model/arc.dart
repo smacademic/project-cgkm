@@ -16,9 +16,10 @@ class Arc {
   String _description;
   String _parentArc;
   List<Task> tasks;
+  List<Arc> subArcs;
 
   // Constructor
-  Arc(this._uid, this._title, {description = null, parentArc = null}) { 
+  Arc(this._uid, this._title, {description = null, parentArc = null}) {
     this._aid = new Uuid().v4();
     this._description = description;
     this._parentArc = parentArc;
@@ -107,11 +108,9 @@ class Arc {
   }
 
   /*   
-  * Given a taskID it deletes the task entry for the supplied task ID. It then 
-  *  searches the collection of task objects in the instance of Arc until it finds
-  *  the correct task. It then removes and deletes that task from the arc object. 
-  *  The deletion of the class will call the destructor function of the Task 
-  *  object
+  * Description: Given a taskID it deletes the task entry for the supplied task ID. 
+  *  It then searches the collection of task objects in the instance of Arc until it 
+  *  finds the correct task. It then removes and deletes that task from the arc object. 
   * @param taskID the TID of the task that needs to be deleted 
   */
   void removeTask(String taskID) {
@@ -127,5 +126,46 @@ class Arc {
       print(e);
       return null;
     }
+  }
+
+  /*
+  * Description: Adds the given subArc to the collection of subArcs that the Arc class has.
+  * @param subArc is the Arc to be added to the parent's collection of subarcs
+  */
+  void addSubArc(Arc subArc) {
+    subArcs.add(subArc);
+  }
+
+  /*
+  * Description: Given the ID of the sub arc the correct Arc is found in the SQLite file 
+  *  and deleted. It is then also found in the arc instance's collection of sub arcs. 
+  *  Once found that arc runs its own destructor function.
+  * @param subArcID is the ID that represents the subArc that is going to removed.
+  */
+  void removeSubArc(String subArcID) {
+    var db = new DatabaseHelper();
+
+    subArcs.firstWhere((subArc) => subArc.aid == subArcID).removeAll();
+
+    db.deleteArc(subArcID);
+    subArcs.removeWhere((subArc) => subArc.aid == subArcID);
+  }
+
+  /*
+  * Description: Removes all tasks and subArcs that belong to the Arc
+  */
+  void removeAll() {
+    var db = new DatabaseHelper();
+
+    // Delete all tasks in database then all objects
+    tasks.forEach((task) => db.deleteTask(task.tid));
+    tasks.clear();
+
+    // Call remove all function on each subArc
+    subArcs.forEach((subArc) {
+      subArc.removeAll();
+      db.deleteArc(subArc.aid);
+    });
+    subArcs.clear(); 
   }
 }
