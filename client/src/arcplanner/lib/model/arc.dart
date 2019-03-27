@@ -9,7 +9,7 @@ import './../util/databaseHelper.dart';
 import 'package:uuid/uuid.dart';
 
 class Arc {
-  //In flutter, underscore denotes private members
+  // In flutter, underscore denotes private members
   String _aid;
   String _uid;
   String _title;
@@ -17,15 +17,15 @@ class Arc {
   String _parentArc;
   List<Task> tasks;
 
-  //Constructor
+  // Constructor
   Arc(this._uid, this._title, {description = null, parentArc = null}) { 
     this._aid = new Uuid().v4();
     this._description = description;
     this._parentArc = parentArc;
   }
 
-  //Defines a user map.  Helps with moving info betwen the db
-  // and the app
+  // Defines a user map.  Helps with moving info betwen the db
+  //  and the app
   Arc.map(dynamic obj) {
     _aid = obj["aid"];
     _uid = obj["uid"];
@@ -34,14 +34,14 @@ class Arc {
     _parentArc = obj["parentarc"];
   }
 
-  //Getters
+  // Getters
   String get aid => _aid;
   String get uid => _uid;
   String get title => _title;
   String get description => _description;
   String get parentArc => _parentArc;
 
-  //Puts object data onto a user map
+  // Puts object data onto a user map
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map["uid"] = _uid;
@@ -55,7 +55,7 @@ class Arc {
     return map;
   }
 
-  //Puts user map data into a user object
+  // Puts user map data into a user object
   Arc.fromMap(Map<String, dynamic> map) {
     _aid = map["aid"];
     _uid = map["uid"];
@@ -67,19 +67,19 @@ class Arc {
 /*---------------Member Functions-------------*/
 
   /*
-  *Description: The parameters supply needed information to create a Task within
-  * the SQLite database with the exception of the ID. This ID needs to be 
-  * generated with a UUID. This data is sent to the SQLite database to be
-  * inserted into the task table. If successfully inserted the data should be
-  * used to create a task object. That task object should then be added to the
-  * list of tasks belonging to the Arc which called the instance method.
-  *@param title represents the title of the Task
-  *@param description is the information that describes the  task objective. 
+  * Description: The parameters supply needed information to create a Task within
+  *  the SQLite database with the exception of the ID. This ID needs to be 
+  *  generated with a UUID. This data is sent to the SQLite database to be
+  *  inserted into the task table. If successfully inserted the data should be
+  *  used to create a task object. That task object should then be added to the
+  *  list of tasks belonging to the Arc which called the instance method.
+  * @param title represents the title of the Task
+  * @param description is the information that describes the  task objective. 
   *  This is null by default
-  *@param dueDate is the date when the task should be completed by.
+  * @param dueDate is the date when the task should be completed by.
   *  This is null by default
-  *@param location is where the task takes place. This is null by default
-  *Return: Returns the created task
+  * @param location is where the task takes place. This is null by default
+  * Return: Returns the created task
   */
   Task addTask(String title,
       {String description = null,
@@ -93,10 +93,10 @@ class Arc {
           dueDate: dueDate.toString(),
           location: location);
 
-      //insert new task into db
+      // Insert new task into db
       db.insertTask(task);
 
-      //add the new task to the list of tasks belonging to this arc
+      // Add the new task to the list of tasks belonging to this arc
       tasks.add(task);
 
       return task;
@@ -107,21 +107,21 @@ class Arc {
   }
 
   /*   
-  *Given a taskID it deletes the task entry for the supplied task ID. It then 
-  * searches the collection of task objects in the instance of Arc until it finds
-  * the correct task. It then removes and deletes that task from the arc object. 
-  * The deletion of the class will call the destructor function of the Task 
-  * object
-  *@param taskID the TID of the task that needs to be deleted 
+  * Given a taskID it deletes the task entry for the supplied task ID. It then 
+  *  searches the collection of task objects in the instance of Arc until it finds
+  *  the correct task. It then removes and deletes that task from the arc object. 
+  *  The deletion of the class will call the destructor function of the Task 
+  *  object
+  * @param taskID the TID of the task that needs to be deleted 
   */
   void removeTask(String taskID) {
     var db = new DatabaseHelper();
 
     try {
-      //insert new task into db
+      // Insert new task into db
       db.deleteTask(taskID);
 
-      //add the new task to the list of tasks belonging to this arc
+      // Add the new task to the list of tasks belonging to this arc
       tasks.removeWhere((task) => task.tid == taskID);
     } catch (e) {
       print(e);
