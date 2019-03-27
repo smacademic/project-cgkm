@@ -9,7 +9,7 @@ import './../util/databaseHelper.dart';
 import 'package:uuid/uuid.dart';
 
 class Arc {
-  //In flutter, underscrore denotes private members
+  //In flutter, underscore denotes private members
   String _aid;
   String _uid;
   String _title;
@@ -21,7 +21,7 @@ class Arc {
   Arc(this._uid, this._title, {description = null, parentArc = null}) { 
     this._aid = new Uuid().v4();
     this._description = description;
-    this._parentArc = parentarc;
+    this._parentArc = parentArc;
   }
 
   //Defines a user map.  Helps with moving info betwen the db
@@ -39,7 +39,7 @@ class Arc {
   String get uid => _uid;
   String get title => _title;
   String get description => _description;
-  String get parentarc => _parentArc;
+  String get parentArc => _parentArc;
 
   //Puts object data onto a user map
   Map<String, dynamic> toMap() {

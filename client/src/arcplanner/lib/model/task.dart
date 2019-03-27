@@ -20,7 +20,7 @@ class Task {
       {description = null, dueDate = null, location = null}) {
     this._tid = new Uuid().v4();
     this._description = description;
-    this._dueDate = duedate;
+    this._dueDate = dueDate;
     this._location = location;
   }
 
