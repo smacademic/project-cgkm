@@ -9,9 +9,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import './../model/user.dart';
-import './../model/task.dart';
-import './../model/arc.dart';
+import 'package:arcplanner/model/user.dart';
+import 'package:arcplanner/model/task.dart';
+import 'package:arcplanner/model/arc.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -38,6 +38,7 @@ class DatabaseHelper {
   static final String _arcTitle = "Title";
   static final String _arcDesc = "Description";
   static final String _arcPArc = "ParentArc";
+  static final int _arcCompleted = 0;
 
   static final String _taskTable = "Task";
   static final String _taskAID = "AID";
@@ -46,6 +47,8 @@ class DatabaseHelper {
   static final String _taskDesc = "Description";
   static final String _taskDueDate = "DueDate";
   static final String _taskLoc = "Location";
+  static final int _taskCompleted = 0;
+
 
 // Singleton database initialization
   Future<Database> get db async{
@@ -80,7 +83,8 @@ class DatabaseHelper {
           $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) <= $_uuidSize), 
           $_arcTitle TEXT NOT NULL CHECK(LENGTH($_arcTitle) <= $_nameSize), 
           $_arcDesc TEXT, 
-          $_arcPArc TEXT CHECK(LENGTH($_arcPArc) = $_uuidSize)
+          $_arcPArc TEXT CHECK(LENGTH($_arcPArc) = $_uuidSize),
+          $_arcCompleted INTEGER CHECK($_arcCompleted == 0 OR $_arcCompleted == 1)
           )""");
     await db.execute("""
         CREATE TABLE $_taskTable(
@@ -89,7 +93,8 @@ class DatabaseHelper {
           $_taskTitle TEXT CHECK(LENGTH($_taskTitle) <= $_nameSize), 
           $_taskDesc TEXT, 
           $_taskDueDate TEXT, 
-          $_taskLoc TEXT CHECK(LENGTH($_taskLoc) <= $_locSize)
+          $_taskLoc TEXT CHECK(LENGTH($_taskLoc) <= $_locSize),
+          $_taskCompleted INTEGER CHECK($_taskCompleted == 0 OR $_taskCompleted == 1)
           )""");
     print("Tables created");
   }
