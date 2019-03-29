@@ -38,7 +38,7 @@ class DatabaseHelper {
   static final String _arcTitle = "Title";
   static final String _arcDesc = "Description";
   static final String _arcPArc = "ParentArc";
-  static final int _arcCompleted = 0;
+  static final String _arcCompleted = "Completed";
 
   static final String _taskTable = "Task";
   static final String _taskAID = "AID";
@@ -47,7 +47,7 @@ class DatabaseHelper {
   static final String _taskDesc = "Description";
   static final String _taskDueDate = "DueDate";
   static final String _taskLoc = "Location";
-  static final int _taskCompleted = 0;
+  static final String _taskCompleted = "Completed";
 
 
 // Singleton database initialization
