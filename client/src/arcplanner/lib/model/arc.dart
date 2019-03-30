@@ -53,7 +53,7 @@ class Arc {
     map["title"] = _title;
     map["description"] = _description;
     map["parentarc"] = _parentArc;
-    map["completd"] =_completed;
+    map["completed"] =_completed;
 
     if (aid != null) {
       map["aid"] = _aid;
