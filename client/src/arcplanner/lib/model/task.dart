@@ -5,6 +5,7 @@
  */
 
 import 'package:uuid/uuid.dart';
+import 'package:arcplanner/util/databaseHelper.dart';
 
 class Task {
   // In flutter, underscrore denotes private members
@@ -73,4 +74,16 @@ class Task {
     _location = map["location"];
     _completed = map["completed"];
   }
+
+  /*
+  * Description: Updates the SQLite related task completed field to true. It then also changes its on instance variable to true.
+  */
+  void completeTask() {
+    var db = new DatabaseHelper();
+
+    _completed = true;
+    
+    // Update database with updated task
+    db.updateTask(this);
+  } 
 }
