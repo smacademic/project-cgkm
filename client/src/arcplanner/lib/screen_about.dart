@@ -30,6 +30,10 @@ class _AboutScreenState extends State<AboutScreen> {
     Navigator.pushNamed(context, '/loading');
   }
 
+  void _toSettingScreen() {
+    Navigator.pushNamed(context, '/settings');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,11 +58,33 @@ class _AboutScreenState extends State<AboutScreen> {
         ],
       ),
         
-      floatingActionButton: FloatingActionButton(
-        foregroundColor: Colors.blue,
-        onPressed: _toPreviousScreen,
+     // floatingActionButton: FloatingActionButton(
+       // foregroundColor: Colors.blue,
+       // onPressed: _toPreviousScreen,
+      //),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    
+      floatingActionButton: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+
+        children: <Widget>[
+          FloatingActionButton(
+            heroTag: 0,
+            foregroundColor: Colors.blue,
+            onPressed: _toPreviousScreen,
+          ),
+          FloatingActionButton(
+            heroTag: 1,
+            child: Icon(Icons.settings, color: Colors.white,),
+            foregroundColor: Colors.blue,
+            onPressed: _toSettingScreen,
+          ),
+        ]
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      //floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
+
+   
   }
 }
