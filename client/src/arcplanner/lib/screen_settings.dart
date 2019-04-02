@@ -26,10 +26,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Navigator.pushNamed(context, '/about');
   }
 
-  void _toSettingScreen() {
-    Navigator.pushNamed(context, '/settings');
-  }
-
 // Create a temporary list to store 'dummy' settings
 List<String> settingsList = ["Setting 1", "Setting 2", "Setting 3"];
 
@@ -95,14 +91,9 @@ List<String> settingsList = ["Setting 1", "Setting 2", "Setting 3"];
         children: <Widget>[
           FloatingActionButton(
             heroTag: 0,
+            child: Icon(Icons.arrow_back, color: Colors.white,),
             foregroundColor: Colors.blue,
             onPressed: _toPreviousScreen,
-          ),
-          FloatingActionButton(
-            heroTag: 1,
-            child: Icon(Icons.settings, color: Colors.white,),
-            foregroundColor: Colors.blue,
-            onPressed: _toSettingScreen,
           ),
         ]
       ),
