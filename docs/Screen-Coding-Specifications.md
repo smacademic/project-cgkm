@@ -15,10 +15,11 @@ MediaQuery.of(context).size.width
 ## Bottom App Bar ##
 * If using a bottom bar in a screen, use the default height of the bar
 
-## Panel Dimensions ##
+## Panels/Tiles ##
 Panels include the Arc/SubArc/Task tiles in the Arc and Task Views, Home Screen, and Calendar View.  
 * Panels should span the width of the device's screen
 * Arc/Task panels should be a total of 15% of the screen's height
+* If a tile needs to be tappable, implement it using the `ListTile` widget
 
 
 ## Fonts ##
