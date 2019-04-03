@@ -3,12 +3,11 @@
  * team-CGKM
  * CS 298 - Software Devops; Spring 2019
  * 
- * File: screen_Settings.dart
- * Version 1
+ * File: settings_screen.dart
 */
 
 import 'package:flutter/material.dart';
-import 'main.dart';
+//import 'package:arcplanner/main.dart';
 
 class SettingsScreen extends StatefulWidget {
   final String title;
