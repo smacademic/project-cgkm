@@ -7,6 +7,7 @@
 */
 
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 //import 'package:arcplanner/main.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -173,13 +174,14 @@ class _LoginScreenState extends State<LoginScreen> {
         color: Colors.blue,
         child: Container(
           padding: EdgeInsets.all(2),
-          child: Text(
+          child: AutoSizeText(
             'ArcPlanner v0.0.1\nDeveloped as part of CS 298 at WCSU in Spring 2019\nteam-CGKM\nMatthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12.0,
             ),
-            textAlign: TextAlign.left,
+            maxFontSize: 24.0,
+            minFontSize: 8.0,
+            maxLines: 4,
           ),
         ),
       ),
