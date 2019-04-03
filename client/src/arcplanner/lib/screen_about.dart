@@ -30,6 +30,10 @@ class _AboutScreenState extends State<AboutScreen> {
     Navigator.pushNamed(context, '/loading');
   }
 
+  void _toSettingScreen() {
+    Navigator.pushNamed(context, '/settings');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,15 +56,7 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
           ),
         ],
-      ),
-        
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.arrow_back),
-        backgroundColor: Colors.blue,
-        onPressed: _toPreviousScreen,
-        mini: true,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      ), 
     );
   }
 }
