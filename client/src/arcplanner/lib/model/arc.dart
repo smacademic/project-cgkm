@@ -174,4 +174,16 @@ class Arc {
     });
     subArcs.clear(); 
   }
+
+  /*
+  * Description: Updates the SQLite related arc completed field to true. It then also changes its on instance variable to true.
+  */
+  void completeArc() {
+    var db = new DatabaseHelper();
+
+    _completed = true;
+    
+    // Update database with updated arc
+    db.updateArc(this);
+  } 
 }
