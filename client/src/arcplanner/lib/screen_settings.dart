@@ -26,77 +26,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Navigator.pushNamed(context, '/about');
   }
 
-// Create a temporary list to store 'dummy' settings
-List<String> settingsList = ["Setting 1", "Setting 2", "Setting 3"];
-
    @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: ListView.builder(
-        itemBuilder: (context, position) {
-        return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget> [
-              ButtonTheme(
-                height: 60,
-                buttonColor: Colors.white70,
-                child: FlatButton(
-                  onPressed: _toPreviousScreen,
-                  padding:EdgeInsets.only(
-                      top: 10,
-                      bottom: 10,
-                      left: 8,
-                      right: 10,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget> [
-                    Container(
-                      padding: EdgeInsets.only(left:8.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Text(settingsList[position],
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                              ),),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(15)
-                      ),
-                    ]
-                  ),
-                ),
-              ),
-              Divider(
-                    height: 2.0,
-                    color: Colors.grey,)
-            ],
-          );
-        },
-        itemCount: settingsList.length,
-      ),
-
-      floatingActionButton: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-
-        children: <Widget>[
-          FloatingActionButton(
-            heroTag: 0,
-            child: Icon(Icons.arrow_back, color: Colors.white,),
-            foregroundColor: Colors.blue,
-            onPressed: _toPreviousScreen,
-          ),
-        ]
-      ),
+       body: ListView(
+        children: ListTile.divideTiles(
+          context: context,
+          tiles: [
+            ListTile(
+              title: Text("Setting 1"),
+                    onTap:() {
+                      _toPreviousScreen();
+                    }
+            ),
+             ListTile(
+              title: Text("Setting 2"),
+                    onTap:() {
+                      _toPreviousScreen();
+                    }
+            ),
+             ListTile(
+              title: Text("Setting 3"),
+                    onTap:() {
+                      _toPreviousScreen();
+                    }
+            ),
+          ],
+        ).toList(),
+       ),
     );
   }
 }
