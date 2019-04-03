@@ -40,13 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
           SafeArea(
             child: Container(
               color: Colors.blue,
-              height: MediaQuery.of(context).size.height * 0.2,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.all(8),
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery.of(context).size.width * 0.60,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget> [
@@ -64,33 +63,32 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 24.0,
                             color: Colors.white,
                           ),
-                          maxLines: 6,
+                          maxLines: 3,
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        FloatingActionButton.extended(
-                          label: Text(
-                            'New\nTask',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          icon: Icon(
-                            Icons.add,
-                            size: 50,
-                          ),
-                          backgroundColor: Colors.white,
-                          foregroundColor: Colors.blue,
-                          onPressed: _newTask,
+                    padding: EdgeInsets.only(
+                      right: 10.0,
+                    ),
+                    child: ButtonTheme(
+                      height: 55.0,
+                      buttonColor: Colors.white,
+                      child: RaisedButton.icon(
+                        textColor: Colors.blue,
+                        icon: Icon(
+                          Icons.add,
+                          size: 45.0,
                         ),
-                      ],
+                        label: Text(
+                          'New\nTask',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        onPressed: _newTask,
+                      ),
                     ),
                   ),
                 ],
