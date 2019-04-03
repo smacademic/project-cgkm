@@ -3,17 +3,17 @@
  * team-CGKM
  * CS 298 - Software Devops; Spring 2019
  * 
- * File: screen_login.dart
- * Version 1
+ * File: login_screen.dart
 */
 
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+//import 'package:arcplanner/main.dart';
 
 class LoginScreen extends StatefulWidget {
   final String title;
 
-  LoginScreen({Key key, this.title}) : super(key: key) {}
+  LoginScreen({Key key, this.title}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
 
-  _LoginScreenState() {}
+  _LoginScreenState();
 
   String errorMessage = '';
 
@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   */
   void _sendLogin() async {
     try {
-      Navigator.pushReplacementNamed(context, '/about');
+      Navigator.pushReplacementNamed(context, '/home');
     } catch (error) {
       print(error.toString());
     }
@@ -169,17 +169,19 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
+
       bottomNavigationBar: BottomAppBar(
         color: Colors.blue,
         child: Container(
           padding: EdgeInsets.all(2),
-          child: Text(
+          child: AutoSizeText(
             'ArcPlanner v0.0.1\nDeveloped as part of CS 298 at WCSU in Spring 2019\nteam-CGKM\nMatthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12.0,
             ),
-            textAlign: TextAlign.left,
+            maxFontSize: 24.0,
+            minFontSize: 8.0,
+            maxLines: 4,
           ),
         ),
       ),

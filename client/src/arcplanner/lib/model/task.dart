@@ -5,6 +5,7 @@
  */
 
 import 'package:uuid/uuid.dart';
+import 'package:arcplanner/util/databaseHelper.dart';
 
 class Task {
   // In flutter, underscrore denotes private members
@@ -14,6 +15,7 @@ class Task {
   String _description;
   String _dueDate; // SQLite will store the dueDate as TEXT type
   String _location;
+  bool _completed;
 
   // Constructor
   Task(this._aid, this._title,
@@ -22,6 +24,7 @@ class Task {
     this._description = description;
     this._dueDate = dueDate;
     this._location = location;
+    this._completed = false;
   }
 
   // Defines a user map.  Helps with moving info betwen the db
@@ -33,6 +36,7 @@ class Task {
     _description = obj["description"];
     _dueDate = obj["duedate"];
     _location = obj["location"];
+    _completed = obj["completed"];
   }
 
   // Getters
@@ -42,6 +46,7 @@ class Task {
   String get description => _description;
   String get duedate => _dueDate;
   String get location => _location;
+  bool get completed => _completed;
 
   // Puts object data onto a user map
   Map<String, dynamic> toMap() {
@@ -51,6 +56,7 @@ class Task {
     map["description"] = _description;
     map["duedate"] = _dueDate;
     map["location"] = _location;
+    map["completed"] = _completed;
 
     if (tid != null) {
       map["tid"] = _tid;
@@ -66,5 +72,18 @@ class Task {
     _description = map["description"];
     _dueDate = map["duedate"];
     _location = map["location"];
+    _completed = map["completed"];
   }
+
+  /*
+  * Description: Updates the SQLite related task completed field to true. It then also changes its on instance variable to true.
+  */
+  void completeTask() {
+    var db = new DatabaseHelper();
+
+    _completed = true;
+    
+    // Update database with updated task
+    db.updateTask(this);
+  } 
 }

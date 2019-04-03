@@ -4,8 +4,8 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
-import './../model/task.dart';
-import './../util/databaseHelper.dart';
+import 'package:arcplanner/model/task.dart';
+import 'package:arcplanner/util/databaseHelper.dart';
 import 'package:uuid/uuid.dart';
 
 class Arc {
@@ -15,6 +15,7 @@ class Arc {
   String _title;
   String _description;
   String _parentArc;
+  bool _completed;
   List<Task> tasks;
   List<Arc> subArcs;
 
@@ -23,6 +24,7 @@ class Arc {
     this._aid = new Uuid().v4();
     this._description = description;
     this._parentArc = parentArc;
+    this._completed = false;
   }
 
   // Defines a user map.  Helps with moving info betwen the db
@@ -33,6 +35,7 @@ class Arc {
     _title = obj["title"];
     _description = obj["description"];
     _parentArc = obj["parentarc"];
+    _completed = obj["completed"];
   }
 
   // Getters
@@ -41,6 +44,7 @@ class Arc {
   String get title => _title;
   String get description => _description;
   String get parentArc => _parentArc;
+  bool get completed => _completed;
 
   // Puts object data onto a user map
   Map<String, dynamic> toMap() {
@@ -49,6 +53,7 @@ class Arc {
     map["title"] = _title;
     map["description"] = _description;
     map["parentarc"] = _parentArc;
+    map["completed"] =_completed;
 
     if (aid != null) {
       map["aid"] = _aid;
@@ -63,6 +68,7 @@ class Arc {
     _title = map["title"];
     _description = map["description"];
     _parentArc = map["parentarc"];
+    _completed = map["completed"];
   }
 
 /*---------------Member Functions-------------*/
@@ -168,4 +174,16 @@ class Arc {
     });
     subArcs.clear(); 
   }
+
+  /*
+  * Description: Updates the SQLite related arc completed field to true. It then also changes its on instance variable to true.
+  */
+  void completeArc() {
+    var db = new DatabaseHelper();
+
+    _completed = true;
+    
+    // Update database with updated arc
+    db.updateArc(this);
+  } 
 }
