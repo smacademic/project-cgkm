@@ -3,6 +3,8 @@ import 'package:arcplanner/ui/login_screen.dart';
 import 'package:arcplanner/ui/loading_screen.dart';
 import 'package:arcplanner/ui/about_screen.dart';
 import 'package:arcplanner/ui/home_screen.dart';
+import 'package:arcplanner/ui/settings_screen.dart';
+
 
 /// Observer for tracking page changes
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -17,6 +19,7 @@ class ArcPlanner extends StatelessWidget {
   static LoadingScreen loadingScreen = LoadingScreen();
   static AboutScreen aboutScreen = AboutScreen();
   static HomeScreen homeScreen = HomeScreen();
+  static SettingsScreen settingsScreen = SettingsScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +35,7 @@ class ArcPlanner extends StatelessWidget {
         '/loading': (BuildContext context) => loadingScreen,
         '/about': (BuildContext context) => aboutScreen,
         '/home': (BuildContext context) => homeScreen,
+        '/settings': (BuildContext context) => settingsScreen,
       },
       navigatorObservers: [routeObserver],
     );
