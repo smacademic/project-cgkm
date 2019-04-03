@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'screen_login.dart';
-import 'screen_loading.dart';
-import 'screen_about.dart';
+import 'package:arcplanner/ui/login_screen.dart';
+import 'package:arcplanner/ui/loading_screen.dart';
+import 'package:arcplanner/ui/about_screen.dart';
+import 'package:arcplanner/ui/home_screen.dart';
 
 /// Observer for tracking page changes
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -12,16 +13,10 @@ void main() {
 }
 
 class ArcPlanner extends StatelessWidget {
-  static LoginScreen loginScreen  = LoginScreen();
+  static LoginScreen loginScreen = LoginScreen();
   static LoadingScreen loadingScreen = LoadingScreen();
-  static AboutScreen aboutScreen  = AboutScreen();
-
-  /// Resets the application to a default state. This allows log out and log back in without reset
-  static void resetConnection() async {
-    loginScreen = LoginScreen();
-    loadingScreen = LoadingScreen();
-    aboutScreen = AboutScreen();
-  }
+  static AboutScreen aboutScreen = AboutScreen();
+  static HomeScreen homeScreen = HomeScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +25,13 @@ class ArcPlanner extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: loginScreen,
+      home: loginScreen,  //setting home as 'homeScreen' for app development
       // Sets up the routes the Navigator can go through
       routes: <String, WidgetBuilder> {
         '/login': (BuildContext context) => loginScreen,
         '/loading': (BuildContext context) => loadingScreen,
         '/about': (BuildContext context) => aboutScreen,
+        '/home': (BuildContext context) => homeScreen,
       },
       navigatorObservers: [routeObserver],
     );

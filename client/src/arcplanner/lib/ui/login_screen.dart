@@ -3,17 +3,16 @@
  * team-CGKM
  * CS 298 - Software Devops; Spring 2019
  * 
- * File: screen_login.dart
- * Version 1
+ * File: login_screen.dart
 */
 
 import 'package:flutter/material.dart';
-import 'main.dart';
+//import 'package:arcplanner/main.dart';
 
 class LoginScreen extends StatefulWidget {
   final String title;
 
-  LoginScreen({Key key, this.title}) : super(key: key) {}
+  LoginScreen({Key key, this.title}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -23,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
 
-  _LoginScreenState() {}
+  _LoginScreenState();
 
   String errorMessage = '';
 
@@ -32,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   */
   void _sendLogin() async {
     try {
-      Navigator.pushReplacementNamed(context, '/about');
+      Navigator.pushReplacementNamed(context, '/home');
     } catch (error) {
       print(error.toString());
     }
@@ -169,6 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
+
       bottomNavigationBar: BottomAppBar(
         color: Colors.blue,
         child: Container(

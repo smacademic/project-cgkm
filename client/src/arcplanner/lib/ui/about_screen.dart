@@ -3,8 +3,7 @@
  * team-CGKM
  * CS 298 - Software DevOps; Spring 2019
  * 
- * File: screen_about.dart
- * Version 1
+ * File: about_screen.dart
  * 
  * Purpose:
  *  This screen contains basic information about the application, as well as 
@@ -13,7 +12,8 @@
 */
 
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'package:arcplanner/ui/drawer_menu.dart';
+//import 'package:arcplanner/main.dart';
 
 
 class AboutScreen extends StatefulWidget {
@@ -24,11 +24,6 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
-
-  void _toPreviousScreen() {
-    //Navigator.pop(context);
-    Navigator.pushNamed(context, '/loading');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +48,8 @@ class _AboutScreenState extends State<AboutScreen> {
           ),
         ],
       ),
-        
-      floatingActionButton: FloatingActionButton(
-        foregroundColor: Colors.blue,
-        onPressed: _toPreviousScreen,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
+      drawer: drawerMenu(context),
     );
   }
 }
