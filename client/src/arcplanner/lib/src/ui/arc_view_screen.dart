@@ -1,5 +1,3 @@
-/*
-
 import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
 import 'drawer_menu.dart';
@@ -58,5 +56,3 @@ Widget arcList() {
     },
   );
 }
-
-*/
