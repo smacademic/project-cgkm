@@ -12,22 +12,13 @@
 */
 
 import 'package:flutter/material.dart';
-import 'package:arcplanner/ui/drawer_menu.dart';
-//import 'package:arcplanner/main.dart';
+import 'drawer_menu.dart';
 
-
-class AboutScreen extends StatefulWidget {
-  AboutScreen({Key key}) : super(key: key);
-
-  @override
-  _AboutScreenState createState() => _AboutScreenState();
-}
-
-class _AboutScreenState extends State<AboutScreen> {
-  @override
-  Widget build(BuildContext context) {
+class AboutScreen extends StatelessWidget {
+  Widget build(context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      
       body: ListView(
         padding: EdgeInsets.all(20),
         children: <Widget> [

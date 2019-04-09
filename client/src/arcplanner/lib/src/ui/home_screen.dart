@@ -8,31 +8,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:arcplanner/ui/drawer_menu.dart';
-//import 'package:arcplanner/main.dart';
+import 'drawer_menu.dart';
 
-class HomeScreen extends StatefulWidget {
-  final String title;
-
-  HomeScreen({Key key, this.title}) : super(key: key);
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  _HomeScreenState();
-
+class HomeScreen extends StatelessWidget {
   // For visual demonstration purposes only. Will be removed before release
   //=======================================================================
   String userName = 'UserName';
   var upcomingTasks = 5;
   //=======================================================================
-
   void _newTask() {}
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 

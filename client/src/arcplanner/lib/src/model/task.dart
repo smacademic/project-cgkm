@@ -5,7 +5,7 @@
  */
 
 import 'package:uuid/uuid.dart';
-import 'package:arcplanner/util/databaseHelper.dart';
+import '../util/databaseHelper.dart';
 
 class Task {
   // In flutter, underscrore denotes private members

@@ -4,8 +4,8 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
-import 'package:arcplanner/model/task.dart';
-import 'package:arcplanner/util/databaseHelper.dart';
+import 'task.dart';
+import '../util/databaseHelper.dart';
 import 'package:uuid/uuid.dart';
 
 class Arc {
@@ -27,7 +27,7 @@ class Arc {
     this._completed = false;
   }
 
-  // Defines a user map.  Helps with moving info betwen the db
+  // Defines a user map.  Helps with moving info between the db
   //  and the app
   Arc.map(dynamic obj) {
     _aid = obj["aid"];

@@ -9,9 +9,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import 'package:arcplanner/model/user.dart';
-import 'package:arcplanner/model/task.dart';
-import 'package:arcplanner/model/arc.dart';
+import '../model/user.dart';
+import '../model/task.dart';
+import '../model/arc.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
