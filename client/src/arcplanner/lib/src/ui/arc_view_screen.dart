@@ -190,6 +190,7 @@ Widget tile(dynamic obj, BuildContext context) {
   } else if (obj is Task) {
     return taskTile(obj, context);
   } else {
+    print(obj);
     return Text('tile tried to build not an Arc or Task');
   }
 }

@@ -24,7 +24,19 @@ class Bloc {
   // Takes in 
   final _arcViewController = StreamController<dynamic>.broadcast();
   Stream<dynamic> get arcViewStream => _arcViewController.stream;
-  Function(dynamic) get arcViewInsert => _arcViewController.sink.add;
+  //Function(dynamic) get arcViewInsert => _arcViewController.sink.add;
+  void arcViewInsert(dynamic obj) {
+    print('getting to sink');
+    _arcViewController.sink.add(obj);
+  } 
+
+  Stream<dynamic> get transformer => _arcViewController.stream.transform(transformData);
+
+  final transformData =
+    StreamTransformer<dynamic, String>.fromHandlers(handleData: (order, sink) {
+      print('getting to transformer');
+      print(order);
+  });
   
   Arc toArc(Map map) {
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
@@ -83,8 +95,11 @@ class Bloc {
   }
 
   updateArcView(Arc parent, String flag){
+    print('getting here');
+    print("parent title: " + parent.title + " flag: " + flag );
     //flag conditions: getChildren, ...
     if (flag == "getChildren"){
+      print(parent.title);
       getChildren(parent);
     } else if (flag == "getParent"){
         //get parent
