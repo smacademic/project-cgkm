@@ -24,8 +24,6 @@ class ArcViewScreen extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   dynamic snapshotData = snapshot.data;
-                  print('length is '+ snapshotData.length.toString());
-                  print(snapshotData);
                   return ListView.builder(
                     itemCount: snapshotData.length,
                     itemBuilder: (context, index) {
@@ -78,14 +76,15 @@ class ArcViewScreen extends StatelessWidget {
 Widget arcTile(Arc arc, BuildContext context) {
   var description = arc.description;
   if (description == null) {
-    description = 'Need to get on your hands and knees and scrub the living FUCK out your floors.';
+    description = 'Tidy up.';
   }
-
-  print('inside tile:' + arc.title);
 
   return Container(
     decoration: BoxDecoration(
-      border: Border.all(),
+      border: Border(
+        bottom: BorderSide(),
+        top: BorderSide(),
+      ),
     ),
     height: MediaQuery.of(context).size.height * 0.20,
     child: ListTile(
@@ -119,7 +118,9 @@ Widget arcTile(Arc arc, BuildContext context) {
           ),
         ],
       ),
-      //onTap: bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'}),
+      onTap: () {
+        bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+      } 
       //onLongPress: ,
     ),
   );
@@ -175,53 +176,20 @@ Widget taskTile(Task task, BuildContext context) {
           ),
         ],
       ),
-      //onTap: _toTaskView(task),
-      //onLongPress: ,
+      // onTap: () {
+      //   _toTaskView(task),
+      // }  
+      // onLongPress: ,
     )
   );
 }
 
 Widget tile(dynamic obj, BuildContext context) {
   if (obj is Arc) {
-    print('title is: ' + obj.title);
-    print('getting here 1');
     return arcTile(obj, context);
   } else if (obj is Task) {
-    print('getting here 2');
     return taskTile(obj, context);
   } else {
-    print('getting here 3');
-    return Text('FUCKERS GOT GIT');
+    return Text('tile tried to build not an Arc or Task');
   }
 }
-
-/*
-Widget displayArc() {
-  return StreamBuilder(
-    stream: bloc.arc,
-    builder: (context, context) {
-      return Text(
-        //Print some things and stuff
-        bloc.getArcTitle
-       ),
-      ),
-    },
-  );
-}
-
-Widget arcList() {
-  return StreamBuilder(
-    stream: bloc.arcMap,
-    builder: (context, context) {
-      return ListView.builder(
-        itemCount: arcMap.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Text (
-            arcMap[index].title
-          );
-        },
-      );
-    },
-  );
-}
-*/
