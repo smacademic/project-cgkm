@@ -20,7 +20,7 @@ class DatabaseHelper {
   static Database _db;
 
 // Constants for attribute lengths
-  static final int _uuidSize = 60;
+  static final int _uuidSize = 36;
   static final int _nameSize = 60;
   static final int _locSize = 60;
   static final int _emailSize = 319;
@@ -72,7 +72,7 @@ class DatabaseHelper {
   void _onCreate(Database db, int version) async {
     await db.execute("""
         CREATE TABLE $_userTable(
-          $_userUID TEXT PRIMARY KEY CHECK(LENGTH($_userUID) <= $_uuidSize),
+          $_userUID TEXT PRIMARY KEY CHECK(LENGTH($_userUID) = $_uuidSize),
           $_userFirstName TEXT NOT NULL CHECK(LENGTH($_userFirstName) <= $_nameSize), 
           $_userLastName TEXT NOT NULL CHECK(LENGTH($_userLastName) <= $_nameSize), 
           $_userEmail TEXT CHECK(LENGTH($_userEmail) <= $_emailSize)
@@ -80,7 +80,7 @@ class DatabaseHelper {
     await db.execute("""
         CREATE TABLE $_arcTable(
           $_arcUID TEXT NOT NULL REFERENCES $_userTable ($_userUID), 
-          $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) <= $_uuidSize), 
+          $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) = $_uuidSize), 
           $_arcTitle TEXT NOT NULL CHECK(LENGTH($_arcTitle) <= $_nameSize), 
           $_arcDesc TEXT, 
           $_arcPArc TEXT CHECK(LENGTH($_arcPArc) = $_uuidSize),
@@ -89,7 +89,7 @@ class DatabaseHelper {
     await db.execute("""
         CREATE TABLE $_taskTable(
           $_taskAID TEXT REFERENCES $_arcTable ($_arcAID), 
-          $_taskTID TEXT PRIMARY KEY CHECK(LENGTH($_taskTID) <= $_uuidSize), 
+          $_taskTID TEXT PRIMARY KEY CHECK(LENGTH($_taskTID) = $_uuidSize), 
           $_taskTitle TEXT CHECK(LENGTH($_taskTitle) <= $_nameSize), 
           $_taskDesc TEXT, 
           $_taskDueDate TEXT, 
