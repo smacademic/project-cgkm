@@ -16,27 +16,27 @@ class Bloc {
   void initMap() async {
     insertListIntoMap(await db.getMasterArcs());
     List<Arc> initialList = new List();
-    loadedObjects.forEach(((key, value) => initialList.add(value)));
-    sendToArcView(initialList); 
-
+    loadedObjects.forEach((key, value) {
+      initialList.add(value);
+    });
+    _arcViewController.add({'object': initialList, 'flag': "add"});
   }
 
   // Takes in 
   final _arcViewController = StreamController<dynamic>.broadcast();
-  Stream<dynamic> get arcViewStream => _arcViewController.stream;
-  //Function(dynamic) get arcViewInsert => _arcViewController.sink.add;
+  Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+  
   void arcViewInsert(dynamic obj) {
-    print('getting to sink');
     _arcViewController.sink.add(obj);
   } 
 
-  Stream<dynamic> get transformer => _arcViewController.stream.transform(transformData);
-
-  final transformData =
-    StreamTransformer<dynamic, String>.fromHandlers(handleData: (order, sink) {
-      print('getting to transformer');
-      print(order);
-  });
+  dynamic transformData(data) async {
+    if (data['flag'] == "add") {
+      return await data['object'];
+    } else if (data['flag'] == "getChildren") {
+      return await getChildren(data['object']);
+    }
+  }
   
   Arc toArc(Map map) {
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
@@ -50,18 +50,24 @@ class Bloc {
         map['Location'], completed: map['Completed']);
   }
 
-  insertObjectIntoMap(Map map) {
+  dynamic insertObjectIntoMap(Map map) {
     if (map.containsKey('TID')) {
-      loadedObjects[map['TID']] = toTask(map);
+      Task task = toTask(map);
+      loadedObjects[map['TID']] = task;
+      return task;
     } else {
-      loadedObjects[map['AID'].toString()] = toArc(map);
+      Arc arc = toArc(map);
+      loadedObjects[map['AID'].toString()] = arc;
+      return arc;
     }
   }
 
-  insertListIntoMap(List<Map> list) {
+  List<dynamic> insertListIntoMap(List<Map> list) {
+    List<dynamic> objects = List<dynamic>(); 
     for (Map map in list) {
-      insertObjectIntoMap(map);
+      objects.add(insertObjectIntoMap(map));
     }
+    return objects;
   }
 
   bool checkMap(String uuid) {
@@ -80,27 +86,34 @@ class Bloc {
   // Checks to see if children are in map. If they exist in map then send them
   //  back via stream. Otherwise load them from database and into map. Then
   //  to the UI via stream
-  void getChildren (Arc parent) async {
+  Future<List<dynamic>> getChildren (Arc parent) async {
+    List<dynamic> children;
+
     // Get first child UUID and see if it exists. If and only if at 
     //  least 1 child exists in map then all children exists
-    String firstChildUUID = parent.childrenUUIDs[0];
-    if (!checkMap(firstChildUUID)) { // Key does not exist in map yet
+    if (parent.childrenUUIDs.isEmpty) { // Key does not exist in map yet or doesn't have children
       // Add all children to map
-      insertListIntoMap(await db.getChildren(parent.aid));
+      children = insertListIntoMap(await db.getChildren(parent.aid));
+      children.forEach((object) {
+        if (object is Arc) {
+          parent.childrenUUIDs.add(object.aid);
+        } else {
+          parent.childrenUUIDs.add(object.tid);
+        }
+      });
     }
     
-    List<dynamic> children;
     parent.childrenUUIDs.forEach((uuid) => children.add(loadedObjects[uuid]));
-    sendToArcView(children);
+    return children;
   }
 
-  updateArcView(Arc parent, String flag){
-    print('getting here');
-    print("parent title: " + parent.title + " flag: " + flag );
+  dynamic updateArcView(Arc parent, String flag){
     //flag conditions: getChildren, ...
     if (flag == "getChildren"){
       print(parent.title);
       getChildren(parent);
+    } else if (flag == "add") {
+      _arcViewController.add(parent);
     } else if (flag == "getParent"){
         //get parent
     } else if (flag == "getParentSiblings"){

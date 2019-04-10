@@ -8,7 +8,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 class ArcViewScreen extends StatelessWidget {
 
   _toTaskView(Task task) {
-
   }
 
   Widget build(context) {
@@ -22,17 +21,22 @@ class ArcViewScreen extends StatelessWidget {
             child: StreamBuilder(
               stream: bloc.arcViewStream,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  dynamic snapshotData = snapshot.data;
-                  return ListView.builder(
-                    itemCount: snapshotData.length,
-                    itemBuilder: (context, index) {
-                      return tile(snapshotData[index], context);
-                    },
-                  );
-                } else {
-                  return Text('There are no Arcs/Tasks');
-                }
+                return new FutureBuilder(
+                  future: snapshot.data,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                    dynamic snapshotData = snapshot.data;
+                    return ListView.builder(
+                      itemCount: snapshotData.length,
+                      itemBuilder: (context, index) {
+                        return tile(snapshotData[index], context);
+                      },
+                    );
+                    } else {
+                      return Text('There are no Arcs/Tasks');
+                    }
+                  },
+                );
               },
             ),
           ),
@@ -119,7 +123,7 @@ Widget arcTile(Arc arc, BuildContext context) {
         ],
       ),
       onTap: () {
-        bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+        bloc.arcViewInsert({ 'object' : arc, 'flag': 'getChildren'});
       } 
       //onLongPress: ,
     ),

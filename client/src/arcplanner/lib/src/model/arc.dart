@@ -16,7 +16,7 @@ class Arc {
   String _description;
   String _parentArc;
   bool _completed;
-  List<String> childrenUUIDs;
+  List<String> childrenUUIDs = new List();
 
   // Constructor
   Arc(this._uid, this._title, {description, parentArc}) {
