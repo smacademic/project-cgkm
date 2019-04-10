@@ -4,8 +4,8 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
-import 'package:arcplanner/model/task.dart';
-import 'package:arcplanner/util/databaseHelper.dart';
+import 'task.dart';
+import '../util/databaseHelper.dart';
 import 'package:uuid/uuid.dart';
 
 class Arc {
@@ -16,18 +16,29 @@ class Arc {
   String _description;
   String _parentArc;
   bool _completed;
-  List<Task> tasks;
-  List<Arc> subArcs;
+  List<String> childrenUUIDs = new List();
 
   // Constructor
-  Arc(this._uid, this._title, {description = null, parentArc = null}) {
+  Arc(this._uid, this._title, {description, parentArc}) {
     this._aid = new Uuid().v4();
     this._description = description;
     this._parentArc = parentArc;
     this._completed = false;
   }
 
-  // Defines a user map.  Helps with moving info betwen the db
+  // Constructor to build object read from database
+  Arc.read(this._uid, this._aid, this._title, 
+      {description, parentArc, completed}) {
+    this._description = description;
+    this._parentArc = parentArc;
+    if (completed == '1') {
+      this._completed = true;
+    } else {
+      this._completed = false;
+    }
+  }
+
+  // Defines a user map.  Helps with moving info between the db
   //  and the app
   Arc.map(dynamic obj) {
     _aid = obj["aid"];
@@ -71,6 +82,7 @@ class Arc {
     _completed = map["completed"];
   }
 
+/*
 /*---------------Member Functions-------------*/
 
   /*
@@ -186,4 +198,5 @@ class Arc {
     // Update database with updated arc
     db.updateArc(this);
   } 
+  */
 }

@@ -1,7 +1,8 @@
 /** Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- *  CS298 Spring 2019 Team CGKM 
+ *  Team CGKM 
+ *  CS298 Spring 2019 
  * 
- * Provided AS IS. No warranties expressed or implied. Use at your own risk.
+ *  Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
 import 'dart:io';
@@ -9,9 +10,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
-import 'package:arcplanner/model/user.dart';
-import 'package:arcplanner/model/task.dart';
-import 'package:arcplanner/model/arc.dart';
+import '../model/user.dart';
+import '../model/task.dart';
+import '../model/arc.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -20,7 +21,7 @@ class DatabaseHelper {
   static Database _db;
 
 // Constants for attribute lengths
-  static final int _uuidSize = 60;
+  static final int _uuidSize = 36;
   static final int _nameSize = 60;
   static final int _locSize = 60;
   static final int _emailSize = 319;
@@ -69,10 +70,11 @@ class DatabaseHelper {
     return arcDb;
   }
 
+  // Creates database tables
   void _onCreate(Database db, int version) async {
     await db.execute("""
         CREATE TABLE $_userTable(
-          $_userUID TEXT PRIMARY KEY CHECK(LENGTH($_userUID) <= $_uuidSize),
+          $_userUID TEXT PRIMARY KEY CHECK(LENGTH($_userUID) = $_uuidSize),
           $_userFirstName TEXT NOT NULL CHECK(LENGTH($_userFirstName) <= $_nameSize), 
           $_userLastName TEXT NOT NULL CHECK(LENGTH($_userLastName) <= $_nameSize), 
           $_userEmail TEXT CHECK(LENGTH($_userEmail) <= $_emailSize)
@@ -80,7 +82,7 @@ class DatabaseHelper {
     await db.execute("""
         CREATE TABLE $_arcTable(
           $_arcUID TEXT NOT NULL REFERENCES $_userTable ($_userUID), 
-          $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) <= $_uuidSize), 
+          $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) = $_uuidSize), 
           $_arcTitle TEXT NOT NULL CHECK(LENGTH($_arcTitle) <= $_nameSize), 
           $_arcDesc TEXT, 
           $_arcPArc TEXT CHECK(LENGTH($_arcPArc) = $_uuidSize),
@@ -89,7 +91,7 @@ class DatabaseHelper {
     await db.execute("""
         CREATE TABLE $_taskTable(
           $_taskAID TEXT REFERENCES $_arcTable ($_arcAID), 
-          $_taskTID TEXT PRIMARY KEY CHECK(LENGTH($_taskTID) <= $_uuidSize), 
+          $_taskTID TEXT PRIMARY KEY CHECK(LENGTH($_taskTID) = $_uuidSize), 
           $_taskTitle TEXT CHECK(LENGTH($_taskTitle) <= $_nameSize), 
           $_taskDesc TEXT, 
           $_taskDueDate TEXT, 
@@ -128,6 +130,44 @@ class DatabaseHelper {
         await dbClient.rawQuery("SELECT COUNT(*) FROM $_userTable"));
   }
 
+  // returns a list of Arcs with no parent. Highest level Arcs
+  Future<List<Map>> getMasterArcs() async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc IS NULL');
+  }
+
+  // pulls a single Arc from db given a UUID
+  Future<List<Map>> getArc(String uuid) async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT 1 FROM Arc WHERE AID = $uuid',);
+  } 
+
+  // pulls a single Task from db given a UUID
+  Future<List<Map>> getTask(String uuid) async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT 1 FROM Task WHERE TID = $uuid');
+  }
+
+  // given a UUID, returns a list of mapped children
+  Future<List<Map>> getChildren(String uuid) async {
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
+    //list.addAll(await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"'));
+    return list;
+  }
+
+  // pulls all Arcs and Tasks out of the database and creates objects out of them
+  Future<List<Map>> getArcList() async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT * FROM Arc');
+  } 
+
+  
+  Future<List<Map>> getTaskList() async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT * FROM Task');
+  }
+
   // -----Insert, update and remove ops for task-----
 
   // Inserts a new task to the DB using a Task object as an input
@@ -159,7 +199,7 @@ class DatabaseHelper {
         await dbClient.rawQuery("SELECT COUNT(*) FROM $_taskTable"));
   }
   
-  // -----Insert, update and remove ops for ark-----
+  // -----Insert, update and remove ops for arc-----
 
   // Inserts a new arc to the DB using a Arc object as an input
   Future<int> insertArc(Arc ar) async {
@@ -194,5 +234,4 @@ class DatabaseHelper {
     var dbClient = await db;
     return dbClient.close();
   }
-  
 }

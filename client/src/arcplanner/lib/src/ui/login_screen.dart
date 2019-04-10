@@ -10,35 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 //import 'package:arcplanner/main.dart';
 
-class LoginScreen extends StatefulWidget {
-  final String title;
-
-  LoginScreen({Key key, this.title}) : super(key: key);
-
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreen extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
+  final String errorMessage = '';
 
-  _LoginScreenState();
+  _sendLogin() {}
 
-  String errorMessage = '';
-
-  /*
-   * 
-  */
-  void _sendLogin() async {
-    try {
-      Navigator.pushReplacementNamed(context, '/home');
-    } catch (error) {
-      print(error.toString());
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
