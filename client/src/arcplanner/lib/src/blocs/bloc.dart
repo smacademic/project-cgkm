@@ -31,6 +31,8 @@ class Bloc {
     _arcViewController.sink.add(obj);
   } 
 
+  // Map function that based on the given flag from stream will perform
+  //  varying operations that return needed arcs to stream 
   dynamic transformData(data) async {
     if (data['flag'] == "add") {
       return await data['object'];
@@ -106,27 +108,10 @@ class Bloc {
           parent.childrenUUIDs.add(object.tid);
         }
       });
+    } else {
+      parent.childrenUUIDs.forEach((uuid) => children.add(loadedObjects[uuid]));
     }
-    
-    parent.childrenUUIDs.forEach((uuid) => children.add(loadedObjects[uuid]));
     return children;
-  }
-
-  // Performs an action on the arc given by the 'parent' parameter
-  // Flag determines which function to perform with the arc
-  dynamic updateArcView(Arc parent, String flag){
-    //flag conditions: getChildren, ...
-    if (flag == "getChildren"){
-      print(parent.title);
-      getChildren(parent);
-    } else if (flag == "add") {
-      _arcViewController.add(parent);
-    } else if (flag == "getParent"){
-        //get parent
-    } else if (flag == "getParentSiblings"){
-      // get parent's siblings
-    }
-    /*else if... */
   }
 
   // Closes the stream controller

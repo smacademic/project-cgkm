@@ -85,6 +85,7 @@ Widget arcTile(Arc arc, BuildContext context) {
 
   return Container(
     decoration: BoxDecoration(
+      color: Colors.grey[300],
       border: Border(
         bottom: BorderSide(),
         top: BorderSide(),
@@ -132,6 +133,13 @@ Widget arcTile(Arc arc, BuildContext context) {
 
 Widget taskTile(Task task, BuildContext context) {
   return Container(
+    decoration: BoxDecoration(
+      color: Colors.grey[300],
+      border: Border(
+        bottom: BorderSide(),
+        top: BorderSide(),
+      ),
+    ),
     height: MediaQuery.of(context).size.height * 0.15,
     child: ListTile(
       title: Column(
