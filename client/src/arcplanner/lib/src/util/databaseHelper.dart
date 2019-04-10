@@ -128,6 +128,42 @@ class DatabaseHelper {
         await dbClient.rawQuery("SELECT COUNT(*) FROM $_userTable"));
   }
 
+  // returns a list of Arcs with no parent. Highest level Arcs
+  Future<List<Map>> getMasterArcs() async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc IS NULL');
+  }
+
+  // pulls a single Arc from db given a UUID
+  Future<List<Map>> getArc(String uuid) async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT 1 FROM Arc WHERE AID = $uuid',);
+  } 
+
+  // pulls a single Task from db given a UUID
+  Future<List<Map>> getTask(String uuid) async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT 1 FROM Task WHERE TID = $uuid');
+  }
+
+  Future<List<Map>> getChildren(String uuid) async {
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = $uuid');
+    list.addAll(await dbClient.rawQuery('SELECT * FROM Task WHERE ParentArc = $uuid'));
+    return list;
+  }
+
+  // pulls all Arcs and Tasks out of the database and creates objects out of them
+  Future<List<Map>> getArcList() async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT * FROM Arc');
+  } 
+
+  Future<List<Map>> getTaskList() async {
+    var dbClient = await db;
+    return await dbClient.rawQuery('SELECT * FROM Task');
+  }
+
   // -----Insert, update and remove ops for task-----
 
   // Inserts a new task to the DB using a Task object as an input

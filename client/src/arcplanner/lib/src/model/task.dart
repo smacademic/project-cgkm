@@ -18,13 +18,25 @@ class Task {
   bool _completed;
 
   // Constructor
-  Task(this._aid, this._title,
-      {description = null, dueDate = null, location = null}) {
+  Task(this._aid, this._title, {description, dueDate, location}) {
     this._tid = new Uuid().v4();
     this._description = description;
     this._dueDate = dueDate;
     this._location = location;
     this._completed = false;
+  }
+
+  // Constructor to build object read from database
+  Task.read(this._tid, this._aid, this._title, 
+      {description, dueDate, location, completed}) {
+    this._description = description;
+    this._dueDate = duedate;
+    this._location = location;
+    if (completed == 'true') {
+      this._completed = true;
+    } else {
+      this._completed = false;
+    }
   }
 
   // Defines a user map.  Helps with moving info betwen the db
