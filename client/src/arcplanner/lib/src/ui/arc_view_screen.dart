@@ -8,7 +8,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 class ArcViewScreen extends StatelessWidget {
 
   _toTaskView(Task task) {
-
   }
 
   Widget build(context) {
@@ -22,17 +21,22 @@ class ArcViewScreen extends StatelessWidget {
             child: StreamBuilder(
               stream: bloc.arcViewStream,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  dynamic snapshotData = snapshot.data;
-                  return ListView.builder(
-                    itemCount: snapshotData.length,
-                    itemBuilder: (context, index) {
-                      return tile(snapshotData[index], context);
-                    },
-                  );
-                } else {
-                  return Text('There are no Arcs/Tasks');
-                }
+                return new FutureBuilder(
+                  future: snapshot.data,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                    dynamic snapshotData = snapshot.data;
+                    return ListView.builder(
+                      itemCount: snapshotData.length,
+                      itemBuilder: (context, index) {
+                        return tile(snapshotData[index], context);
+                      },
+                    );
+                    } else {
+                      return Text('There are no Arcs/Tasks');
+                    }
+                  },
+                );
               },
             ),
           ),
@@ -76,14 +80,18 @@ class ArcViewScreen extends StatelessWidget {
 Widget arcTile(Arc arc, BuildContext context) {
   var description = arc.description;
   if (description == null) {
-    description = 'Tidy up.';
+    description = '';
   }
 
   return Container(
     decoration: BoxDecoration(
       border: Border(
-        bottom: BorderSide(),
-        top: BorderSide(),
+        bottom: BorderSide(
+          color: Colors.grey[350],
+        ),
+        top: BorderSide(
+          color: Colors.grey[350],
+        ),
       ),
     ),
     height: MediaQuery.of(context).size.height * 0.20,
@@ -93,19 +101,25 @@ Widget arcTile(Arc arc, BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(
+              top: 10.0,
+              bottom: 10.0,
+            ),
             child: AutoSizeText(arc.title,
               style: TextStyle(
                 color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
-              maxFontSize: 20.0,
-              minFontSize: 16.0,
+              maxFontSize: 24.0,
+              minFontSize: 18.0,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(
+              bottom: 10.0,
+            ),
             child: AutoSizeText(description,
               style: TextStyle(
                 color: Colors.black,
@@ -119,7 +133,7 @@ Widget arcTile(Arc arc, BuildContext context) {
         ],
       ),
       onTap: () {
-        bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+        bloc.arcViewInsert({ 'object' : arc, 'flag': 'getChildren'});
       } 
       //onLongPress: ,
     ),
@@ -127,7 +141,22 @@ Widget arcTile(Arc arc, BuildContext context) {
 }
 
 Widget taskTile(Task task, BuildContext context) {
+  var description = task.description;
+  if (description == null) {
+    description = '';
+  }
+
   return Container(
+    decoration: BoxDecoration(
+      border: Border(
+        bottom: BorderSide(
+          color: Colors.grey[350],
+        ),
+        top: BorderSide(
+          color: Colors.grey[350],
+        ),
+      ),
+    ),
     height: MediaQuery.of(context).size.height * 0.15,
     child: ListTile(
       title: Column(
@@ -136,7 +165,10 @@ Widget taskTile(Task task, BuildContext context) {
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width * 0.7,
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10.0,
+                ),
                 child: AutoSizeText(task.title,
                   maxFontSize: 20.0,
                   minFontSize: 16.0,
@@ -145,7 +177,9 @@ Widget taskTile(Task task, BuildContext context) {
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.only(
+                  bottom: 10.0,
+                ),
                 child: AutoSizeText(task.duedate,
                   maxFontSize: 20.0,
                   minFontSize: 16.0,
@@ -190,6 +224,7 @@ Widget tile(dynamic obj, BuildContext context) {
   } else if (obj is Task) {
     return taskTile(obj, context);
   } else {
+    print(obj);
     return Text('tile tried to build not an Arc or Task');
   }
 }
