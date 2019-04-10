@@ -13,59 +13,63 @@ class ArcViewScreen extends StatelessWidget {
 
   Widget build(context) {
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
+    return Scaffold(
+      backgroundColor: Colors.white,
 
-        body: StreamBuilder(
-          stream: bloc.arcViewStream,
-          builder: (context, snapshot) {
-            dynamic snapshotData = snapshot.data;
-            if (snapshotData != null) {
-              print('length is '+ snapshotData.length.toString());
-              print(snapshotData);
-              return ListView.builder(
-                itemCount: snapshotData.length,
-                itemBuilder: (context, index) {
-                  tile(snapshot.data[index], context);
-                },
-              );
-            } else {
-              return Text('There are no Arcs/Tasks');
-            }
-          },
-        ),
-
-        drawer: drawerMenu(context),
-
-        bottomNavigationBar: BottomAppBar(
-          color: Colors.blue,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              RaisedButton(
-                child: Text('New Task'),
-                color: Colors.white,
-                textColor: Colors.blue,
-                // Needs to open New Task dialog
-                onPressed: () {},
-              ),
-              RaisedButton(
-                child: Text('New Arc'),
-                color: Colors.white,
-                textColor: Colors.blue,
-                // Needs to open New Arc dialog
-                onPressed: () {},
-              ),
-            ],
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: StreamBuilder(
+              stream: bloc.arcViewStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  dynamic snapshotData = snapshot.data;
+                  print('length is '+ snapshotData.length.toString());
+                  print(snapshotData);
+                  return ListView.builder(
+                    itemCount: snapshotData.length,
+                    itemBuilder: (context, index) {
+                      return tile(snapshotData[index], context);
+                    },
+                  );
+                } else {
+                  return Text('There are no Arcs/Tasks');
+                }
+              },
+            ),
           ),
-        ),
+        ],
+      ),
 
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+      drawer: drawerMenu(context),
+
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.blue,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            RaisedButton(
+              child: Text('New Task'),
+              color: Colors.white,
+              textColor: Colors.blue,
+              // Needs to open New Task dialog
+              onPressed: () {},
+            ),
+            RaisedButton(
+              child: Text('New Arc'),
+              color: Colors.white,
+              textColor: Colors.blue,
+              // Needs to open New Arc dialog
+              onPressed: () {},
+            ),
+          ],
         ),
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
     );
   }
@@ -74,19 +78,27 @@ class ArcViewScreen extends StatelessWidget {
 Widget arcTile(Arc arc, BuildContext context) {
   var description = arc.description;
   if (description == null) {
-    description = '';
+    description = 'Need to get on your hands and knees and scrub the living FUCK out your floors.';
   }
 
   print('inside tile:' + arc.title);
 
   return Container(
-    height: MediaQuery.of(context).size.height * 0.15,
+    decoration: BoxDecoration(
+      border: Border.all(),
+    ),
+    height: MediaQuery.of(context).size.height * 0.20,
     child: ListTile(
       title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
             padding: EdgeInsets.all(10),
             child: AutoSizeText(arc.title,
+              style: TextStyle(
+                color: Colors.black,
+              ),
               maxFontSize: 20.0,
               minFontSize: 16.0,
               maxLines: 1,
@@ -96,6 +108,9 @@ Widget arcTile(Arc arc, BuildContext context) {
           Container(
             padding: EdgeInsets.all(10),
             child: AutoSizeText(description,
+              style: TextStyle(
+                color: Colors.black,
+              ),
               maxFontSize: 16.0,
               minFontSize: 12.0,
               maxLines: 4,
@@ -106,7 +121,7 @@ Widget arcTile(Arc arc, BuildContext context) {
       ),
       //onTap: bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'}),
       //onLongPress: ,
-    )
+    ),
   );
 }
 
