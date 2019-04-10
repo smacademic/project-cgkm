@@ -1,43 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:arcplanner/ui/login_screen.dart';
-import 'package:arcplanner/ui/loading_screen.dart';
-import 'package:arcplanner/ui/about_screen.dart';
-import 'package:arcplanner/ui/home_screen.dart';
-import 'package:arcplanner/ui/settings_screen.dart';
-
-
-/// Observer for tracking page changes
-final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
-
+import 'src/arcplanner.dart';
 
 void main() {
   runApp(ArcPlanner());
 }
 
-class ArcPlanner extends StatelessWidget {
-  static LoginScreen loginScreen = LoginScreen();
-  static LoadingScreen loadingScreen = LoadingScreen();
-  static AboutScreen aboutScreen = AboutScreen();
-  static HomeScreen homeScreen = HomeScreen();
-  static SettingsScreen settingsScreen = SettingsScreen();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ArcPlanner',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: loginScreen,  //setting home as 'homeScreen' for app development
-      // Sets up the routes the Navigator can go through
-      routes: <String, WidgetBuilder> {
-        '/login': (BuildContext context) => loginScreen,
-        '/loading': (BuildContext context) => loadingScreen,
-        '/about': (BuildContext context) => aboutScreen,
-        '/home': (BuildContext context) => homeScreen,
-        '/settings': (BuildContext context) => settingsScreen,
-      },
-      navigatorObservers: [routeObserver],
-    );
-  }
-}
+// import 'src/model/arc.dart';
+// import 'src/model/task.dart';
+// import 'src/model/user.dart';
+// import 'src/util/databaseHelper.dart';
+
+// void main () async {
+
+//   var db = new DatabaseHelper();
+
+//   //add user, arc, task
+//   User sally2 = new User("sally2", "seashell2s", "t2his@that.com");
+//   Arc getOrganized = new Arc( sally2.uid,"Another Amazing Title",description: "WOW, That's Amazing");
+//   await db.insertArc(getOrganized);
+  
+//   db.close();
+// }

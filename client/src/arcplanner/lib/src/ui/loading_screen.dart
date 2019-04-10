@@ -7,22 +7,9 @@
 */
 
 import 'package:flutter/material.dart';
-//import 'package:arcplanner/main.dart';
 
-class LoadingScreen extends StatefulWidget {
-  final String title;
-
-  LoadingScreen({Key key, this.title}) : super(key: key);
-
-  @override
-  _LoadingScreenState createState() => _LoadingScreenState();
-}
-
-class _LoadingScreenState extends State<LoadingScreen> {
-  _LoadingScreenState();
-
-  @override
-  Widget build(BuildContext context) {
+class LoadingScreen extends StatelessWidget {
+  Widget build(context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
