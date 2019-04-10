@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
-       body: ListView(
+      body: ListView(
         children: ListTile.divideTiles(
           context: context,
           tiles: [
@@ -20,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
             settingThree(),
           ],
         ).toList(),
-       ),
+      ),
     );
   }
 }

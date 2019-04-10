@@ -41,8 +41,7 @@ class Bloc {
         map['Location'], completed: map['Completed']);
   }
 
-  // Takes a task or arc as an argument and places it into their respective
-  //  maps
+  // Takes a task or arc as an argument and places it into their respective maps
   insertObjectIntoMap(Map map) {
     if (map.containsKey('TID')) {
       loadedObjects[map['TID']] = toTask(map);
@@ -51,6 +50,7 @@ class Bloc {
     }
   }
 
+  // Takes in a list of Arc/Task maps and inserts each into loadedObjects
   insertListIntoMap(List<Map> list) {
     for (Map map in list) {
       insertObjectIntoMap(map);

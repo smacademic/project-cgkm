@@ -3,8 +3,6 @@
  * team-CGKM
  * CS 298 - Software DevOps; Spring 2019
  * 
- * File: about_screen.dart
- * 
  * Purpose:
  *  This screen contains basic information about the application, as well as 
  *  listing the developers that assisted in its development.

@@ -1,7 +1,8 @@
 /** Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- *  CS298 Spring 2019 Team CGKM 
+ *  Team CGKM 
+ *  CS298 Spring 2019 
  * 
- * Provided AS IS. No warranties expressed or implied. Use at your own risk.
+ *  Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
 import 'dart:io';
@@ -69,6 +70,7 @@ class DatabaseHelper {
     return arcDb;
   }
 
+  // Creates database tables
   void _onCreate(Database db, int version) async {
     await db.execute("""
         CREATE TABLE $_userTable(
@@ -146,6 +148,7 @@ class DatabaseHelper {
     return await dbClient.rawQuery('SELECT 1 FROM Task WHERE TID = $uuid');
   }
 
+  // given a UUID, returns a list of mapped children
   Future<List<Map>> getChildren(String uuid) async {
     var dbClient = await db;
     List<Map> list = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = $uuid');
@@ -159,6 +162,7 @@ class DatabaseHelper {
     return await dbClient.rawQuery('SELECT * FROM Arc');
   } 
 
+  
   Future<List<Map>> getTaskList() async {
     var dbClient = await db;
     return await dbClient.rawQuery('SELECT * FROM Task');
@@ -195,7 +199,7 @@ class DatabaseHelper {
         await dbClient.rawQuery("SELECT COUNT(*) FROM $_taskTable"));
   }
   
-  // -----Insert, update and remove ops for ark-----
+  // -----Insert, update and remove ops for arc-----
 
   // Inserts a new arc to the DB using a Arc object as an input
   Future<int> insertArc(Arc ar) async {
@@ -230,5 +234,4 @@ class DatabaseHelper {
     var dbClient = await db;
     return dbClient.close();
   }
-  
 }
