@@ -13,6 +13,7 @@ class Bloc {
     initMap();
   }
   
+  // Load the BLoC with records from the database to be used by the app
   void initMap() async {
     insertListIntoMap(await db.getMasterArcs());
     List<Arc> initialList = new List();
@@ -22,7 +23,7 @@ class Bloc {
     _arcViewController.add({'object': initialList, 'flag': "add"});
   }
 
-  // Takes in 
+  // Create stream and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
   Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
   
@@ -38,18 +39,21 @@ class Bloc {
     }
   }
   
+  // Reads from the DB and returns an Arc object
   Arc toArc(Map map) {
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
         map['Description'], parentArc: map['ParentArc'], completed: 
         map['Completed']);
   }
 
+  // Reads from the DB and returns a Task object
   Task toTask(Map map) {
     return Task.read(map['TID'], map['AID'], map['Title'], description: 
         map['Description'], dueDate: map['DueDate'], location: 
         map['Location'], completed: map['Completed']);
   }
 
+  // Takes a task or arc as an argument and places it into their respective maps
   dynamic insertObjectIntoMap(Map map) {
     if (map.containsKey('TID')) {
       Task task = toTask(map);
@@ -70,6 +74,7 @@ class Bloc {
     return objects;
   }
 
+  // Determines whether the given UUID exists within the map
   bool checkMap(String uuid) {
     if (loadedObjects.containsKey(uuid)) {
       return true;
@@ -107,6 +112,8 @@ class Bloc {
     return children;
   }
 
+  // Performs an action on the arc given by the 'parent' parameter
+  // Flag determines which function to perform with the arc
   dynamic updateArcView(Arc parent, String flag){
     //flag conditions: getChildren, ...
     if (flag == "getChildren"){
@@ -122,6 +129,7 @@ class Bloc {
     /*else if... */
   }
 
+  // Closes the stream controller
   dispose() {
     _arcViewController.close();
   }
