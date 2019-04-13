@@ -3,6 +3,8 @@ import 'dart:async';
 import '../model/arc.dart';
 import '../model/task.dart';
 import '../util/databaseHelper.dart';
+import 'package:rxdart/rxdart.dart';
+
 
 class Bloc {
   final DatabaseHelper db = DatabaseHelper();
@@ -25,8 +27,29 @@ class Bloc {
 
   // Create stream and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
-  Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+  final _arcLocationFieldController = BehaviorSubject<dynamic>();
+  final _arcTitleFieldController = BehaviorSubject<dynamic>();
+  final _arcEndDateFieldController = BehaviorSubject<dynamic>();
+  final _arcDescriptionFieldController = BehaviorSubject<dynamic>();
   
+  Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+
+  Stream<dynamic> get arcLocationFieldStream => _arcLocationFieldController.stream;
+
+  Stream<dynamic> get arcTitleFieldStream => _arcTitleFieldController.stream;
+
+  Stream<dynamic> get arcEndDateFieldStream => _arcEndDateFieldController.stream;
+
+  Stream<dynamic> get arcDescriptionFieldStream => _arcDescriptionFieldController.stream;
+
+  //Stream<bool> get submitValidArc =>
+    //  Observable.combineLatest4(arcLocationFieldStream, arcTitleFieldStream, ///arcEndDateFieldStream, arcDescriptionFieldStream, (l, t, e, d) => true);
+
+  Function(String) get changeLocation => _arcLocationFieldController.sink.add;
+  Function(String) get changeTitle => _arcTitleFieldController.sink.add;
+  Function(String) get changeEndDate => _arcEndDateFieldController.sink.add;
+  Function(String) get changeDescription => _arcDescriptionFieldController.sink.add;
+
   void arcViewInsert(dynamic obj) {
     _arcViewController.sink.add(obj);
   } 
@@ -114,8 +137,20 @@ class Bloc {
     return children;
   }
 
+  submitArc() {
+    final arcLoc = _arcLocationFieldController.value;
+    final arcTitle = _arcTitleFieldController.value;
+    final arcEndDate = _arcEndDateFieldController.value;
+    final arcDescription = _arcEndDateFieldController.value;
+  }
+
   // Closes the stream controller
   dispose() {
+    _arcViewController.close();
+    _arcDescriptionFieldController.close();
+    _arcEndDateFieldController.close();
+    _arcLocationFieldController.close();
+    _arcTitleFieldController.close();
     _arcViewController.close();
   }
 }
