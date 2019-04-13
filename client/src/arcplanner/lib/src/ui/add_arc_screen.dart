@@ -11,11 +11,26 @@ class AddArcScreen extends StatelessWidget {
         margin: EdgeInsets.all(20.0),
         child: Column(
           children:[
+            Container(margin: EdgeInsets.only(top: 20)),
             locationField(),
             titleField(), //name
-            endDate(),
+            //endDate(),
             descriptionField(),
-            Container(margin: EdgeInsets.only(top: 25)),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.blue,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            RaisedButton(
+              child: Text('Cancel'),
+              color: Colors.white,
+              textColor: Colors.blue,
+              // Needs to open New Task dialog
+              onPressed: () {Navigator.pop(context);},
+            ),
             submitArc(),
           ],
         ),
@@ -34,6 +49,7 @@ class AddArcScreen extends StatelessWidget {
         //Description
         return TextField(
           onChanged: bloc.changeTitle,
+          keyboardType: TextInputType.datetime,
           decoration: InputDecoration(
             hintText: 'Location'
             //errorText: snapshot.error,
@@ -53,9 +69,10 @@ class AddArcScreen extends StatelessWidget {
       //Description
       return TextField(
         onChanged: bloc.changeTitle,
+        keyboardType: TextInputType.text,
         decoration: InputDecoration(
-          hintText: 'Title'
-          //errorText: snapshot.error,
+          hintText: 'Title',
+          errorText: snapshot.error,
         ),
       );
     }
@@ -91,10 +108,11 @@ Widget descriptionField(){
       //Description
       return TextField(
         maxLines: 7,
-        onChanged: bloc.changeTitle,
+        onChanged: bloc.changeDescription,
+        keyboardType: TextInputType.multiline,
         decoration: InputDecoration(
-          hintText: 'Description'
-          //errorText: snapshot.error,
+          hintText: 'Description',
+          errorText: snapshot.error,
         ),
       );
     }
@@ -107,12 +125,23 @@ Widget submitArc() {
     builder: (context, snapshot){
       return RaisedButton(
         child: Text('Submit'),
-        color: Colors.blue,
-        onPressed: () {
-            snapshot.hasData ? bloc.submitArc() : null;
-            Navigator.pop(context);
+        color: Colors.white,
+        textColor: Colors.blue,
+        onPressed: snapshot.hasData ? (){ 
+          bloc.submitArc;
+          Navigator.pop(context);
           }
-        );
-      },
+        :  null //(){print(snapshot.data);
+        //}
+        /*(){
+          if(snapshot.hasData) {
+             bloc.submitArc();
+            Navigator.pop(context);
+          } else {null;}
+          
+        },
+        */
+      );
+    },
   );
 }
