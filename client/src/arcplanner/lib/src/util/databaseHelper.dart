@@ -139,7 +139,7 @@ class DatabaseHelper {
   // pulls a single Arc from db given a UUID
   Future<List<Map>> getArc(String uuid) async {
     var dbClient = await db;
-    return await dbClient.rawQuery('SELECT 1 FROM Arc WHERE AID = $uuid',);
+    return await dbClient.rawQuery('SELECT 1 FROM Arc WHERE AID = $uuid');
   } 
 
   // pulls a single Task from db given a UUID
@@ -151,9 +151,27 @@ class DatabaseHelper {
   // given a UUID, returns a list of mapped children
   Future<List<Map>> getChildren(String uuid) async {
     var dbClient = await db;
-    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
-    List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"');
-    return new List.from(arcList)..addAll(taskList);
+    List<Map> arcList = await dbClient.rawQuery("""
+      SELECT UID, AID, Title, Description, ParentArc, Completed, 
+        ( group_concat (
+          SELECT AID
+          FROM Arc
+          WHERE ParentArc = "$uuid" AND IS NOT NULL
+          UNION
+          SELECT TID
+          FROM Task
+          WHERE AID = "$uuid"
+        )) AS ChildrenUUIDs
+      FROM Arc 
+      WHERE AID = "$uuid"
+      """);
+
+    if (uuid != null) {
+      List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"');
+      return new List.from(arcList)..addAll(taskList);
+    } else
+      return arcList;
+      
   }
 
   // pulls all Arcs and Tasks out of the database and creates objects out of them

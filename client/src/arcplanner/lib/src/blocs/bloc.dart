@@ -93,14 +93,14 @@ class Bloc {
   // Checks to see if children are in map. If they exist in map then send them
   //  back via stream. Otherwise load them from database and into map. Then
   //  to the UI via stream
-  Future<List<dynamic>> getChildren (Arc parent) async {
+  Future<List<dynamic>> getChildren (String parentUUID) async {
     List<dynamic> children;
 
     // Get first child UUID and see if it exists. If and only if at 
     //  least 1 child exists in map then all children exists
     if (parent.childrenUUIDs.isEmpty) { // Key does not exist in map yet or doesn't have children
       // Add all children to map
-      children = insertListIntoMap(await db.getChildren(parent.aid));
+      children = insertListIntoMap(await db.getChildren(parentUUID));
       children.forEach((object) {
         if (object is Arc) {
           parent.childrenUUIDs.add(object.aid);

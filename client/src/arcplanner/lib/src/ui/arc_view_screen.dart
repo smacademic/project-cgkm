@@ -11,6 +11,7 @@ class ArcViewScreen extends StatelessWidget {
   }
 
   Widget build(context) {
+    String currentParent = "Home";
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -70,7 +71,11 @@ class ArcViewScreen extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context);
+          if (currentParent == "Home") {
+            Navigator.pop(context);
+          } else {
+            bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
+          }
         },
       ),
     );
