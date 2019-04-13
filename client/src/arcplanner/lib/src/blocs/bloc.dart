@@ -9,7 +9,7 @@ import 'package:rxdart/rxdart.dart';
 class Bloc {
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
-
+  
   // Constructor
   Bloc() {
     initMap();
@@ -42,8 +42,8 @@ class Bloc {
 
   Stream<dynamic> get arcDescriptionFieldStream => _arcDescriptionFieldController.stream;
 
-  //Stream<bool> get submitValidArc =>
-    //  Observable.combineLatest4(arcLocationFieldStream, arcTitleFieldStream, ///arcEndDateFieldStream, arcDescriptionFieldStream, (l, t, e, d) => true);
+  Stream<bool> get submitValidArc =>
+      Observable.combineLatest4(arcLocationFieldStream, arcTitleFieldStream, arcEndDateFieldStream, arcDescriptionFieldStream, (l, t, e, d) => true);
 
   Function(String) get changeLocation => _arcLocationFieldController.sink.add;
   Function(String) get changeTitle => _arcTitleFieldController.sink.add;
@@ -142,6 +142,10 @@ class Bloc {
     final arcTitle = _arcTitleFieldController.value;
     final arcEndDate = _arcEndDateFieldController.value;
     final arcDescription = _arcEndDateFieldController.value;
+
+
+    //TODO create arc with new data
+    //TODO insert to new arc
   }
 
   // Closes the stream controller
