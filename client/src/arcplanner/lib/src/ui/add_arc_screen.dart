@@ -14,7 +14,9 @@ class AddArcScreen extends StatelessWidget {
             locationField(),
             titleField(), //name
             endDate(),
-            descriptionField()
+            descriptionField(),
+            Container(margin: EdgeInsets.only(top: 25)),
+            submitArc(),
           ],
         ),
       ),
@@ -88,7 +90,7 @@ Widget descriptionField(){
       //End date
       //Description
       return TextField(
-        maxLines: 10,
+        maxLines: 7,
         onChanged: bloc.changeTitle,
         decoration: InputDecoration(
           hintText: 'Description'
@@ -99,4 +101,18 @@ Widget descriptionField(){
   );
 }
 
-
+Widget submitArc() {
+  return StreamBuilder(
+    stream: bloc.submitValidArc, 
+    builder: (context, snapshot){
+      return RaisedButton(
+        child: Text('Submit'),
+        color: Colors.blue,
+        onPressed: () {
+            snapshot.hasData ? bloc.submitArc() : null;
+            Navigator.pop(context);
+          }
+        );
+      },
+  );
+}
