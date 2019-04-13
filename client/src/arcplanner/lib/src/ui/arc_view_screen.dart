@@ -62,7 +62,9 @@ class ArcViewScreen extends StatelessWidget {
               color: Colors.white,
               textColor: Colors.blue,
               // Needs to open New Arc dialog
-              onPressed: () {},
+              onPressed: () {
+                Navigator.popAndPushNamed(context, '/addarc'); 
+              },
             ),
           ],
         ),
