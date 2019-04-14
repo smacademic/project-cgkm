@@ -4,8 +4,6 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
-import 'task.dart';
-import '../util/databaseHelper.dart';
 import 'package:uuid/uuid.dart';
 
 class Arc {
@@ -28,9 +26,10 @@ class Arc {
 
   // Constructor to build object read from database
   Arc.read(this._uid, this._aid, this._title, 
-      {description, parentArc, completed}) {
+      {description, parentArc, completed, childrenUUIDs}) {
     this._description = description;
     this._parentArc = parentArc;
+    this.childrenUUIDs = childrenUUIDs?.split(",");
     if (completed == '1') {
       this._completed = true;
     } else {

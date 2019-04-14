@@ -138,7 +138,7 @@ Widget arcTile(Arc arc, BuildContext context) {
         ],
       ),
       onTap: () {
-        bloc.arcViewInsert({ 'object' : arc, 'flag': 'getChildren'});
+        bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
       } 
       //onLongPress: ,
     ),

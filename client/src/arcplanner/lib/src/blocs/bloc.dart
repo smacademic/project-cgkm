@@ -45,7 +45,7 @@ class Bloc {
   Arc toArc(Map map) {
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
         map['Description'], parentArc: map['ParentArc'], completed: 
-        map['Completed']);
+        map['Completed'], childrenUUIDs: map['ChildrenUUIDs']);
   }
 
   // Reads from the DB and returns a Task object
@@ -68,6 +68,8 @@ class Bloc {
     }
   }
 
+  // Inserts a map of Arcs/Tasks into the map using insertObjectIntoMap for
+  //   each object in list.
   List<dynamic> insertListIntoMap(List<Map> list) {
     List<dynamic> objects = List<dynamic>(); 
     for (Map map in list) {
@@ -85,9 +87,8 @@ class Bloc {
     }
   }
 
-  // Using the UUID the associated object is sent to the arcViewController
-  sendToArcView(List<dynamic> listOfObjects) {
-    _arcViewController.add(listOfObjects);
+  dynamic getFromMap(String uuid) {
+    return loadedObjects[uuid];
   }
 
   // Checks to see if children are in map. If they exist in map then send them
@@ -96,20 +97,22 @@ class Bloc {
   Future<List<dynamic>> getChildren (String parentUUID) async {
     List<dynamic> children;
 
-    // Get first child UUID and see if it exists. If and only if at 
-    //  least 1 child exists in map then all children exists
-    if (parent.childrenUUIDs.isEmpty) { // Key does not exist in map yet or doesn't have children
-      // Add all children to map
-      children = insertListIntoMap(await db.getChildren(parentUUID));
-      children.forEach((object) {
-        if (object is Arc) {
-          parent.childrenUUIDs.add(object.aid);
-        } else {
-          parent.childrenUUIDs.add(object.tid);
-        }
-      });
+    Arc parent = getFromMap(parentUUID);
+    
+    // If childrenUUIDs is empty then it has no children
+    if (parent.childrenUUIDs?.isEmpty ?? true) { // Key does not exist in map yet or doesn't have children
+      return null;
     } else {
-      parent.childrenUUIDs.forEach((uuid) => children.add(loadedObjects[uuid]));
+      // If Children exist in map already
+      for (String uuid in parent.childrenUUIDs) {
+        if (checkMap(uuid))
+          children.add(getFromMap(uuid));
+        else
+          // If one child UUID is missing use query to get all children and
+          //  add to map. This is to avoid many queries if large list of children
+          children = insertListIntoMap(await db.getChildren(parentUUID));
+          break;
+      }
     }
     return children;
   }
