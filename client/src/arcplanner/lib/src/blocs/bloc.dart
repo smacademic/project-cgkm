@@ -36,6 +36,7 @@ class Bloc extends Object with Validators {
   final _arcTitleFieldController = BehaviorSubject<String>();
   final _arcEndDateFieldController = BehaviorSubject<String>();
   final _arcDescriptionFieldController = BehaviorSubject<String>();
+  final _arcParentFieldController = BehaviorSubject<Arc>();
   
   Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
 
@@ -48,6 +49,8 @@ class Bloc extends Object with Validators {
 
   Stream<String> get arcDescriptionFieldStream => _arcDescriptionFieldController.stream;
 
+  Stream<Arc> get arcParentFieldStream => _arcParentFieldController.stream;
+
   Stream<bool> get submitValidArc =>
       Observable.combineLatest2(arcTitleFieldStream, 
     arcDescriptionFieldStream, (t, d) => true);
@@ -57,6 +60,7 @@ class Bloc extends Object with Validators {
   Function(String) get changeTitle => _arcTitleFieldController.sink.add;
   Function(String) get changeEndDate => _arcEndDateFieldController.sink.add;
   Function(String) get changeDescription => _arcDescriptionFieldController.sink.add;
+  Function(Arc) get changeParent => _arcParentFieldController.sink.add;
 
   void arcViewInsert(dynamic obj) {
     _arcViewController.sink.add(obj);
@@ -169,6 +173,7 @@ class Bloc extends Object with Validators {
     _arcLocationFieldController.close();
     _arcTitleFieldController.close();
     _arcViewController.close();
+    _arcParentFieldController.close();
   }
 }
 
