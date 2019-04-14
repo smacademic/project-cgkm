@@ -146,6 +146,16 @@ Widget taskTile(Task task, BuildContext context) {
     description = '';
   }
 
+  var dueDate = task.duedate;
+  if (dueDate == null) {
+    dueDate = '';
+  }
+
+  var location = task.location;
+  if (location == null) {
+    location = '';
+  }
+
   return Container(
     decoration: BoxDecoration(
       border: Border(
@@ -180,7 +190,7 @@ Widget taskTile(Task task, BuildContext context) {
                 padding: EdgeInsets.only(
                   bottom: 10.0,
                 ),
-                child: AutoSizeText(task.duedate,
+                child: AutoSizeText(dueDate,
                   maxFontSize: 20.0,
                   minFontSize: 16.0,
                   maxLines: 1,
@@ -193,13 +203,13 @@ Widget taskTile(Task task, BuildContext context) {
             padding: EdgeInsets.all(10),
             child: Column(
               children: <Widget>[
-                AutoSizeText(task.location,
+                AutoSizeText(location,
                   maxFontSize: 16.0,
                   minFontSize: 8.0,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                AutoSizeText(task.description,
+                AutoSizeText(description,
                   maxFontSize: 14.0,
                   minFontSize: 10.0,
                   maxLines: 4,
