@@ -169,7 +169,6 @@ class DatabaseHelper {
   Future<List<Map>> getChildren(String uuid) async {
     var dbClient = await db;
     List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
-
     if (uuid != null) {
       List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"');
       return new List.from(arcList)..addAll(taskList);

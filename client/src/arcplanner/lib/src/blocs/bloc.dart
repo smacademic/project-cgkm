@@ -10,18 +10,18 @@ class Bloc {
 
   // Constructor
   Bloc() {
-    initMap();
+    //initArcView();
   }
   
   // Load the BLoC with records from the database to be used by the app
-  void initMap() async {
+  void initArcView() async {
     insertListIntoMap(await db.getMasterArcs());
     List<Arc> initialList = new List();
     loadedObjects.forEach((key, value) {
       initialList.add(value);
     });
-    _arcViewController.add({'object': initialList, 'flag': "add"});
   }
+
 
   // Create stream and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
@@ -38,6 +38,9 @@ class Bloc {
       return await data['object'];
     } else if (data['flag'] == "getChildren") {
       return await getChildren(data['object']);
+    } else if (data['flag'] == "backButton") {
+      Arc parent = getFromMap(data['object']);
+      return await getChildren(parent.parentArc);
     }
   }
   
@@ -95,7 +98,14 @@ class Bloc {
   //  back via stream. Otherwise load them from database and into map. Then
   //  to the UI via stream
   Future<List<dynamic>> getChildren (String parentUUID) async {
-    List<dynamic> children;
+    List<dynamic> children = new List();
+
+
+    // If there is no supplied UUID supply parentArc = null, the masterArcs
+    if (parentUUID == null) {
+      children = insertListIntoMap(await db.getMasterArcs());
+      return children;
+    }
 
     Arc parent = getFromMap(parentUUID);
     
@@ -105,13 +115,15 @@ class Bloc {
     } else {
       // If Children exist in map already
       for (String uuid in parent.childrenUUIDs) {
-        if (checkMap(uuid))
+        if (checkMap(uuid)) {
           children.add(getFromMap(uuid));
-        else
+        }    
+        else {
           // If one child UUID is missing use query to get all children and
           //  add to map. This is to avoid many queries if large list of children
           children = insertListIntoMap(await db.getChildren(parentUUID));
           break;
+        }          
       }
     }
     return children;

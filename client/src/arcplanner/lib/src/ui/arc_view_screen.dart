@@ -6,12 +6,14 @@ import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class ArcViewScreen extends StatelessWidget {
+  static String currentParent = "Home";
 
   _toTaskView(Task task) {
   }
 
   Widget build(context) {
-    String currentParent = "Home";
+    bool firstTimeLoading = true;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -25,6 +27,10 @@ class ArcViewScreen extends StatelessWidget {
                 return new FutureBuilder(
                   future: snapshot.data,
                   builder: (context, snapshot) {
+                    if (firstTimeLoading) {
+                      bloc.arcViewInsert({ 'object' : null, 'flag': 'getChildren'});
+                      firstTimeLoading = false;
+                    }
                     if (snapshot.hasData) {
                     dynamic snapshotData = snapshot.data;
                     return ListView.builder(
@@ -71,10 +77,10 @@ class ArcViewScreen extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (currentParent == "Home") {
+          if (currentParent == null) {
             Navigator.pop(context);
           } else {
-            bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
+            bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
           }
         },
       ),
@@ -84,6 +90,10 @@ class ArcViewScreen extends StatelessWidget {
 
 Widget arcTile(Arc arc, BuildContext context) {
   var description = arc.description;
+
+  // TODO move to somewhere where it isnt called more then needed
+  ArcViewScreen.currentParent = arc.parentArc;
+  
   if (description == null) {
     description = '';
   }
