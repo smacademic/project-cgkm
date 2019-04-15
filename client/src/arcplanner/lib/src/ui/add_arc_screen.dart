@@ -33,8 +33,8 @@ class AddArcScreen extends StatelessWidget {
                   parentField(),
                   Flexible(
                     child: Container(
-                      width:MediaQuery.of(context).size.width * 0.4 , 
-                      child: arcList(),
+                      width:MediaQuery.of(context).size.width * 0.25 , 
+                      child: selectParent(),
                     ),
                   ),   
                 ]
@@ -134,42 +134,6 @@ Widget descriptionField(){
     );
  }
 
-Widget arcList() {
-  
-String _arcTitle;
-
-  return StreamBuilder(
-    stream: bloc.arcViewStream,
-    builder: (context, snapshot) {
-      return new FutureBuilder(
-        future: snapshot.data,
-        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasData) {
-          dynamic snapshotData = snapshot.data;
-          return DropdownButton<dynamic>(
-            value: _arcTitle,
-            onChanged: (value) {
-              bloc.changeParent(value);
-              print("$value");
-            },
-            isExpanded: true,
-            items: List<DropdownMenuItem<dynamic>>.generate(
-            snapshotData.length,
-              (int index) => DropdownMenuItem<dynamic>(
-                value: snapshotData[index],
-                child: Text(snapshotData[index].title),
-              ),
-            ),
-          );
-           } else {
-            return Text('There are no Arcs/Tasks');
-          }   
-        },
-      );
-    },
-  );
-}
-
 Widget arcTile(Arc arc, BuildContext context) {
   var description = arc.description;
   if (description == null) {
@@ -190,6 +154,17 @@ Widget arcTile(Arc arc, BuildContext context) {
     child: ListTile(
       title: Text(arc.title),
     ),
+  );
+}
+
+Widget selectParent(){
+  return RaisedButton(
+    child: Text('Select'),
+    color: Colors.blue,
+    textColor: Colors.white,
+    onPressed: (){
+    //TODO add call to new select_arc_screen
+   },
   );
 }
 
