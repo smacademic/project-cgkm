@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import '../blocs/bloc.dart';
-import 'drawer_menu.dart';
-import '../model/arc.dart';
 import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
