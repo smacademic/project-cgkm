@@ -9,18 +9,7 @@ class Bloc {
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
 
   // Constructor
-  Bloc() {
-    //initArcView();
-  }
-  
-  // Load the BLoC with records from the database to be used by the app
-  void initArcView() async {
-    insertListIntoMap(await db.getMasterArcs());
-    List<Arc> initialList = new List();
-    loadedObjects.forEach((key, value) {
-      initialList.add(value);
-    });
-  }
+  Bloc();  
 
 
   // Create stream and getters for views to interact with
@@ -41,6 +30,8 @@ class Bloc {
     } else if (data['flag'] == "backButton") {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
+    } else if (data['flag'] == "clear") {
+      return null;
     }
   }
   
@@ -90,6 +81,7 @@ class Bloc {
     }
   }
 
+  // Loads Arc or Task from loaded objects map given a UUID
   dynamic getFromMap(String uuid) {
     return loadedObjects[uuid];
   }

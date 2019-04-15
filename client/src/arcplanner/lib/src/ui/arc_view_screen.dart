@@ -7,6 +7,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 class ArcViewScreen extends StatelessWidget {
   static String currentParent = "Home";
+  static bool atNoArcTaskScreen = false;
 
   _toTaskView(Task task) {
   }
@@ -31,6 +32,7 @@ class ArcViewScreen extends StatelessWidget {
                       bloc.arcViewInsert({ 'object' : null, 'flag': 'getChildren'});
                       firstTimeLoading = false;
                     }
+                    
                     if (snapshot.hasData) {
                     dynamic snapshotData = snapshot.data;
                     return ListView.builder(
@@ -77,10 +79,15 @@ class ArcViewScreen extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (currentParent == null) {
+          if (currentParent == null && !atNoArcTaskScreen) {
             Navigator.pop(context);
           } else {
-            bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
+            if (atNoArcTaskScreen) {
+              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
+              atNoArcTaskScreen = false;
+            } 
+            else
+              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
           }
         },
       ),
@@ -148,7 +155,13 @@ Widget arcTile(Arc arc, BuildContext context) {
         ],
       ),
       onTap: () {
-        bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+        //If going to a screen that shows no children then set flag to true
+        if (arc.childrenUUIDs?.isEmpty ?? true) {
+          ArcViewScreen.atNoArcTaskScreen = true;
+          bloc.arcViewInsert({ 'object' : null, 'flag': 'clear'});
+        } else {
+          bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+        }
       } 
       //onLongPress: ,
     ),
@@ -249,7 +262,6 @@ Widget tile(dynamic obj, BuildContext context) {
   } else if (obj is Task) {
     return taskTile(obj, context);
   } else {
-    print(obj);
     return Text('tile tried to build not an Arc or Task');
   }
 }
