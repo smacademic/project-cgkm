@@ -8,7 +8,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 Widget taskTile(Task task, BuildContext context) {
   var description = task.description;
   if (description == null) {
-    description = '';
+    description = 'No Description';
   }
 
   var dueDate = task.duedate;
@@ -35,18 +35,25 @@ Widget taskTile(Task task, BuildContext context) {
     height: MediaQuery.of(context).size.height * 0.15,
     child: ListTile(
       title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                width: MediaQuery.of(context).size.width * 0.7,
                 padding: EdgeInsets.only(
                   top: 10.0,
                   bottom: 10.0,
                 ),
-                child: AutoSizeText(task.title,
-                  maxFontSize: 20.0,
-                  minFontSize: 16.0,
+                child: AutoSizeText(
+                  task.title,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxFontSize: 24.0,
+                  minFontSize: 18.0,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -55,40 +62,39 @@ Widget taskTile(Task task, BuildContext context) {
                 padding: EdgeInsets.only(
                   bottom: 10.0,
                 ),
-                child: AutoSizeText(dueDate,
-                  maxFontSize: 20.0,
-                  minFontSize: 16.0,
-                  maxLines: 1,
+                child: AutoSizeText(
+                  dueDate,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  maxFontSize: 16.0,
+                  minFontSize: 12.0,
+                  maxLines: 4,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
           Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: <Widget>[
-                AutoSizeText(location,
-                  maxFontSize: 16.0,
-                  minFontSize: 8.0,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                AutoSizeText(description,
-                  maxFontSize: 14.0,
-                  minFontSize: 10.0,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            padding: EdgeInsets.only(
+              bottom: 10.0,
+            ),
+            child: AutoSizeText(description,
+              style: TextStyle(
+                color: Colors.black,
+              ),
+              maxFontSize: 16.0,
+              minFontSize: 12.0,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
+          // onTap: () {
+          //   _toTaskView(task),
+          // }
+          // onLongPress: ,
         ],
       ),
-      // onTap: () {
-      //   _toTaskView(task),
-      // }  
-      // onLongPress: ,
-    )
+    ),
   );
 }
