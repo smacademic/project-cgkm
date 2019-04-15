@@ -2,22 +2,28 @@ import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
 import '../model/arc.dart';
 import 'drawer_menu.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 
 class AddArcScreen extends StatelessWidget {
   
-
   Widget build(context) {
 
     return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.cancel),
+            onPressed: () {Navigator.pop(context);},
+          )
+        ],
+      ),
+      
       body: Container(
-        margin: EdgeInsets.all(20.0),
+        margin: EdgeInsets.only(left: 15.0, right: 15.0),
         child: Column(
           children:[
             Container(margin: EdgeInsets.only(top: 20)),
-            titleField(), //name
-            //endDate(),
+            titleField(),
             descriptionField(),
             Container(
               margin: EdgeInsets.only(top: 20),
@@ -33,9 +39,8 @@ class AddArcScreen extends StatelessWidget {
                   ),   
                 ]
               ),
+              //TODO: add additional fields as needed
             ),
-            //parentField(),
-            //arcList(),
           ],
         ),
       ),
@@ -47,13 +52,6 @@ class AddArcScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            RaisedButton(
-              child: Text('Cancel'),
-              color: Colors.white,
-              textColor: Colors.blue,
-              // Needs to open New Task dialog
-              onPressed: () {Navigator.pop(context);},
-            ),
             submitArc(),
           ],
         ),
@@ -66,31 +64,21 @@ class AddArcScreen extends StatelessWidget {
   return StreamBuilder(
       stream: bloc.arcTitleFieldStream,
       builder: (context, snapshot) {
-        //Location
-        //Name
-        //End date
-        //Description
         return TextField(
           onChanged: bloc.changeTitle,
           keyboardType: TextInputType.datetime,
           decoration: InputDecoration(
             hintText: 'Location'
-            //errorText: snapshot.error,
           ),
         );
       }
     );
  }
 
-
  Widget titleField(){
   return StreamBuilder(
     stream: bloc.arcTitleFieldStream,
     builder: (context, snapshot) {
-      //Location
-      //Name
-      //End date
-      //Description
       return TextField(
         onChanged: bloc.changeTitle,
         keyboardType: TextInputType.text,
@@ -107,15 +95,11 @@ Widget endDate(){
   return StreamBuilder(
     stream: bloc.arcEndDateFieldStream,
     builder: (context, snapshot) {
-      //Location
-      //Name
-      //End date
-      //Description
       return TextField(
         onChanged: bloc.changeEndDate,
         decoration: InputDecoration(
           hintText: 'EndDate'
-          //errorText: snapshot.error,
+          //TODO add errorText when used
         ),
       );
     }
@@ -126,14 +110,12 @@ Widget descriptionField(){
   return StreamBuilder(
     stream: bloc.arcDescriptionFieldStream,
     builder: (context, snapshot) {
-      //Location
-      //Name
-      //End date
-      //Description
       return TextField(
         maxLines: 7,
         onChanged: bloc.changeDescription,
         keyboardType: TextInputType.multiline,
+        textInputAction: TextInputAction.done,
+        autocorrect: true,
         decoration: InputDecoration(
           hintText: 'Description',
           errorText: snapshot.error,
@@ -165,7 +147,6 @@ String _arcTitle;
           if (snapshot.hasData) {
           dynamic snapshotData = snapshot.data;
           return DropdownButton<dynamic>(
-            hint: Text("Select Parent Arc"),
             value: _arcTitle,
             onChanged: (value) {
               bloc.changeParent(value);
@@ -214,26 +195,17 @@ Widget arcTile(Arc arc, BuildContext context) {
 
 Widget submitArc() {
   return StreamBuilder(
-    stream: bloc.submitValidArc, 
+    stream: bloc.arcTitleFieldStream, 
     builder: (context, snapshot){
       return RaisedButton(
         child: Text('Submit'),
         color: Colors.white,
         textColor: Colors.blue,
         onPressed: snapshot.hasData ? (){ 
-          bloc.submitArc;
+          bloc.submitArc; //Currently just returns to previous screen
           Navigator.pop(context);
           }
-        :  null //(){print(snapshot.data);
-        //}
-        /*(){
-          if(snapshot.hasData) {
-             bloc.submitArc();
-            Navigator.pop(context);
-          } else {null;}
-          
-        },
-        */
+        :  null
       );
     },
   );
