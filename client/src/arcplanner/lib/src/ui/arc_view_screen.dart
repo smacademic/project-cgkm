@@ -70,6 +70,7 @@ class ArcViewScreen extends StatelessWidget {
       ),
 
       floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.arrow_back),
         onPressed: () {
           Navigator.pop(context);
         },
