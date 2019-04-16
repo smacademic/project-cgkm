@@ -3,7 +3,8 @@ import '../blocs/bloc.dart';
 import 'drawer_menu.dart';
 import '../model/arc.dart';
 import '../model/task.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import 'arc_tile.dart';
+import 'task_tile.dart';
 
 class ArcViewScreen extends StatelessWidget {
   static String currentParent = "Home";
@@ -55,21 +56,21 @@ class ArcViewScreen extends StatelessWidget {
       drawer: drawerMenu(context),
 
       bottomNavigationBar: BottomAppBar(
-        color: Colors.blue,
+        color: Colors.blue[400],
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             RaisedButton(
               child: Text('New Task'),
               color: Colors.white,
-              textColor: Colors.blue,
+              textColor: Colors.blue[400],
               // Needs to open New Task dialog
               onPressed: () {},
             ),
             RaisedButton(
               child: Text('New Arc'),
               color: Colors.white,
-              textColor: Colors.blue,
+              textColor: Colors.blue[400],
               // Needs to open New Arc dialog
               onPressed: () {},
             ),
@@ -78,6 +79,8 @@ class ArcViewScreen extends StatelessWidget {
       ),
 
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue[400],
+        child: Icon(Icons.arrow_back),
         onPressed: () {
           if (currentParent == null && !atNoArcTaskScreen) {
             Navigator.pop(context);
@@ -93,167 +96,6 @@ class ArcViewScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget arcTile(Arc arc, BuildContext context) {
-  var description = arc.description;
-
-  // TODO move to somewhere where it isnt called more then needed
-  ArcViewScreen.currentParent = arc.parentArc;
-  
-  if (description == null) {
-    description = '';
-  }
-
-  return Container(
-    decoration: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color: Colors.grey[350],
-        ),
-        top: BorderSide(
-          color: Colors.grey[350],
-        ),
-      ),
-    ),
-    height: MediaQuery.of(context).size.height * 0.20,
-    child: ListTile(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(
-              top: 10.0,
-              bottom: 10.0,
-            ),
-            child: AutoSizeText(arc.title,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-              maxFontSize: 24.0,
-              minFontSize: 18.0,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(
-              bottom: 10.0,
-            ),
-            child: AutoSizeText(description,
-              style: TextStyle(
-                color: Colors.black,
-              ),
-              maxFontSize: 16.0,
-              minFontSize: 12.0,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-      onTap: () {
-        //If going to a screen that shows no children then set flag to true
-        if (arc.childrenUUIDs?.isEmpty ?? true) {
-          ArcViewScreen.atNoArcTaskScreen = true;
-          bloc.arcViewInsert({ 'object' : null, 'flag': 'clear'});
-        } else {
-          bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
-        }
-      } 
-      //onLongPress: ,
-    ),
-  );
-}
-
-Widget taskTile(Task task, BuildContext context) {
-  var description = task.description;
-  if (description == null) {
-    description = '';
-  }
-
-  var dueDate = task.duedate;
-  if (dueDate == null) {
-    dueDate = '';
-  }
-
-  var location = task.location;
-  if (location == null) {
-    location = '';
-  }
-
-  return Container(
-    decoration: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color: Colors.grey[350],
-        ),
-        top: BorderSide(
-          color: Colors.grey[350],
-        ),
-      ),
-    ),
-    height: MediaQuery.of(context).size.height * 0.15,
-    child: ListTile(
-      title: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                padding: EdgeInsets.only(
-                  top: 10.0,
-                  bottom: 10.0,
-                ),
-                child: AutoSizeText(task.title,
-                  maxFontSize: 20.0,
-                  minFontSize: 16.0,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  bottom: 10.0,
-                ),
-                child: AutoSizeText(dueDate,
-                  maxFontSize: 20.0,
-                  minFontSize: 16.0,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: <Widget>[
-                AutoSizeText(location,
-                  maxFontSize: 16.0,
-                  minFontSize: 8.0,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                AutoSizeText(description,
-                  maxFontSize: 14.0,
-                  minFontSize: 10.0,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      // onTap: () {
-      //   _toTaskView(task),
-      // }  
-      // onLongPress: ,
-    )
-  );
 }
 
 Widget tile(dynamic obj, BuildContext context) {
