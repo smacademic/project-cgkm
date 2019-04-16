@@ -28,7 +28,7 @@ class Arc {
 
   // Constructor to build object read from database
   Arc.read(this._uid, this._aid, this._title, 
-      {description, dueDate, parentArc, completed}) {
+      {description, dueDate, parentArc, completed, childrenUUIDs}) {
     this._description = description;
     this._dueDate = dueDate;
     this._parentArc = parentArc;
