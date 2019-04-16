@@ -39,6 +39,7 @@ class DatabaseHelper {
   static final String _arcAID = "AID";
   static final String _arcTitle = "Title";
   static final String _arcDesc = "Description";
+  static final String _arcDueDate = "DueDate";
   static final String _arcPArc = "ParentArc";
   static final String _arcCompleted = "Completed";
 
@@ -86,6 +87,7 @@ class DatabaseHelper {
           $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) = $_uuidSize), 
           $_arcTitle TEXT NOT NULL CHECK(LENGTH($_arcTitle) <= $_nameSize), 
           $_arcDesc TEXT, 
+          $_arcDueDate TEXT,
           $_arcPArc TEXT CHECK(LENGTH($_arcPArc) = $_uuidSize),
           $_arcCompleted INTEGER CHECK($_arcCompleted == 0 OR $_arcCompleted == 1)
           )""");

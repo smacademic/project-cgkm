@@ -12,22 +12,25 @@ class Arc {
   String _uid;
   String _title;
   String _description;
+  String _dueDate;
   String _parentArc;
   bool _completed;
   List<String> childrenUUIDs = new List();
 
   // Constructor
-  Arc(this._uid, this._title, {description, parentArc}) {
+  Arc(this._uid, this._title, {description, dueDate, parentArc}) {
     this._aid = new Uuid().v4();
     this._description = description;
+    this._dueDate = dueDate;
     this._parentArc = parentArc;
     this._completed = false;
   }
 
   // Constructor to build object read from database
   Arc.read(this._uid, this._aid, this._title, 
-      {description, parentArc, completed, childrenUUIDs}) {
+      {description, dueDate, parentArc, completed}) {
     this._description = description;
+    this._dueDate = dueDate;
     this._parentArc = parentArc;
     this.childrenUUIDs = childrenUUIDs?.split(",");
     if (completed == '1') {
@@ -44,6 +47,7 @@ class Arc {
     _uid = obj["uid"];
     _title = obj["title"];
     _description = obj["description"];
+    _dueDate = obj["dueDate"];
     _parentArc = obj["parentarc"];
     _completed = obj["completed"];
   }
@@ -53,6 +57,7 @@ class Arc {
   String get uid => _uid;
   String get title => _title;
   String get description => _description;
+  String get dueDate => _dueDate;
   String get parentArc => _parentArc;
   bool get completed => _completed;
 
@@ -62,6 +67,7 @@ class Arc {
     map["uid"] = _uid;
     map["title"] = _title;
     map["description"] = _description;
+    map["dueDate"] = _dueDate;
     map["parentarc"] = _parentArc;
     map["completed"] =_completed;
 
@@ -77,6 +83,7 @@ class Arc {
     _uid = map["uid"];
     _title = map["title"];
     _description = map["description"];
+    _dueDate = map["dueDate"];
     _parentArc = map["parentarc"];
     _completed = map["completed"];
   }
