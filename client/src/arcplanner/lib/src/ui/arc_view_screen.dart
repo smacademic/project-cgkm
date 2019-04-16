@@ -6,11 +6,15 @@ import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class ArcViewScreen extends StatelessWidget {
+  static String currentParent = "Home";
+  static bool atNoArcTaskScreen = false;
 
   _toTaskView(Task task) {
   }
 
   Widget build(context) {
+    bool firstTimeLoading = true;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -24,6 +28,11 @@ class ArcViewScreen extends StatelessWidget {
                 return new FutureBuilder(
                   future: snapshot.data,
                   builder: (context, snapshot) {
+                    if (firstTimeLoading) {
+                      bloc.arcViewInsert({ 'object' : null, 'flag': 'getChildren'});
+                      firstTimeLoading = false;
+                    }
+                    
                     if (snapshot.hasData) {
                     dynamic snapshotData = snapshot.data;
                     return ListView.builder(
@@ -72,7 +81,16 @@ class ArcViewScreen extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context);
+          if (currentParent == null && !atNoArcTaskScreen) {
+            Navigator.pop(context);
+          } else {
+            if (atNoArcTaskScreen) {
+              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
+              atNoArcTaskScreen = false;
+            } 
+            else
+              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
+          }
         },
       ),
     );
@@ -81,6 +99,10 @@ class ArcViewScreen extends StatelessWidget {
 
 Widget arcTile(Arc arc, BuildContext context) {
   var description = arc.description;
+
+  // TODO move to somewhere where it isnt called more then needed
+  ArcViewScreen.currentParent = arc.parentArc;
+  
   if (description == null) {
     description = '';
   }
@@ -135,7 +157,13 @@ Widget arcTile(Arc arc, BuildContext context) {
         ],
       ),
       onTap: () {
-        bloc.arcViewInsert({ 'object' : arc, 'flag': 'getChildren'});
+        //If going to a screen that shows no children then set flag to true
+        if (arc.childrenUUIDs?.isEmpty ?? true) {
+          ArcViewScreen.atNoArcTaskScreen = true;
+          bloc.arcViewInsert({ 'object' : null, 'flag': 'clear'});
+        } else {
+          bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+        }
       } 
       //onLongPress: ,
     ),
@@ -146,6 +174,16 @@ Widget taskTile(Task task, BuildContext context) {
   var description = task.description;
   if (description == null) {
     description = '';
+  }
+
+  var dueDate = task.duedate;
+  if (dueDate == null) {
+    dueDate = '';
+  }
+
+  var location = task.location;
+  if (location == null) {
+    location = '';
   }
 
   return Container(
@@ -182,7 +220,7 @@ Widget taskTile(Task task, BuildContext context) {
                 padding: EdgeInsets.only(
                   bottom: 10.0,
                 ),
-                child: AutoSizeText(task.duedate,
+                child: AutoSizeText(dueDate,
                   maxFontSize: 20.0,
                   minFontSize: 16.0,
                   maxLines: 1,
@@ -195,13 +233,13 @@ Widget taskTile(Task task, BuildContext context) {
             padding: EdgeInsets.all(10),
             child: Column(
               children: <Widget>[
-                AutoSizeText(task.location,
+                AutoSizeText(location,
                   maxFontSize: 16.0,
                   minFontSize: 8.0,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                AutoSizeText(task.description,
+                AutoSizeText(description,
                   maxFontSize: 14.0,
                   minFontSize: 10.0,
                   maxLines: 4,
@@ -226,7 +264,6 @@ Widget tile(dynamic obj, BuildContext context) {
   } else if (obj is Task) {
     return taskTile(obj, context);
   } else {
-    print(obj);
     return Text('tile tried to build not an Arc or Task');
   }
 }
