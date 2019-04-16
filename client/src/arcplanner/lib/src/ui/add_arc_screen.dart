@@ -20,10 +20,11 @@ class AddArcScreen extends StatelessWidget {
       
       body: Container(
         margin: EdgeInsets.only(left: 15.0, right: 15.0),
-        child: Column(
+        child: ListView(
           children:[
             Container(margin: EdgeInsets.only(top: 20)),
             titleField(),
+            dueDate(),
             descriptionField(),
             Container(
               margin: EdgeInsets.only(top: 20),
@@ -91,14 +92,15 @@ class AddArcScreen extends StatelessWidget {
   );
 }
 
-Widget endDate(){
+Widget dueDate(){
   return StreamBuilder(
     stream: bloc.arcEndDateFieldStream,
     builder: (context, snapshot) {
       return TextField(
+        keyboardType: TextInputType.datetime,
         onChanged: bloc.changeEndDate,
         decoration: InputDecoration(
-          hintText: 'EndDate'
+          hintText: 'Due Date'
           //TODO add errorText when used
         ),
       );
