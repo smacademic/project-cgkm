@@ -20,7 +20,7 @@ Widget arcTile(Arc arc, BuildContext context) {
         ),
       ),
     ),
-    height: MediaQuery.of(context).size.height * 0.15,
+    height: MediaQuery.of(context).size.height * 0.18,
     child: ListTile(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,18 +28,47 @@ Widget arcTile(Arc arc, BuildContext context) {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(
-              top: 10.0,
+              //top: 10.0,
               bottom: 10.0,
             ),
-            child: AutoSizeText(arc.title,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-              maxFontSize: 24.0,
-              minFontSize: 18.0,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Arc',
+                      style: TextStyle(
+                        fontSize: 8.0,
+                      ),
+                    ),
+                    AutoSizeText(
+                      arc.title,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxFontSize: 24.0,
+                      minFontSize: 16.0,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+                Container(
+                  child: AutoSizeText(
+                    'dueDate',
+                    //arc.dueDate,
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                    maxFontSize: 14.0,
+                    minFontSize: 14.0,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
@@ -48,10 +77,10 @@ Widget arcTile(Arc arc, BuildContext context) {
             ),
             child: AutoSizeText(description,
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.grey[600],
               ),
-              maxFontSize: 16.0,
-              minFontSize: 12.0,
+              maxFontSize: 14.0,
+              minFontSize: 10.0,
               maxLines: 4,
               overflow: TextOverflow.ellipsis,
             ),
