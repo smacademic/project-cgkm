@@ -34,26 +34,28 @@ Widget arcTile(Arc arc, BuildContext context) {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Arc',
-                      style: TextStyle(
-                        fontSize: 8.0,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Arc',
+                        style: TextStyle(
+                          fontSize: 8.0,
+                        ),
                       ),
-                    ),
-                    AutoSizeText(
-                      arc.title,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                      AutoSizeText(
+                        arc.title,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxFontSize: 24.0,
+                        minFontSize: 16.0,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxFontSize: 24.0,
-                      minFontSize: 16.0,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 Container(
                   child: AutoSizeText(

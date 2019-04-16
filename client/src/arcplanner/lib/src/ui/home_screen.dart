@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
         children: <Widget>[
           SafeArea(
             child: Container(
-              color: Colors.blue,
+              color: Colors.blue[400],
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                       height: 55.0,
                       buttonColor: Colors.white,
                       child: RaisedButton.icon(
-                        textColor: Colors.blue,
+                        textColor: Colors.blue[400],
                         icon: Icon(
                           Icons.add,
                           size: 45.0,

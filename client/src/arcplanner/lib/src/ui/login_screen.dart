@@ -115,7 +115,7 @@ class LoginScreen extends StatelessWidget {
                 height: 50,
                 child: RaisedButton(
                   onPressed: _sendLogin,
-                  color: Colors.blue,
+                  color: Colors.blue[400],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -149,7 +149,7 @@ class LoginScreen extends StatelessWidget {
       ),
 
       bottomNavigationBar: BottomAppBar(
-        color: Colors.blue,
+        color: Colors.blue[400],
         child: Container(
           padding: EdgeInsets.all(2),
           child: AutoSizeText(

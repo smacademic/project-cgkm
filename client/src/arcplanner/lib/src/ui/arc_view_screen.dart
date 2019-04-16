@@ -47,21 +47,21 @@ class ArcViewScreen extends StatelessWidget {
       drawer: drawerMenu(context),
 
       bottomNavigationBar: BottomAppBar(
-        color: Colors.blue,
+        color: Colors.blue[400],
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             RaisedButton(
               child: Text('New Task'),
               color: Colors.white,
-              textColor: Colors.blue,
+              textColor: Colors.blue[400],
               // Needs to open New Task dialog
               onPressed: () {},
             ),
             RaisedButton(
               child: Text('New Arc'),
               color: Colors.white,
-              textColor: Colors.blue,
+              textColor: Colors.blue[400],
               // Needs to open New Arc dialog
               onPressed: () {},
             ),
@@ -70,6 +70,7 @@ class ArcViewScreen extends StatelessWidget {
       ),
 
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue[400],
         child: Icon(Icons.arrow_back),
         onPressed: () {
           Navigator.pop(context);

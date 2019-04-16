@@ -24,11 +24,12 @@ Drawer drawerMenu(BuildContext context) {
             child: Text(
               'Menu',
               style: TextStyle(
+                color: Colors.white,
                 fontSize: 20.0,
               ),
             ),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blue[400],
             ),
           ),
         ),
@@ -131,17 +132,17 @@ Drawer drawerMenu(BuildContext context) {
             Navigator.popAndPushNamed(context, '/settings');
           },
         ),
-        ListTile(
-          title: Text(
-            'Logout',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-          ),
-          onTap: () {
-            Navigator.popAndPushNamed(context, '/login');
-          },
-        ),
+        // ListTile(
+        //   title: Text(
+        //     'Logout',
+        //       style: TextStyle(
+        //         fontSize: 20.0,
+        //       ),
+        //   ),
+        //   onTap: () {
+        //     Navigator.popAndPushNamed(context, '/login');
+        //   },
+        // ),
       ],
     )
   );
