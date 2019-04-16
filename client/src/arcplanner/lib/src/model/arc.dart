@@ -4,8 +4,6 @@
  * Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
-import 'task.dart';
-import '../util/databaseHelper.dart';
 import 'package:uuid/uuid.dart';
 
 class Arc {
@@ -34,6 +32,7 @@ class Arc {
     this._description = description;
     this._dueDate = dueDate;
     this._parentArc = parentArc;
+    this.childrenUUIDs = childrenUUIDs?.split(",");
     if (completed == '1') {
       this._completed = true;
     } else {
