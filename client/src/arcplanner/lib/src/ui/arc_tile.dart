@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
 import '../model/arc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'arc_view_screen.dart';
 
 Widget arcTile(Arc arc, BuildContext context) {
   var description = arc.description;
+
+  ArcViewScreen.currentParent = arc.parentArc;
+
   if (description == null) {
     description = '';
   }
@@ -90,7 +94,13 @@ Widget arcTile(Arc arc, BuildContext context) {
         ],
       ),
       onTap: () {
-        bloc.arcViewInsert({ 'object' : arc, 'flag': 'getChildren'});
+        //If going to a screen that shows no children then set flag to true
+        if (arc.childrenUUIDs?.isEmpty ?? true) {
+          ArcViewScreen.atNoArcTaskScreen = true;
+          bloc.arcViewInsert({ 'object' : null, 'flag': 'clear'});
+        } else {
+          bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+        }
       } 
       //onLongPress: ,
     ),
