@@ -7,11 +7,15 @@ import 'arc_tile.dart';
 import 'task_tile.dart';
 
 class ArcViewScreen extends StatelessWidget {
+  static String currentParent = "Home";
+  static bool atNoArcTaskScreen = false;
 
   _toTaskView(Task task) {
   }
 
   Widget build(context) {
+    bool firstTimeLoading = true;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -25,6 +29,11 @@ class ArcViewScreen extends StatelessWidget {
                 return new FutureBuilder(
                   future: snapshot.data,
                   builder: (context, snapshot) {
+                    if (firstTimeLoading) {
+                      bloc.arcViewInsert({ 'object' : null, 'flag': 'getChildren'});
+                      firstTimeLoading = false;
+                    }
+                    
                     if (snapshot.hasData) {
                     dynamic snapshotData = snapshot.data;
                     return ListView.builder(
@@ -73,7 +82,16 @@ class ArcViewScreen extends StatelessWidget {
         backgroundColor: Colors.blue[400],
         child: Icon(Icons.arrow_back),
         onPressed: () {
-          Navigator.pop(context);
+          if (currentParent == null && !atNoArcTaskScreen) {
+            Navigator.pop(context);
+          } else {
+            if (atNoArcTaskScreen) {
+              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
+              atNoArcTaskScreen = false;
+            } 
+            else
+              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
+          }
         },
       ),
     );
@@ -86,7 +104,6 @@ Widget tile(dynamic obj, BuildContext context) {
   } else if (obj is Task) {
     return taskTile(obj, context);
   } else {
-    print(obj);
     return Text('tile tried to build not an Arc or Task');
   }
 }
