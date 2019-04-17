@@ -2,20 +2,53 @@
 import 'dart:async';
 import '../model/arc.dart';
 import '../model/task.dart';
+//import '../model/user.dart';
 import '../util/databaseHelper.dart';
+import '../blocs/validators.dart';
+import 'package:rxdart/rxdart.dart';
 
-class Bloc {
+
+class Bloc extends Object with Validators {
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
-
+  
   // Constructor
   Bloc();  
 
-
   // Create stream and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
-  Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+
+  // Streams for add_arc_screen
+  final _arcLocationFieldController = BehaviorSubject<String>();
+  final _arcTitleFieldController = BehaviorSubject<String>();
+  final _arcEndDateFieldController = BehaviorSubject<String>();
+  final _arcDescriptionFieldController = BehaviorSubject<String>();
+  final _arcParentFieldController = BehaviorSubject<Arc>();
   
+  Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+
+  // Add data to streams for Add Arc Screen
+  Stream<String> get arcLocationFieldStream => _arcLocationFieldController.stream;
+
+  Stream<String> get arcTitleFieldStream => _arcTitleFieldController.stream.transform(validateTitle);
+
+  Stream<String> get arcEndDateFieldStream => _arcEndDateFieldController.stream;
+
+  Stream<String> get arcDescriptionFieldStream => _arcDescriptionFieldController.stream;
+
+  Stream<Arc> get arcParentFieldStream => _arcParentFieldController.stream;
+
+  Stream<bool> get submitValidArc =>
+      Observable.combineLatest2(arcTitleFieldStream, 
+    arcDescriptionFieldStream, (t, d) => true);
+
+  // Change data for Add Arc Screen
+  Function(String) get changeLocation => _arcLocationFieldController.sink.add;
+  Function(String) get changeTitle => _arcTitleFieldController.sink.add;
+  Function(String) get changeEndDate => _arcEndDateFieldController.sink.add;
+  Function(String) get changeDescription => _arcDescriptionFieldController.sink.add;
+  Function(Arc) get changeParent => _arcParentFieldController.sink.add;
+
   void arcViewInsert(dynamic obj) {
     _arcViewController.sink.add(obj);
   } 
@@ -121,9 +154,31 @@ class Bloc {
     return children;
   }
 
+  submitArc() {
+    final arcLoc = _arcLocationFieldController.value;
+    final validArcTitle = _arcTitleFieldController.value;
+    final arcEndDate = _arcEndDateFieldController.value;
+    final arcDescription = _arcEndDateFieldController.value;
+
+    print("$validArcTitle");
+    //TODO create arc with new data
+    //User sally = new User("sally", "seashells", "this@that.com");
+    //Arc ar = new Arc(sally.uid, validArcTitle);
+    //db.insertArc(ar);
+    //TODO insert to new arc
+  }
+
   // Closes the stream controller
   dispose() {
     _arcViewController.close();
+
+    // Close Add Arc Screen streams
+    _arcDescriptionFieldController.close();
+    _arcEndDateFieldController.close();
+    _arcLocationFieldController.close();
+    _arcTitleFieldController.close();
+    _arcViewController.close();
+    _arcParentFieldController.close();
   }
 }
 

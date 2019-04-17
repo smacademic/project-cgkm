@@ -5,6 +5,7 @@ import 'ui/about_screen.dart';
 import 'ui/home_screen.dart';
 import 'ui/settings_screen.dart';
 import 'ui/arc_view_screen.dart';
+import 'ui/add_arc_screen.dart';
 
 /// Observer for tracking page changes
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -16,6 +17,7 @@ class ArcPlanner extends StatelessWidget {
   static HomeScreen homeScreen = HomeScreen();
   static SettingsScreen settingsScreen = SettingsScreen();
   static ArcViewScreen arcViewScreen = ArcViewScreen();
+  static AddArcScreen addArcScreen = AddArcScreen();
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,6 +34,7 @@ class ArcPlanner extends StatelessWidget {
         '/home': (BuildContext context) => homeScreen,
         '/settings': (BuildContext context) => settingsScreen,
         '/arcview': (BuildContext context) => arcViewScreen,
+        '/addarc': (BuildContext context) => addArcScreen,
       },
       navigatorObservers: [routeObserver],
     );
