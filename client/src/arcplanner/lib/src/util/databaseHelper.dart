@@ -1,8 +1,15 @@
-/** Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- *  Team CGKM 
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
  *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Jonathan Middleton, Kevin Kelly
+ *    Contributors: Matthew Chastain, Justin Grabowski
  * 
- *  Provided AS IS. No warranties expressed or implied. Use at your own risk.
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file the DatabaseHelper class and associated functions, which are
+ *  used by the app to interact with the database.
  */
 
 import 'dart:io';
@@ -33,11 +40,13 @@ class DatabaseHelper {
   static final String _userLastName = "LastName";
   static final String _userEmail = "Email";
 
-  static final String _arcTable = "Arc";
+  static final String _arcTable = "Arc_t";
+  static final String _arcView = "Arc";
   static final String _arcUID = "UID";
   static final String _arcAID = "AID";
   static final String _arcTitle = "Title";
   static final String _arcDesc = "Description";
+  static final String _arcDueDate = "DueDate";
   static final String _arcPArc = "ParentArc";
   static final String _arcCompleted = "Completed";
 
@@ -85,6 +94,7 @@ class DatabaseHelper {
           $_arcAID TEXT PRIMARY KEY NOT NULL CHECK(LENGTH($_arcAID) = $_uuidSize), 
           $_arcTitle TEXT NOT NULL CHECK(LENGTH($_arcTitle) <= $_nameSize), 
           $_arcDesc TEXT, 
+          $_arcDueDate TEXT,
           $_arcPArc TEXT CHECK(LENGTH($_arcPArc) = $_uuidSize),
           $_arcCompleted INTEGER CHECK($_arcCompleted == 0 OR $_arcCompleted == 1)
           )""");
@@ -98,6 +108,22 @@ class DatabaseHelper {
           $_taskLoc TEXT CHECK(LENGTH($_taskLoc) <= $_locSize),
           $_taskCompleted INTEGER CHECK($_taskCompleted == 0 OR $_taskCompleted == 1)
           )""");
+    await db.execute("""
+        CREATE VIEW $_arcView AS
+        SELECT UID, AID, Title, Description, ParentArc, Completed, 
+          ( SELECT group_concat(UUID)
+            FROM (
+              SELECT Arc2.AID AS UUID
+              FROM Arc_t AS Arc2
+              WHERE Arc2.ParentArc = Arc1.AID AND Arc2.ParentArc IS NOT NULL
+              UNION
+              SELECT TID As UUID
+              FROM Task
+              WHERE Task.AID = Arc1.UID
+          )
+        ) As ChildrenUUIDs
+        FROM Arc_t AS Arc1
+        """);
     print("Tables created");
   }
 
@@ -139,7 +165,7 @@ class DatabaseHelper {
   // pulls a single Arc from db given a UUID
   Future<List<Map>> getArc(String uuid) async {
     var dbClient = await db;
-    return await dbClient.rawQuery('SELECT 1 FROM Arc WHERE AID = $uuid',);
+    return await dbClient.rawQuery('SELECT 1 FROM Arc WHERE AID = $uuid');
   } 
 
   // pulls a single Task from db given a UUID
@@ -151,9 +177,13 @@ class DatabaseHelper {
   // given a UUID, returns a list of mapped children
   Future<List<Map>> getChildren(String uuid) async {
     var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
-    //list.addAll(await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"'));
-    return list;
+    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
+    if (uuid != null) {
+      List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"');
+      return new List.from(arcList)..addAll(taskList);
+    } else
+      return arcList;
+      
   }
 
   // pulls all Arcs and Tasks out of the database and creates objects out of them

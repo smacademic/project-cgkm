@@ -1,15 +1,20 @@
-/* 
- * Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- * team-CGKM
- * CS 298 - Software Devops; Spring 2019
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Matthew Chastain
+ *    Contributors: 
  * 
- * File: login_screen.dart
-*/
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file contains the layout of the Login screen. This file will be used
+ *  when the application moves to a cloud system with multiple users.
+ */
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 //import 'package:arcplanner/main.dart';
-
 class LoginScreen extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -115,7 +120,7 @@ class LoginScreen extends StatelessWidget {
                 height: 50,
                 child: RaisedButton(
                   onPressed: _sendLogin,
-                  color: Colors.blue,
+                  color: Colors.blue[400],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -149,7 +154,7 @@ class LoginScreen extends StatelessWidget {
       ),
 
       bottomNavigationBar: BottomAppBar(
-        color: Colors.blue,
+        color: Colors.blue[400],
         child: Container(
           padding: EdgeInsets.all(2),
           child: AutoSizeText(

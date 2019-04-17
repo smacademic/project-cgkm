@@ -1,32 +1,67 @@
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Matthew Chastain, Justin Grabowski, Kevin Kelly
+ *    Contributors: 
+ * 
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file contains the implementation of the BLoC Pattern for Software Design for use with 
+ *  Flutter. The Bloc present in this file handles data flow throughout the application.
+ */
 
 import 'dart:async';
 import '../model/arc.dart';
 import '../model/task.dart';
+//import '../model/user.dart';
 import '../util/databaseHelper.dart';
+import '../blocs/validators.dart';
+import 'package:rxdart/rxdart.dart';
 
-class Bloc {
+
+class Bloc extends Object with Validators {
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
-
-  // Constructor
-  Bloc() {
-    initMap();
-  }
   
-  // Load the BLoC with records from the database to be used by the app
-  void initMap() async {
-    insertListIntoMap(await db.getMasterArcs());
-    List<Arc> initialList = new List();
-    loadedObjects.forEach((key, value) {
-      initialList.add(value);
-    });
-    _arcViewController.add({'object': initialList, 'flag': "add"});
-  }
+  // Constructor
+  Bloc();  
 
   // Create stream and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
-  Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+
+  // Streams for add_arc_screen
+  final _arcLocationFieldController = BehaviorSubject<String>();
+  final _arcTitleFieldController = BehaviorSubject<String>();
+  final _arcEndDateFieldController = BehaviorSubject<String>();
+  final _arcDescriptionFieldController = BehaviorSubject<String>();
+  final _arcParentFieldController = BehaviorSubject<Arc>();
   
+  Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+
+  // Add data to streams for Add Arc Screen
+  Stream<String> get arcLocationFieldStream => _arcLocationFieldController.stream;
+
+  Stream<String> get arcTitleFieldStream => _arcTitleFieldController.stream.transform(validateTitle);
+
+  Stream<String> get arcEndDateFieldStream => _arcEndDateFieldController.stream;
+
+  Stream<String> get arcDescriptionFieldStream => _arcDescriptionFieldController.stream;
+
+  Stream<Arc> get arcParentFieldStream => _arcParentFieldController.stream;
+
+  Stream<bool> get submitValidArc =>
+      Observable.combineLatest2(arcTitleFieldStream, 
+    arcDescriptionFieldStream, (t, d) => true);
+
+  // Change data for Add Arc Screen
+  Function(String) get changeLocation => _arcLocationFieldController.sink.add;
+  Function(String) get changeTitle => _arcTitleFieldController.sink.add;
+  Function(String) get changeEndDate => _arcEndDateFieldController.sink.add;
+  Function(String) get changeDescription => _arcDescriptionFieldController.sink.add;
+  Function(Arc) get changeParent => _arcParentFieldController.sink.add;
+
   void arcViewInsert(dynamic obj) {
     _arcViewController.sink.add(obj);
   } 
@@ -38,6 +73,11 @@ class Bloc {
       return await data['object'];
     } else if (data['flag'] == "getChildren") {
       return await getChildren(data['object']);
+    } else if (data['flag'] == "backButton") {
+      Arc parent = getFromMap(data['object']);
+      return await getChildren(parent.parentArc);
+    } else if (data['flag'] == "clear") {
+      return null;
     }
   }
   
@@ -45,7 +85,7 @@ class Bloc {
   Arc toArc(Map map) {
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
         map['Description'], parentArc: map['ParentArc'], completed: 
-        map['Completed']);
+        map['Completed'], childrenUUIDs: map['ChildrenUUIDs']);
   }
 
   // Reads from the DB and returns a Task object
@@ -68,6 +108,8 @@ class Bloc {
     }
   }
 
+  // Inserts a map of Arcs/Tasks into the map using insertObjectIntoMap for
+  //   each object in list.
   List<dynamic> insertListIntoMap(List<Map> list) {
     List<dynamic> objects = List<dynamic>(); 
     for (Map map in list) {
@@ -85,38 +127,71 @@ class Bloc {
     }
   }
 
-  // Using the UUID the associated object is sent to the arcViewController
-  sendToArcView(List<dynamic> listOfObjects) {
-    _arcViewController.add(listOfObjects);
+  // Loads Arc or Task from loaded objects map given a UUID
+  dynamic getFromMap(String uuid) {
+    return loadedObjects[uuid];
   }
 
   // Checks to see if children are in map. If they exist in map then send them
   //  back via stream. Otherwise load them from database and into map. Then
   //  to the UI via stream
-  Future<List<dynamic>> getChildren (Arc parent) async {
-    List<dynamic> children;
+  Future<List<dynamic>> getChildren (String parentUUID) async {
+    List<dynamic> children = new List();
 
-    // Get first child UUID and see if it exists. If and only if at 
-    //  least 1 child exists in map then all children exists
-    if (parent.childrenUUIDs.isEmpty) { // Key does not exist in map yet or doesn't have children
-      // Add all children to map
-      children = insertListIntoMap(await db.getChildren(parent.aid));
-      children.forEach((object) {
-        if (object is Arc) {
-          parent.childrenUUIDs.add(object.aid);
-        } else {
-          parent.childrenUUIDs.add(object.tid);
-        }
-      });
+
+    // If there is no supplied UUID supply parentArc = null, the masterArcs
+    if (parentUUID == null) {
+      children = insertListIntoMap(await db.getMasterArcs());
+      return children;
+    }
+
+    Arc parent = getFromMap(parentUUID);
+    
+    // If childrenUUIDs is empty then it has no children
+    if (parent.childrenUUIDs?.isEmpty ?? true) { // Key does not exist in map yet or doesn't have children
+      return null;
     } else {
-      parent.childrenUUIDs.forEach((uuid) => children.add(loadedObjects[uuid]));
+      // If Children exist in map already
+      for (String uuid in parent.childrenUUIDs) {
+        if (checkMap(uuid)) {
+          children.add(getFromMap(uuid));
+        }    
+        else {
+          // If one child UUID is missing use query to get all children and
+          //  add to map. This is to avoid many queries if large list of children
+          children = insertListIntoMap(await db.getChildren(parentUUID));
+          break;
+        }          
+      }
     }
     return children;
+  }
+
+  submitArc() {
+    final arcLoc = _arcLocationFieldController.value;
+    final validArcTitle = _arcTitleFieldController.value;
+    final arcEndDate = _arcEndDateFieldController.value;
+    final arcDescription = _arcEndDateFieldController.value;
+
+    print("$validArcTitle");
+    //TODO create arc with new data
+    //User sally = new User("sally", "seashells", "this@that.com");
+    //Arc ar = new Arc(sally.uid, validArcTitle);
+    //db.insertArc(ar);
+    //TODO insert to new arc
   }
 
   // Closes the stream controller
   dispose() {
     _arcViewController.close();
+
+    // Close Add Arc Screen streams
+    _arcDescriptionFieldController.close();
+    _arcEndDateFieldController.close();
+    _arcLocationFieldController.close();
+    _arcTitleFieldController.close();
+    _arcViewController.close();
+    _arcParentFieldController.close();
   }
 }
 

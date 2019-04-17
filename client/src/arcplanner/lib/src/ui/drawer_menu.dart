@@ -1,15 +1,17 @@
-/* 
- * Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- * team-CGKM
- * CS 298 - Software Devops; Spring 2019
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Matthew Chastain
+ *    Contributors: Justin Grabowski
  * 
- * File: drawer_menu.dart
- * 
- * Purpose:
- *  This file defines a single method 'drawerMenu' which builds the 
- *  side-menu for a number of the screens in the application. The 
- *  menu can be accessed by pulling from the left side of the screen.
-*/
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file defines a single method 'drawerMenu' which builds the side-menu 
+ *  for a number of the screens in the application. The menu can be accessed by 
+ *  pulling from the left side of the screen.
+ */
 
 import 'package:flutter/material.dart';
 
@@ -24,11 +26,12 @@ Drawer drawerMenu(BuildContext context) {
             child: Text(
               'Menu',
               style: TextStyle(
+                color: Colors.white,
                 fontSize: 20.0,
               ),
             ),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blue[400],
             ),
           ),
         ),
@@ -62,7 +65,7 @@ Drawer drawerMenu(BuildContext context) {
               ),
           ),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popAndPushNamed(context, '/addarc');       
           },
         ),
         ListTile(
@@ -131,17 +134,17 @@ Drawer drawerMenu(BuildContext context) {
             Navigator.popAndPushNamed(context, '/settings');
           },
         ),
-        ListTile(
-          title: Text(
-            'Logout',
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-          ),
-          onTap: () {
-            Navigator.popAndPushNamed(context, '/login');
-          },
-        ),
+        // ListTile(
+        //   title: Text(
+        //     'Logout',
+        //       style: TextStyle(
+        //         fontSize: 20.0,
+        //       ),
+        //   ),
+        //   onTap: () {
+        //     Navigator.popAndPushNamed(context, '/login');
+        //   },
+        // ),
       ],
     )
   );

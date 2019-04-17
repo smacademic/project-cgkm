@@ -1,3 +1,16 @@
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Matthew Chastain
+ *    Contributors: 
+ * 
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file contains ArcPlanner's main method which runs the application.
+ */
+
 import 'package:flutter/material.dart';
 import 'src/arcplanner.dart';
 
@@ -6,19 +19,3 @@ void main() {
 }
 
 
-// import 'src/model/arc.dart';
-// import 'src/model/task.dart';
-// import 'src/model/user.dart';
-// import 'src/util/databaseHelper.dart';
-
-// void main () async {
-
-//   var db = new DatabaseHelper();
-
-//   //add user, arc, task
-//   User sally2 = new User("sally2", "seashell2s", "t2his@that.com");
-//   Arc getOrganized = new Arc( sally2.uid,"Another Amazing Title",description: "WOW, That's Amazing");
-//   await db.insertArc(getOrganized);
-  
-//   db.close();
-// }

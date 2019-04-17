@@ -1,10 +1,15 @@
-/* 
- * Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- * team-CGKM
- * CS 298 - Software Devops; Spring 2019
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Justin Grabowski
+ *    Contributors: 
  * 
- * File: settings_screen.dart
-*/
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file contains the visual definition of the Settings screen.
+ */
 
 import 'package:flutter/material.dart';
 
