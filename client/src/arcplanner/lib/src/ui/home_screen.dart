@@ -3,21 +3,14 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: 
+ *    Primary: Matthew Chastain
  *    Contributors: 
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains...
+ *  This file contains ArcPlanner's home screen which will be displayed on launch. The screen shows 
+ *  users a list of upcoming tasks along with a Task quick-add button.
  */
-
-/* 
- * Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- * team-CGKM
- * CS 298 - Software Devops; Spring 2019
- * 
- * File: home_screen.dart
-*/
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';

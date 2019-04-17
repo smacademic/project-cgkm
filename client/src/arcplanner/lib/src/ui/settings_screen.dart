@@ -8,16 +8,8 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains...
+ *  This file contains the visual definition of the Settings screen.
  */
-
-/* 
- * Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- * team-CGKM
- * CS 298 - Software Devops; Spring 2019
- * 
- * File: settings_screen.dart
-*/
 
 import 'package:flutter/material.dart';
 

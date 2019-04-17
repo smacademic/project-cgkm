@@ -3,21 +3,14 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: 
+ *    Primary: Matthew Chastain
  *    Contributors: 
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains...
+ *  This file contains the layout of the Login screen. This file will be used when the application 
+ *  moves to a cloud system with multiple users.
  */
-
-/* 
- * Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- * team-CGKM
- * CS 298 - Software Devops; Spring 2019
- * 
- * File: login_screen.dart
-*/
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';

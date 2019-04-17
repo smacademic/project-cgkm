@@ -3,24 +3,14 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: 
+ *    Primary: Matthew Chastain
  *    Contributors: 
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains...
+ *  This screen contains basic information about the application, as well as listing the developers 
+ *  that assisted in its development.
  */
-
-/* 
- * Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- * team-CGKM
- * CS 298 - Software DevOps; Spring 2019
- * 
- * Purpose:
- *  This screen contains basic information about the application, as well as 
- *  listing the developers that assisted in its development.
- * 
-*/
 
 import 'package:flutter/material.dart';
 import 'drawer_menu.dart';

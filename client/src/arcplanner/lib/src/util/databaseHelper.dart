@@ -4,18 +4,11 @@
  *
  *  Authors: 
  *    Primary: 
- *    Contributors: 
+ *    Contributors: Matthew Chastain
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
  *  This file contains...
- */
-
-/** Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- *  Team CGKM 
- *  CS298 Spring 2019 
- * 
- *  Provided AS IS. No warranties expressed or implied. Use at your own risk.
  */
 
 import 'dart:io';
