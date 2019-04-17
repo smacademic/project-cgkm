@@ -14,7 +14,6 @@
 
 import 'dart:async';
 
-
 class Validators {
 
   final validateTitle = 
