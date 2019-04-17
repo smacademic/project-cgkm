@@ -4,7 +4,7 @@
  *
  *  Authors: 
  *    Primary: Justin Grabowski
- *    Contributors: Kevin Kelly
+ *    Contributors:
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
