@@ -3,7 +3,7 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: Justin Grabowski
+ *    Primary: Justin Grabowski, Kevin Kelly
  *    Contributors:  Jonathan Middleton
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.

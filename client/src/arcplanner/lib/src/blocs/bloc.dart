@@ -3,7 +3,7 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: Matthew Chastain, Justin Grabowski
+ *    Primary: Matthew Chastain, Justin Grabowski, Kevin Kelly
  *    Contributors: 
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.

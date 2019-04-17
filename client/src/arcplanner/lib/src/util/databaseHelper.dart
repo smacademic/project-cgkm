@@ -3,7 +3,7 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: Jonathan Middleton
+ *    Primary: Jonathan Middleton, Kevin Kelly
  *    Contributors: Matthew Chastain, Justin Grabowski
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
