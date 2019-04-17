@@ -38,7 +38,7 @@ class ArcPlanner extends StatelessWidget {
         '/home': (BuildContext context) => homeScreen,
         '/settings': (BuildContext context) => settingsScreen,
         '/arcview': (BuildContext context) => arcViewScreen,
-        '/taskview': (BuildContext context) => taskViewScreen
+        '/taskview': (BuildContext context) => taskViewScreen,
         '/addarc': (BuildContext context) => addArcScreen,
       },
       navigatorObservers: [routeObserver],
