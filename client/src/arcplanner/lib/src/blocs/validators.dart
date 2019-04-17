@@ -8,7 +8,8 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains...
+ *  This file defines the Validators class to be utilized from the Bloc class
+ *   in order to validate data passed to it's streams
  */
 
 import 'dart:async';
@@ -25,7 +26,7 @@ class Validators {
       }
     });
 
-    final validateDesc = 
+  final validateDesc = 
     StreamTransformer<String, String>.fromHandlers(handleData: (desc, sink) {
         if (desc.isNotEmpty)  {
         sink.add(desc);
