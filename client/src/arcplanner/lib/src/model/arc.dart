@@ -4,11 +4,11 @@
  *
  *  Authors: 
  *    Primary: Justin Grabowski
- *    Contributors: 
+ *    Contributors:  Jonathan Middleton
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains...
+ *  This file has the Arc class and associated functions
  */
 
 /** Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton

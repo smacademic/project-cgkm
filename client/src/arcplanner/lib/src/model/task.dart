@@ -4,17 +4,11 @@
  *
  *  Authors: 
  *    Primary: Justin Grabowski
- *    Contributors: 
+ *    Contributors: Jonathan Middleton
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains...
- */
-
-/** Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- *  CS298 Spring 2019 Team CGKM 
- * 
- * Provided AS IS. No warranties expressed or implied. Use at your own risk.
+ *  This file has the Task class and associated functions
  */
 
 import 'package:uuid/uuid.dart';

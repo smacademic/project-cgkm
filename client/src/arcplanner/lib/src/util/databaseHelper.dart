@@ -3,12 +3,13 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: 
+ *    Primary: Jonathan Middleton
  *    Contributors: Matthew Chastain, Justin Grabowski
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains...
+ *  This file the DatabaseHelper class and associated functions, which are
+ *  used by the app to interact with the database.
  */
 
 import 'dart:io';
