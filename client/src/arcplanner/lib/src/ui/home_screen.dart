@@ -1,10 +1,17 @@
-/* 
- * Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- * team-CGKM
- * CS 298 - Software Devops; Spring 2019
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Matthew Chastain
+ *    Contributors: 
  * 
- * File: home_screen.dart
-*/
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file contains ArcPlanner's home screen which will be displayed on 
+ *  launch. The screen shows users a list of upcoming tasks along with a Task 
+ *  quick-add button.
+ */
 
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';

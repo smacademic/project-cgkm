@@ -1,3 +1,17 @@
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Matthew Chastain
+ *    Contributors: 
+ * 
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file contains the visual definition of the Task tiles found in
+ *  multiple screens within ArcPlanner.
+ */
+
 import 'package:flutter/material.dart';
 import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';

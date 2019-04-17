@@ -1,15 +1,17 @@
-/* 
- * Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- * team-CGKM
- * CS 298 - Software Devops; Spring 2019
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Matthew Chastain
+ *    Contributors: Justin Grabowski
  * 
- * File: drawer_menu.dart
- * 
- * Purpose:
- *  This file defines a single method 'drawerMenu' which builds the 
- *  side-menu for a number of the screens in the application. The 
- *  menu can be accessed by pulling from the left side of the screen.
-*/
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file defines a single method 'drawerMenu' which builds the side-menu 
+ *  for a number of the screens in the application. The menu can be accessed by 
+ *  pulling from the left side of the screen.
+ */
 
 import 'package:flutter/material.dart';
 

@@ -1,3 +1,17 @@
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Matthew Chastain
+ *    Contributors: Kevin Kelly
+ * 
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file contains the visual definition of the Arc tiles found in multiple 
+ *  screens within ArcPlanner.
+ */
+
 import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
 import '../model/arc.dart';

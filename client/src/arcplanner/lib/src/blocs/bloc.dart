@@ -1,3 +1,16 @@
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
+ *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Matthew Chastain, Justin Grabowski, Kevin Kelly
+ *    Contributors: 
+ * 
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file contains the implementation of the BLoC Pattern for Software Design for use with 
+ *  Flutter. The Bloc present in this file handles data flow throughout the application.
+ */
 
 import 'dart:async';
 import '../model/arc.dart';

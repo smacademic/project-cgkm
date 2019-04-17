@@ -1,8 +1,15 @@
-/** Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
- *  Team CGKM 
+/** 
+ *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
  *  CS298 Spring 2019 
+ *
+ *  Authors: 
+ *    Primary: Jonathan Middleton, Kevin Kelly
+ *    Contributors: Matthew Chastain, Justin Grabowski
  * 
- *  Provided AS IS. No warranties expressed or implied. Use at your own risk.
+ *  Provided as is. No warranties expressed or implied. Use at your own risk.
+ *
+ *  This file the DatabaseHelper class and associated functions, which are
+ *  used by the app to interact with the database.
  */
 
 import 'dart:io';
