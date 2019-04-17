@@ -8,9 +8,9 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file defines a single method 'drawerMenu' which builds the side-menu for a number of the 
- *  screens in the application. The menu can be accessed by pulling from the left side of the 
- *  screen.
+ *  This file defines a single method 'drawerMenu' which builds the side-menu 
+ *  for a number of the screens in the application. The menu can be accessed by 
+ *  pulling from the left side of the screen.
  */
 
 import 'package:flutter/material.dart';

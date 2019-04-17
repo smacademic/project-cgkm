@@ -8,8 +8,8 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains the visual definition of the Task tiles found in multiple screens within
- *  ArcPlanner.
+ *  This file contains the visual definition of the Task tiles found in
+ *  multiple screens within ArcPlanner.
  */
 
 import 'package:flutter/material.dart';

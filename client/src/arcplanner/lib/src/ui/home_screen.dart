@@ -8,8 +8,9 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains ArcPlanner's home screen which will be displayed on launch. The screen shows 
- *  users a list of upcoming tasks along with a Task quick-add button.
+ *  This file contains ArcPlanner's home screen which will be displayed on 
+ *  launch. The screen shows users a list of upcoming tasks along with a Task 
+ *  quick-add button.
  */
 
 import 'package:flutter/material.dart';

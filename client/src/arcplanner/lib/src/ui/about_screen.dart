@@ -8,8 +8,8 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This screen contains basic information about the application, as well as listing the developers 
- *  that assisted in its development.
+ *  This screen contains basic information about the application, as well as 
+ *  listing the developers that assisted in its development.
  */
 
 import 'package:flutter/material.dart';

@@ -8,8 +8,9 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains the ArcPlanner class, defining the screens present in the application as well
- *  as setting up the Navigator that allows for screen navigation within ArcPlanner.
+ *  This file contains the ArcPlanner class, defining the screens present in 
+ *  the application as well as setting up the Navigator that allows for screen 
+ *  navigation within ArcPlanner.
  */
 
 import 'package:flutter/material.dart';

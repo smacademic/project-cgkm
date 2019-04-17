@@ -8,7 +8,8 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains a navigatable hierarchy of the Arcs and Tasks present in ArcPlanner. 
+ *  This file contains a navigatable hierarchy of the Arcs and Tasks present in 
+ *  ArcPlanner. 
  */
 
 import 'package:flutter/material.dart';

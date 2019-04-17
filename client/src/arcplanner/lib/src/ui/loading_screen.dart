@@ -8,7 +8,8 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains a splash screen of the ArcPlanner logo and is used to hide long load screens.
+ *  This file contains a splash screen of the ArcPlanner logo and is used to 
+ *  hide long load screens.
  */
 
 import 'package:flutter/material.dart';

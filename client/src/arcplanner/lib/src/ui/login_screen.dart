@@ -8,8 +8,8 @@
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains the layout of the Login screen. This file will be used when the application 
- *  moves to a cloud system with multiple users.
+ *  This file contains the layout of the Login screen. This file will be used
+ *  when the application moves to a cloud system with multiple users.
  */
 
 import 'package:flutter/material.dart';
