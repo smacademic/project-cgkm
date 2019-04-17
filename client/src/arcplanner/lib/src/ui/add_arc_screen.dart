@@ -3,12 +3,13 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: 
- *    Contributors: 
+ *    Primary: Justin Grabowski
+ *    Contributors: Kevin Kelly
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains...
+ *  This file contains widgets that allow the user to enter the information
+ *  for a new arc, and then create the arc
  */
 
 import 'package:flutter/material.dart';
