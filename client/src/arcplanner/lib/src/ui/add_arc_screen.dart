@@ -17,7 +17,6 @@ import '../blocs/bloc.dart';
 import '../model/arc.dart';
 import 'drawer_menu.dart';
 
-
 class AddArcScreen extends StatelessWidget {
   
   Widget build(context) {

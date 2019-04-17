@@ -15,7 +15,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 //import 'package:arcplanner/main.dart';
-
 class LoginScreen extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
