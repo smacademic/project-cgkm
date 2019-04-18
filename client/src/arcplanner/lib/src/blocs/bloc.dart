@@ -15,7 +15,7 @@
 import 'dart:async';
 import '../model/arc.dart';
 import '../model/task.dart';
-//import '../model/user.dart';
+import '../model/user.dart';
 import '../util/databaseHelper.dart';
 import '../blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
@@ -173,12 +173,14 @@ class Bloc extends Object with Validators {
     final arcEndDate = _arcEndDateFieldController.value;
     final arcDescription = _arcEndDateFieldController.value;
 
-    print("$validArcTitle");
-    //TODO create arc with new data
-    //User sally = new User("sally", "seashells", "this@that.com");
-    //Arc ar = new Arc(sally.uid, validArcTitle);
-    //db.insertArc(ar);
+    //Create arc with new data
+    // This section should be removed when we decide how to procede 
+    // with definingt `user` or removing the paramerter from Arc constructor
+    User tempUser = new User("Temp", "seashells", "this@that.com");
+    Arc ar = new Arc(tempUser.uid, validArcTitle);
+    
     //TODO insert to new arc
+    db.insertArc(ar);
   }
 
   // Closes the stream controller
