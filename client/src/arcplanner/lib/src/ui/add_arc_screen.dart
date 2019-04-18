@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
 import '../model/arc.dart';
 import 'drawer_menu.dart';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class AddArcScreen extends StatelessWidget {
   
@@ -35,7 +37,7 @@ class AddArcScreen extends StatelessWidget {
         margin: EdgeInsets.only(left: 15.0, right: 15.0),
         child: ListView(
           children:[
-            Container(margin: EdgeInsets.only(top: 20)),
+            Container(margin: EdgeInsets.only(top: 15)),
             titleField(),
             dueDate(),
             descriptionField(),
@@ -109,13 +111,14 @@ Widget dueDate(){
   return StreamBuilder(
     stream: bloc.arcEndDateFieldStream,
     builder: (context, snapshot) {
-      return TextField(
-        keyboardType: TextInputType.datetime,
-        onChanged: bloc.changeEndDate,
+      return DateTimePickerFormField(
+        inputType: InputType.date,
+        format: DateFormat.yMEd(),// ("yyyy-MM-dd"),
+        editable: false,
         decoration: InputDecoration(
-          hintText: 'Due Date'
-          //TODO add errorText when used
+          labelText: 'Due Date',
         ),
+        onFieldSubmitted: (date) => bloc.changeEndDate(date.toString()),
       );
     }
   );
@@ -149,35 +152,12 @@ Widget descriptionField(){
     );
  }
 
-Widget arcTile(Arc arc, BuildContext context) {
-  var description = arc.description;
-  if (description == null) {
-    description = '';
-  }
-
-  return Container(
-    decoration: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color: Colors.grey[350],
-        ),
-        top: BorderSide(
-          color: Colors.grey[350],
-        ),
-      ),
-    ),
-    child: ListTile(
-      title: Text(arc.title),
-    ),
-  );
-}
-
 Widget selectParent(){
   return RaisedButton(
     child: Text('Select'),
     color: Colors.blue,
     textColor: Colors.white,
-    onPressed: (){
+    onPressed: () {
     //TODO add call to new select_arc_screen
    },
   );
@@ -186,13 +166,13 @@ Widget selectParent(){
 Widget submitArc() {
   return StreamBuilder(
     stream: bloc.arcTitleFieldStream, 
-    builder: (context, snapshot){
+    builder: (context, snapshot) {
       return RaisedButton(
         child: Text('Submit'),
         color: Colors.white,
         textColor: Colors.blue,
-        onPressed: snapshot.hasData ? (){ 
-          bloc.submitArc; //Currently just returns to previous screen
+        onPressed: snapshot.hasData ? () { 
+          bloc.submitArc(); //Currently just returns to previous screen
           Navigator.pop(context);
           }
         :  null
