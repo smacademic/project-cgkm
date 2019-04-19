@@ -79,6 +79,14 @@ class DatabaseHelper {
     return arcDb;
   }
 
+  startTransaction() async {
+    _db.rawQuery("BEGIN TRANSACTION;");
+  }
+
+  rollback() async {
+    _db.rawQuery("ROLLBACK;");
+  }
+
   // Creates database tables
   void _onCreate(Database db, int version) async {
     await db.execute("""
