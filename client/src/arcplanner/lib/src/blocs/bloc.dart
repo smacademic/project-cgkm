@@ -173,12 +173,13 @@ class Bloc extends Object with Validators {
     final validArcTitle = _arcTitleFieldController.value;
     final arcEndDate = _arcEndDateFieldController.value;
     final arcDescription = _arcDescriptionFieldController.value;
+    final arcParent = _arcParentFieldController.value;
 
     //Create arc with new data
     // This section should be removed when we decide how to procede 
     // with definingt `user` or removing the paramerter from Arc constructor
     User tempUser = new User("Temp", "seashells", "this@that.com");
-    Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate);
+    Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate, parentArc: arcParent.aid);
     db.insertArc(ar);
   }
 
