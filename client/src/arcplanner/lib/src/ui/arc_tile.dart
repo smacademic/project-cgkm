@@ -17,8 +17,11 @@ import '../blocs/bloc.dart';
 import '../model/arc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'arc_view_screen.dart';
+import 'package:intl/intl.dart';
+
 
 Widget arcTile(Arc arc, BuildContext context) {
+  
   var description = arc.description;
 
   ArcViewScreen.currentParent = arc.parentArc;
@@ -77,7 +80,8 @@ Widget arcTile(Arc arc, BuildContext context) {
                 ),
                 Container(
                   child: AutoSizeText(
-                    (arc.dueDate != null) ? arc.dueDate: '',
+                    (arc.dueDate == 'null') ? 'No Due Date' 
+                    : DateFormat.yMEd().format(DateTime.parse(arc.dueDate)),
                     style: TextStyle(
                       color: Colors.black,
                     ),
