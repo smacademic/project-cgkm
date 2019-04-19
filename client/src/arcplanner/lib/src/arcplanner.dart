@@ -22,6 +22,7 @@ import 'ui/settings_screen.dart';
 import 'ui/arc_view_screen.dart';
 import 'ui/task_view_screen.dart';
 import 'ui/add_arc_screen.dart';
+import 'ui/parent_select_screen.dart';
 
 
 /// Observer for tracking page changes
@@ -36,6 +37,7 @@ class ArcPlanner extends StatelessWidget {
   static ArcViewScreen arcViewScreen = ArcViewScreen();
   static TaskViewScreen taskViewScreen = TaskViewScreen();
   static AddArcScreen addArcScreen = AddArcScreen();
+  static ParentSelectScreen parentSelectScreen = ParentSelectScreen();
 
 
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class ArcPlanner extends StatelessWidget {
         '/arcview': (BuildContext context) => arcViewScreen,
         '/taskview': (BuildContext context) => taskViewScreen,
         '/addarc': (BuildContext context) => addArcScreen,
+        '/parent': (BuildContext context) => parentSelectScreen,
       },
       navigatorObservers: [routeObserver],
     );
