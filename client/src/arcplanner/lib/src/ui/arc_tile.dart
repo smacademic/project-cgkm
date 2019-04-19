@@ -77,8 +77,7 @@ Widget arcTile(Arc arc, BuildContext context) {
                 ),
                 Container(
                   child: AutoSizeText(
-                    'dueDate',
-                    //arc.dueDate,
+                    (arc.dueDate != null) ? arc.dueDate: '',
                     style: TextStyle(
                       color: Colors.black,
                     ),
