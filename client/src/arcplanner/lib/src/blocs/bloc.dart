@@ -83,8 +83,9 @@ class Bloc extends Object with Validators {
   
   // Reads from the DB and returns an Arc object
   Arc toArc(Map map) {
+    print(map['Title'].toString() + ": " + map['DueDate'].toString());
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
-        map['Description'], parentArc: map['ParentArc'], completed: 
+        map['Description'], dueDate: map['DueDate'], parentArc: map['ParentArc'], completed: 
         map['Completed'], childrenUUIDs: map['ChildrenUUIDs']);
   }
 
@@ -171,15 +172,13 @@ class Bloc extends Object with Validators {
     final arcLoc = _arcLocationFieldController.value;
     final validArcTitle = _arcTitleFieldController.value;
     final arcEndDate = _arcEndDateFieldController.value;
-    final arcDescription = _arcEndDateFieldController.value;
+    final arcDescription = _arcDescriptionFieldController.value;
 
     //Create arc with new data
     // This section should be removed when we decide how to procede 
     // with definingt `user` or removing the paramerter from Arc constructor
     User tempUser = new User("Temp", "seashells", "this@that.com");
-    Arc ar = new Arc(tempUser.uid, validArcTitle);
-    
-    //TODO insert to new arc
+    Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate);
     db.insertArc(ar);
   }
 
