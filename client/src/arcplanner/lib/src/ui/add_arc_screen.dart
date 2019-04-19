@@ -118,7 +118,7 @@ Widget dueDate(){
         decoration: InputDecoration(
           labelText: 'Due Date',
         ),
-        onFieldSubmitted: (date) => bloc.changeEndDate(date.toString()),
+        onChanged: (date) => bloc.changeEndDate(date.toString()),
       );
     }
   );
