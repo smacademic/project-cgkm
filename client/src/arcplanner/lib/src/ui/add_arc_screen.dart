@@ -50,7 +50,7 @@ class AddArcScreen extends StatelessWidget {
                   Flexible(
                     child: Container(
                       width:MediaQuery.of(context).size.width * 0.25 , 
-                      child: selectParent(),
+                      child: selectParent(context),
                     ),
                   ),   
                 ]
@@ -152,12 +152,13 @@ Widget descriptionField(){
     );
  }
 
-Widget selectParent(){
+Widget selectParent(BuildContext context){
   return RaisedButton(
     child: Text('Select'),
     color: Colors.blue,
     textColor: Colors.white,
     onPressed: () {
+      Navigator.popAndPushNamed(context, '/parent');
     //TODO add call to new select_arc_screen
    },
   );
@@ -173,9 +174,9 @@ Widget submitArc() {
         textColor: Colors.blue,
         onPressed: snapshot.hasData ? () { 
           bloc.submitArc(); //Currently just returns to previous screen
-          Navigator.pop(context);
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
           }
-        :  null
+        : null
       );
     },
   );
