@@ -17,16 +17,13 @@ import './../lib/src/model/user.dart';
 import './../lib/src/model/arc.dart';
 
 void main() async {
+  
   final db = new DatabaseHelper();
   
-  int users = await db.getUserCount();
-  int arcs = await db.getArcCount();
-  // var myNumber = int.parse(users.toString()) + 1;
-
-
   test('Add user test', () async {
-    final db = new DatabaseHelper();
-    
+
+    int users = await db.getUserCount();
+
     db.startTransaction();
 
     User user1 = new User("UFName1", "ULName1", "email1@web.com");
@@ -37,8 +34,9 @@ void main() async {
   });
 
   test('Add arc test', () async {
-    final db = new DatabaseHelper();
     
+    int arcs = await db.getArcCount();
+
     db.startTransaction();
     User user1 = new User("UFName1", "ULName1", "email1@web.com");
     db.insertUser(user1);
