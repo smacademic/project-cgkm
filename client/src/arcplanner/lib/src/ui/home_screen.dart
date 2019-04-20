@@ -20,14 +20,13 @@ import 'drawer_menu.dart';
 class HomeScreen extends StatelessWidget {
   // For visual demonstration purposes only. Will be removed before release
   //=======================================================================
-  String userName = 'UserName';
-  var upcomingTasks = 5;
+  //String userName = 'UserName';
+  //var upcomingTasks = 5;
   //=======================================================================
   void _newTask() {}
 
   Widget build(context) {
     var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -46,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget> [
                         AutoSizeText(
-                          'Hello $userName',
+                          'Hello userName',
                           style: TextStyle(
                             fontSize: 30.0,
                             color: Colors.white,
@@ -54,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                           maxLines: 1,
                         ),
                         AutoSizeText(
-                          'You have $upcomingTasks upcoming tasks due in the next week',
+                          'You have X upcoming tasks due in the next week',
                           style: TextStyle(
                             fontSize: 24.0,
                             color: Colors.white,
