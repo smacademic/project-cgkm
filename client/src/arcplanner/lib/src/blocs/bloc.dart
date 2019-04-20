@@ -83,7 +83,6 @@ class Bloc extends Object with Validators {
   
   // Reads from the DB and returns an Arc object
   Arc toArc(Map map) {
-    print(map['Title'].toString() + ": " + map['DueDate'].toString());
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
         map['Description'], dueDate: map['DueDate'], parentArc: map['ParentArc'], completed: 
         map['Completed'], childrenUUIDs: map['ChildrenUUIDs']);
