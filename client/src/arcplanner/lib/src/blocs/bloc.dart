@@ -43,7 +43,7 @@ class Bloc extends Object with Validators {
   // Add data to streams for Add Arc Screen
   Stream<String> get arcLocationFieldStream => _arcLocationFieldController.stream;
 
-  Stream<String> get arcTitleFieldStream => _arcTitleFieldController.stream.transform(validateTitle);
+  Stream<String> get arcTitleFieldStream => _arcTitleFieldController.stream; //.transform(validateTitle);
 
   Stream<String> get arcEndDateFieldStream => _arcEndDateFieldController.stream;
 
@@ -180,6 +180,12 @@ class Bloc extends Object with Validators {
     User tempUser = new User("Temp", "seashells", "this@that.com");
     Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate, parentArc: arcParent.aid);
     db.insertArc(ar);
+
+    bloc.changeTitle(null);
+    bloc.changeEndDate(null);
+    bloc.changeDescription(null);
+    bloc.changeParent(null);
+    
   }
 
   // Closes the stream controller
