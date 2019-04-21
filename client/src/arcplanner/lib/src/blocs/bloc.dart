@@ -178,8 +178,15 @@ class Bloc extends Object with Validators {
     // This section should be removed when we decide how to procede 
     // with definingt `user` or removing the paramerter from Arc constructor
     User tempUser = new User("Temp", "seashells", "this@that.com");
-    Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate, parentArc: arcParent.aid);
-    db.insertArc(ar);
+
+    if(arcParent == null) {
+      Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate);
+       db.insertArc(ar);
+    }
+    else {
+      Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate, parentArc: arcParent.aid);
+       db.insertArc(ar);
+    }
 
     bloc.changeTitle(null);
     bloc.changeEndDate(null);
