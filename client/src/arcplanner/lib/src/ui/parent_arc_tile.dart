@@ -116,7 +116,6 @@ Widget parentArcTile(Arc arc, BuildContext context) {
                   color: Colors.blue,
                   textColor: Colors.white,
                   onPressed: () {
-                    bloc.changeLocation(arc.aid);
                     bloc.changeParent(arc);
                     Navigator.pushNamedAndRemoveUntil(context, '/addarc', (Route<dynamic> route) => false);   
                     //TODO add call to new select_arc_screen
