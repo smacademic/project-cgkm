@@ -95,11 +95,12 @@ class AddArcScreen extends StatelessWidget {
   return StreamBuilder(
     stream: bloc.arcTitleFieldStream,
     builder: (context, snapshot) {
+      //var title = snapshot.data;
       return TextField(
         onChanged: bloc.changeTitle,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
-          hintText: 'Title',
+           hintText: snapshot.hasData? snapshot.data: 'Title',
           errorText: snapshot.error,
         ),
       );
@@ -135,7 +136,7 @@ Widget descriptionField(){
         textInputAction: TextInputAction.done,
         autocorrect: true,
         decoration: InputDecoration(
-          hintText: 'Description',
+          hintText: snapshot.hasData? snapshot.data:'Description',
           errorText: snapshot.error,
         ),
       );
@@ -147,7 +148,9 @@ Widget descriptionField(){
   return StreamBuilder(
       stream: bloc.arcParentFieldStream,
       builder: (context, snapshot) {
-        return Text(snapshot.hasData? snapshot.data.title : "Parent");
+        //return Text ("Parent");
+
+      return Text(snapshot.hasData? snapshot.data.title : "Parent");
       }
     );
  }
@@ -175,6 +178,7 @@ Widget submitArc() {
         onPressed: snapshot.hasData ? () { 
           bloc.submitArc(); //Currently just returns to previous screen
           Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
+          //bloc.changeTitle(null);
           }
         : null
       );
