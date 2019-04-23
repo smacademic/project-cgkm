@@ -32,7 +32,6 @@ class Bloc extends Object with Validators {
   final _arcViewController = StreamController<dynamic>.broadcast();
 
   // Streams for add_arc_screen
-  final _arcLocationFieldController = BehaviorSubject<String>();
   final _arcTitleFieldController = BehaviorSubject<String>();
   final _arcEndDateFieldController = BehaviorSubject<String>();
   final _arcDescriptionFieldController = BehaviorSubject<String>();
@@ -41,8 +40,6 @@ class Bloc extends Object with Validators {
   Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
 
   // Add data to streams for Add Arc Screen
-  Stream<String> get arcLocationFieldStream => _arcLocationFieldController.stream;
-
   Stream<String> get arcTitleFieldStream => _arcTitleFieldController.stream; //.transform(validateTitle);
 
   Stream<String> get arcEndDateFieldStream => _arcEndDateFieldController.stream;
@@ -56,7 +53,6 @@ class Bloc extends Object with Validators {
     arcDescriptionFieldStream, (t, d) => true);
 
   // Change data for Add Arc Screen
-  Function(String) get changeLocation => _arcLocationFieldController.sink.add;
   Function(String) get changeTitle => _arcTitleFieldController.sink.add;
   Function(String) get changeEndDate => _arcEndDateFieldController.sink.add;
   Function(String) get changeDescription => _arcDescriptionFieldController.sink.add;
@@ -168,7 +164,6 @@ class Bloc extends Object with Validators {
   }
 
   submitArc() {
-    final arcLoc = _arcLocationFieldController.value;
     final validArcTitle = _arcTitleFieldController.value;
     final arcEndDate = _arcEndDateFieldController.value;
     final arcDescription = _arcDescriptionFieldController.value;
@@ -202,7 +197,6 @@ class Bloc extends Object with Validators {
     // Close Add Arc Screen streams
     _arcDescriptionFieldController.close();
     _arcEndDateFieldController.close();
-    _arcLocationFieldController.close();
     _arcTitleFieldController.close();
     _arcViewController.close();
     _arcParentFieldController.close();
