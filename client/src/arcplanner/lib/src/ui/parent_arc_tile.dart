@@ -99,29 +99,34 @@ Widget parentArcTile(Arc arc, BuildContext context) {
             padding: EdgeInsets.only(
               bottom: 10.0,
             ),
-            child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                AutoSizeText(description,
-                  style: TextStyle(
-                    color: Colors.grey[600],
+            child: SafeArea(
+              child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.60,
+                    child: AutoSizeText(description,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                      ),
+                      maxFontSize: 14.0,
+                      minFontSize: 10.0,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  maxFontSize: 14.0,
-                  minFontSize: 10.0,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                RaisedButton (
-                  child: Text('Select'),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  onPressed: () {
-                    bloc.changeParent(arc);
-                    Navigator.pushNamedAndRemoveUntil(context, '/addarc', (Route<dynamic> route) => false);   
-                    //TODO add call to new select_arc_screen
-                    },
-                ),
-              ],
+                  RaisedButton (
+                    child: Text('Select'),
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      bloc.changeParent(arc);
+                      Navigator.pushNamedAndRemoveUntil(context, '/addarc', (Route<dynamic> route) => false);   
+                      //TODO add call to new select_arc_screen
+                      },
+                  ),
+                ],
+              ),
             ),
           ),
         ],
