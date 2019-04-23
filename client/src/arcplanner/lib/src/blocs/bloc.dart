@@ -70,6 +70,10 @@ class Bloc extends Object with Validators {
     _arcViewController.sink.add(obj);
   } 
 
+  void homeInsert(dynamic obj) {
+    _homeController.sink.add(obj);
+  }
+
   // Map function that based on the given flag from stream will perform
   //  varying operations that return needed arcs to stream 
   dynamic transformData(data) async {
@@ -80,6 +84,8 @@ class Bloc extends Object with Validators {
     } else if (data['flag'] == "backButton") {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
+    } else if (data['flag'] == 'getUpcoming') {
+      return await getUpcomingTasks();
     } else if (data['flag'] == "clear") {
       return null;
     }
@@ -136,6 +142,10 @@ class Bloc extends Object with Validators {
     return loadedObjects[uuid];
   }
 
+  dynamic getUpcomingTasks() {
+    
+  }
+
   // Checks to see if children are in map. If they exist in map then send them
   //  back via stream. Otherwise load them from database and into map. Then
   //  to the UI via stream
@@ -188,6 +198,7 @@ class Bloc extends Object with Validators {
   // Closes the stream controller
   dispose() {
     _arcViewController.close();
+    _homeController.close();
 
     // Close Add Arc Screen streams
     _arcDescriptionFieldController.close();

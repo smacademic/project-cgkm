@@ -19,6 +19,8 @@ import 'drawer_menu.dart';
 import '../blocs/bloc.dart';
 import 'arc_tile.dart';
 import 'task_tile.dart';
+import '../model/arc.dart';
+import '../model/task.dart';
 
 class HomeScreen extends StatelessWidget {
   void _newTask() {}
@@ -99,7 +101,27 @@ class HomeScreen extends StatelessWidget {
                 child: StreamBuilder(
                   stream: bloc.homeStream,
                   builder: (context, snapshot) {
-
+                    return new FutureBuilder(
+                      future: snapshot.data,
+                      builder: (context, snapshot) {
+                        // if (firstTimeLoading) {
+                        //   bloc.homeInsert({ 'object' : null, 'flag': 'getUpcomingTasks'});
+                        //   firstTimeLoading = false;
+                        // }
+                        
+                        if (snapshot.hasData) {
+                        dynamic snapshotData = snapshot.data;
+                        return ListView.builder(
+                          itemCount: snapshotData.length,
+                          itemBuilder: (context, index) {
+                            return tile(snapshotData[index], context);
+                          },
+                        );
+                        } else {
+                          return Text('There are no Arcs/Tasks');
+                        }
+                      },
+                    );
                   },
                 ),
               ),
@@ -110,5 +132,15 @@ class HomeScreen extends StatelessWidget {
 
       drawer: drawerMenu(context),
     );
+  }
+}
+
+Widget tile(dynamic obj, BuildContext context) {
+  if (obj is Arc) {
+    return arcTile(obj, context);
+  } else if (obj is Task) {
+    return taskTile(obj, context);
+  } else {
+    return Text('tile tried to build not an Arc or Task');
   }
 }
