@@ -30,6 +30,7 @@ class Bloc extends Object with Validators {
 
   // Create stream and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
+  final _homeController = StreamController<dynamic>.broadcast();
 
   // Streams for add_arc_screen
   final _arcLocationFieldController = BehaviorSubject<String>();
@@ -39,6 +40,9 @@ class Bloc extends Object with Validators {
   final _arcParentFieldController = BehaviorSubject<Arc>();
   
   Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+
+  // Stream for interaction with Home screen
+  Stream<dynamic> get homeStream => _homeController.stream;
 
   // Add data to streams for Add Arc Screen
   Stream<String> get arcLocationFieldStream => _arcLocationFieldController.stream;

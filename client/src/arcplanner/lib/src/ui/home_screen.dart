@@ -16,13 +16,11 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'drawer_menu.dart';
+import '../blocs/bloc.dart';
+import 'arc_tile.dart';
+import 'task_tile.dart';
 
 class HomeScreen extends StatelessWidget {
-  // For visual demonstration purposes only. Will be removed before release
-  //=======================================================================
-  //String userName = 'UserName';
-  //var upcomingTasks = 5;
-  //=======================================================================
   void _newTask() {}
 
   Widget build(context) {
@@ -30,6 +28,9 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+
+      //appBar: Column(),
+
       body: Column(
         children: <Widget>[
           SafeArea(
@@ -91,12 +92,19 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           
-          //This will be where the tasks are displayed
-          /*
-          ListView.builder(
 
+          Column(
+            children: <Widget>[
+              Expanded(
+                child: StreamBuilder(
+                  stream: bloc.homeStream,
+                  builder: (context, snapshot) {
+
+                  },
+                ),
+              ),
+            ],
           ),
-          */
         ]
       ),
 
