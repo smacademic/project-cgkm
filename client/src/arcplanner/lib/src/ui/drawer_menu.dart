@@ -81,13 +81,13 @@ Drawer drawerMenu(BuildContext context) {
         ),
         ListTile(
           title: Text(
-            'Calendar View',
+            'Calendar',
               style: TextStyle(
                 fontSize: 20.0,
               ),
           ),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popAndPushNamed(context, '/calendar');
           },
         ),
         ListTile(
