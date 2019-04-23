@@ -34,7 +34,7 @@ class AddArcScreen extends StatelessWidget {
       ),
       
       body: Container(
-        margin: EdgeInsets.only(left: 15.0, right: 15.0),
+        margin: EdgeInsets.only(left: 10.0, right: 10.0),
         child: ListView(
           children:[
             Container(margin: EdgeInsets.only(top: 15)),
@@ -130,7 +130,9 @@ Widget descriptionField(){
   return StreamBuilder(
       stream: bloc.arcParentFieldStream,
       builder: (context, snapshot) {
-        return Text(snapshot.hasData? snapshot.data.title : "Parent");
+        return Text(
+          snapshot.hasData? snapshot.data.title : "Parent",
+        );
       }
     );
  }
