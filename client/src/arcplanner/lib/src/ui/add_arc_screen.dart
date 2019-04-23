@@ -55,7 +55,6 @@ class AddArcScreen extends StatelessWidget {
                   ),   
                 ]
               ),
-              //TODO: add additional fields as needed
             ),
           ],
         ),
@@ -76,26 +75,10 @@ class AddArcScreen extends StatelessWidget {
   }
 }
 
- Widget locationField(){
-  return StreamBuilder(
-      stream: bloc.arcTitleFieldStream,
-      builder: (context, snapshot) {
-        return TextField(
-          onChanged: bloc.changeTitle,
-          keyboardType: TextInputType.datetime,
-          decoration: InputDecoration(
-            hintText: 'Location'
-          ),
-        );
-      }
-    );
- }
-
  Widget titleField(){
   return StreamBuilder(
     stream: bloc.arcTitleFieldStream,
     builder: (context, snapshot) {
-      //var title = snapshot.data;
       return TextField(
         onChanged: bloc.changeTitle,
         keyboardType: TextInputType.text,
@@ -114,7 +97,7 @@ Widget dueDate(){
     builder: (context, snapshot) {
       return DateTimePickerFormField(
         inputType: InputType.date,
-        format: DateFormat.yMEd(),// ("yyyy-MM-dd"),
+        format: DateFormat.yMEd(),
         editable: false,
         decoration: InputDecoration(
           labelText: 'Due Date',
@@ -134,7 +117,6 @@ Widget descriptionField(){
         onChanged: bloc.changeDescription,
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.done,
-        autocorrect: true,
         decoration: InputDecoration(
           hintText: snapshot.hasData? snapshot.data:'Description',
           errorText: snapshot.error,
@@ -148,9 +130,7 @@ Widget descriptionField(){
   return StreamBuilder(
       stream: bloc.arcParentFieldStream,
       builder: (context, snapshot) {
-        //return Text ("Parent");
-
-      return Text(snapshot.hasData? snapshot.data.title : "Parent");
+        return Text(snapshot.hasData? snapshot.data.title : "Parent");
       }
     );
  }
@@ -161,9 +141,7 @@ Widget selectParent(BuildContext context){
     color: Colors.blue,
     textColor: Colors.white,
     onPressed: () {
-      Navigator.popAndPushNamed(context, '/parent');
-    //TODO add call to new select_arc_screen
-   },
+      Navigator.popAndPushNamed(context, '/parent');   },
   );
 }
 
