@@ -94,8 +94,9 @@ class Bloc extends Object with Validators {
   // Reads from the DB and returns an Arc object
   Arc toArc(Map map) {
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
-        map['Description'], parentArc: map['ParentArc'], completed: 
-        map['Completed'], childrenUUIDs: map['ChildrenUUIDs']);
+        map['Description'], dueDate: map['DueDate'], parentArc: 
+        map['ParentArc'], completed: map['Completed'], childrenUUIDs: 
+        map['ChildrenUUIDs']);
   }
 
   // Reads from the DB and returns a Task object
@@ -145,7 +146,6 @@ class Bloc extends Object with Validators {
   // Pulls all Arcs and Tasks that are due in the next 7 days into the app
   Future<List<dynamic>> getUpcomingItems() async {
     List<dynamic> upcomingTasks = await db.getUpcomingItems();
-    
     return upcomingTasks;
   }
 

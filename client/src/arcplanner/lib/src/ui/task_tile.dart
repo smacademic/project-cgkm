@@ -22,7 +22,7 @@ Widget taskTile(Task task, BuildContext context) {
     description = 'No Description';
   }
 
-  var dueDate = task.duedate;
+  var dueDate = task.dueDate;
   if (dueDate == null) {
     dueDate = '';
   }
@@ -77,8 +77,7 @@ Widget taskTile(Task task, BuildContext context) {
               ),
               Container(
                 child: AutoSizeText(
-                  'dueDate',
-                  //dueDate,
+                  dueDate,
                   style: TextStyle(
                     color: Colors.black,
                   ),

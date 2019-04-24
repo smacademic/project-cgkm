@@ -63,7 +63,7 @@ class Task {
   String get aid => _aid;
   String get title => _title;
   String get description => _description;
-  String get duedate => _dueDate;
+  String get dueDate => _dueDate;
   String get location => _location;
   bool get completed => _completed;
 

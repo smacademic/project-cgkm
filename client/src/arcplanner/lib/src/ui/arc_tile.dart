@@ -26,6 +26,11 @@ Widget arcTile(Arc arc, BuildContext context) {
   if (description == null) {
     description = '';
   }
+  
+  var dueDate = arc.dueDate;
+  if (dueDate == null) {
+    dueDate = '';
+  }
 
   return Container(
     decoration: BoxDecoration(
@@ -77,8 +82,7 @@ Widget arcTile(Arc arc, BuildContext context) {
                 ),
                 Container(
                   child: AutoSizeText(
-                    'dueDate',
-                    //arc.dueDate,
+                    dueDate,
                     style: TextStyle(
                       color: Colors.black,
                     ),
