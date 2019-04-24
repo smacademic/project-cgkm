@@ -31,6 +31,9 @@ class Bloc extends Object with Validators {
   // Create stream and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
 
+  // Create stream and getters for parent)sdelection view
+  final _arcParentSelectViewController = StreamController<dynamic>.broadcast();
+
   // Streams for add_arc_screen
   final _arcTitleFieldController = BehaviorSubject<String>();
   final _arcEndDateFieldController = BehaviorSubject<String>();
@@ -38,6 +41,8 @@ class Bloc extends Object with Validators {
   final _arcParentFieldController = BehaviorSubject<Arc>();
   
   Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+
+  Stream<dynamic> get arcParentSelectViewStream => _arcParentSelectViewController.stream.map(transformData);
 
   // Add data to streams for Add Arc Screen
   Stream<String> get arcTitleFieldStream => _arcTitleFieldController.stream; //.transform(validateTitle);
@@ -61,6 +66,10 @@ class Bloc extends Object with Validators {
   void arcViewInsert(dynamic obj) {
     _arcViewController.sink.add(obj);
   } 
+
+  void parentSelectInsert(dynamic obj) {
+    _arcParentSelectViewController.sink.add(obj);
+  }
 
   // Map function that based on the given flag from stream will perform
   //  varying operations that return needed arcs to stream 
@@ -193,6 +202,7 @@ class Bloc extends Object with Validators {
   // Closes the stream controller
   dispose() {
     _arcViewController.close();
+    _arcParentSelectViewController.close();
 
     // Close Add Arc Screen streams
     _arcDescriptionFieldController.close();
