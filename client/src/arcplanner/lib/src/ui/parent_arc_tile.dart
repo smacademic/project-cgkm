@@ -135,9 +135,9 @@ Widget parentArcTile(Arc arc, BuildContext context) {
         //If going to a screen that shows no children then set flag to true
         if (arc.childrenUUIDs?.isEmpty ?? true) {
           ArcViewScreen.atNoArcTaskScreen = true;
-          bloc.arcViewInsert({ 'object' : null, 'flag': 'clear'});
+          bloc.parentSelectInsert({ 'object' : null, 'flag': 'clear'});
         } else {
-          bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+          bloc.parentSelectInsert({ 'object' : arc.aid, 'flag': 'getChildArcs'});
         }
       } 
       //onLongPress: ,
