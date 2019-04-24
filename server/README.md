@@ -22,10 +22,17 @@ The recommended interactive installer is distributed by EnterpriseDB and can be 
 * Switch to the `arcplanner` database just created using `\c arcplanner`.
 * Create the tables for this database using: `\i <file path to arcplanner repo>/database/src/createTables.sql`
 
-## Step 5: Install Node.js
+## Step 3: Install Node.js
 * The installer can be found [here](https://nodejs.org/en/download/) and will include `npm`. Use the installer defaults.
 
-## Step 5: Install the Web Server
+## Step 4: Install the Web Server
 * Open a Command Prompt or Powershell as administrator
 * Navigate to the root of the Arcplanner/Server directory and type `npm install`.
-* To start the server type `npm start`
+
+## Step 5: Add env file
+* The postgres connection module pg-promise requires a username and password to connect to the database. For security purposes this information is added to a .env file located in the server folder. This file is gitignored and should **NEVER** be uploaded to github. You can set this user and password to any superuser/user that has the ability to access arcplanner database. An example .env file is as follows
+
+```
+DB_USER=postgres
+DB_PASSWORD=password
+```
