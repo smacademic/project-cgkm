@@ -25,16 +25,14 @@ import './../lib/src/model/arc.dart';
 void main() async {
   final db = new DatabaseHelper();
 
-  // For some reason, the test works when this is here, but fails when it is
-  // not.
-  await db.getUserCount();
-
   test('Add user test', () async {
+    int users = await db.getUserCount();
+
     await db.startTransaction();
 
     User user1 = new User("UFName1", "ULName1", "email1@web.com");
 
-    expect(await db.insertUser(user1), 1);
+    expect(await db.insertUser(user1), users + 1);
 
     await db.rollback();
   });
@@ -51,6 +49,7 @@ void main() async {
   });
 
   test('Add arc test', () async {
+    int arcs = await db.getArcCount();
     await db.startTransaction();
     User user1 = new User("UFName1", "ULName1", "email1@web.com");
     await db.insertUser(user1);
@@ -58,7 +57,7 @@ void main() async {
     Arc arc1 = new Arc(user1.uid, "arc title",
         description: "arc description", dueDate: "01/01/2020");
 
-    expect(await db.insertArc(arc1), 1);
+    expect(await db.insertArc(arc1), arcs + 1);
 
     await db.rollback();
   });
