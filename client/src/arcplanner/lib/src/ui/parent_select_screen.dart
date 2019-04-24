@@ -93,7 +93,7 @@ class ParentSelectScreen extends StatelessWidget {
                    Navigator.of(context).pop();
                 } else {
                   if (atNoArcTaskScreen) {
-                    bloc.parentSelectInsert({ 'object' : currentParent, 'flag': 'getChildren'});
+                    bloc.parentSelectInsert({ 'object' : currentParent, 'flag': 'getChildArcs'});
                     atNoArcTaskScreen = false;
                   } 
                   else
