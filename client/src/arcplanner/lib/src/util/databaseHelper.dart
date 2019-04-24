@@ -110,7 +110,7 @@ class DatabaseHelper {
           )""");
     await db.execute("""
         CREATE VIEW $_arcView AS
-        SELECT UID, AID, Title, Description, ParentArc, Completed, 
+        SELECT UID, AID, Title, Description, DueDate, ParentArc, Completed, 
           ( SELECT group_concat(UUID)
             FROM (
               SELECT Arc2.AID AS UUID
