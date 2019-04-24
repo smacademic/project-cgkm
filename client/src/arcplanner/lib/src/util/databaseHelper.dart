@@ -79,6 +79,16 @@ class DatabaseHelper {
     return arcDb;
   }
 
+  /// Runs the BEGIN TRANSACTION; query in the database.
+  startTransaction() async {
+    _db.rawQuery("BEGIN TRANSACTION;");
+  }
+
+  /// Runs the ROLLBACK; command in the database.
+  rollback() async {
+    _db.rawQuery("ROLLBACK;");
+  }
+
   // Creates database tables
   void _onCreate(Database db, int version) async {
     await db.execute("""
@@ -110,7 +120,7 @@ class DatabaseHelper {
           )""");
     await db.execute("""
         CREATE VIEW $_arcView AS
-        SELECT UID, AID, Title, Description, ParentArc, Completed, 
+        SELECT UID, AID, Title, Description, DueDate, ParentArc, Completed, 
           ( SELECT group_concat(UUID)
             FROM (
               SELECT Arc2.AID AS UUID

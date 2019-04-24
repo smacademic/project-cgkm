@@ -4,11 +4,11 @@
  *
  *  Authors: 
  *    Primary: Matthew Chastain
- *    Contributors: Kevin Kelly
+ *    Contributors: Kevin Kelly, Justin Grabowski
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains the visual definition of the Arc tiles found in multiple 
+ *  This file contains the visual definition of the Parent Arc tiles found in multiple 
  *  screens within ArcPlanner.
  */
 
@@ -18,9 +18,10 @@ import '../model/arc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'arc_view_screen.dart';
 import 'package:intl/intl.dart';
+import 'add_arc_screen.dart';
 
 
-Widget arcTile(Arc arc, BuildContext context) {
+Widget parentArcTile(Arc arc, BuildContext context) {
   
   var description = arc.description;
 
@@ -81,7 +82,7 @@ Widget arcTile(Arc arc, BuildContext context) {
                 Container(
                   child: AutoSizeText(
                     (arc.dueDate == 'null' || arc.dueDate == null) ? 'No Due Date' 
-                     : DateFormat.yMEd().format(DateTime.parse(arc.dueDate)),
+                    : DateFormat.yMEd().format(DateTime.parse(arc.dueDate)),
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -90,7 +91,7 @@ Widget arcTile(Arc arc, BuildContext context) {
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ),
+                ),  
               ],
             ),
           ),
@@ -98,14 +99,34 @@ Widget arcTile(Arc arc, BuildContext context) {
             padding: EdgeInsets.only(
               bottom: 10.0,
             ),
-            child: AutoSizeText(description,
-              style: TextStyle(
-                color: Colors.grey[600],
+            child: SafeArea(
+              child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.60,
+                    child: AutoSizeText(description,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                      ),
+                      maxFontSize: 14.0,
+                      minFontSize: 10.0,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  RaisedButton (
+                    child: Text('Select'),
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      bloc.changeParent(arc);
+                      Navigator.pushNamedAndRemoveUntil(context, '/addarc', (Route<dynamic> route) => false);   
+                      //TODO add call to new select_arc_screen
+                      },
+                  ),
+                ],
               ),
-              maxFontSize: 14.0,
-              minFontSize: 10.0,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
