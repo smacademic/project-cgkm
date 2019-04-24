@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
 import 'drawer_menu.dart';
+import 'parent_select_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
@@ -144,7 +145,9 @@ Widget selectParent(BuildContext context){
     color: Colors.blue,
     textColor: Colors.white,
     onPressed: () {
-      Navigator.popAndPushNamed(context, '/parent');   },
+      _openParentSelectDialog(context);
+     // Navigator.popAndPushNamed(context, '/parent');   },
+    }
   );
 }
 
@@ -164,5 +167,16 @@ Widget submitArc() {
         : null
       );
     },
+  );
+}
+
+void _openParentSelectDialog(BuildContext context) {
+  Navigator.of(context).push(
+    new MaterialPageRoute<Null>(
+      builder: (BuildContext context) {
+        return new ParentSelectScreen();
+      },
+      fullscreenDialog: true
+    )
   );
 }
