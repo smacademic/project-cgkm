@@ -188,8 +188,8 @@ class DatabaseHelper {
   // Pulls all Arcs and Tasks that are due in the next 7 days from DB into app
   Future<List<Map>> getUpcomingItems() async {
     var dbClient = await db;
-    List<Map> arcList = await dbClient.rawQuery('');
-    List<Map> taskList = await dbClient.rawQuery('');
+    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE DueDate < (date(''now'') + 7)');
+    List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE DueDate < (date(''now'') + 7)');
     return new List.from(arcList)..addAll(taskList);
   }
 

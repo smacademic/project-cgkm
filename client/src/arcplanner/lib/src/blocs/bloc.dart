@@ -144,8 +144,8 @@ class Bloc extends Object with Validators {
 
   // Pulls all Arcs and Tasks that are due in the next 7 days into the app
   Future<List<dynamic>> getUpcomingItems() async {
-    List<dynamic> upcomingTasks = new List();
-
+    List<dynamic> upcomingTasks = await db.getUpcomingItems();
+    
     return upcomingTasks;
   }
 
