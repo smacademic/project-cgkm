@@ -176,11 +176,11 @@ class Bloc extends Object with Validators {
 
     if(arcParent == null) {
       Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate);
-       db.insertArc(ar);
+      db.insertArc(ar);
     }
     else {
       Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate, parentArc: arcParent.aid);
-       db.insertArc(ar);
+      db.insertArc(ar);
     }
 
     bloc.changeTitle(null);

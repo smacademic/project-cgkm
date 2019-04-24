@@ -82,7 +82,7 @@ class AddArcScreen extends StatelessWidget {
         onChanged: bloc.changeTitle,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
-           hintText: snapshot.hasData? snapshot.data: 'Title',
+          hintText: snapshot.hasData? snapshot.data: 'Title',
           errorText: snapshot.error,
         ),
       );
