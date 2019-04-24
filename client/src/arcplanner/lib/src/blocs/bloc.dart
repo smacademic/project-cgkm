@@ -42,7 +42,7 @@ class Bloc extends Object with Validators {
   Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
 
   // Stream for interaction with Home screen
-  Stream<dynamic> get homeStream => _homeController.stream;
+  Stream<dynamic> get homeStream => _homeController.stream.map(transformData);
 
   // Add data to streams for Add Arc Screen
   Stream<String> get arcLocationFieldStream => _arcLocationFieldController.stream;
@@ -142,8 +142,10 @@ class Bloc extends Object with Validators {
     return loadedObjects[uuid];
   }
 
-  dynamic getUpcomingTasks() {
-    
+  Future<List<dynamic>> getUpcomingTasks() async {
+    List<dynamic> upcomingTasks = new List();
+
+    return upcomingTasks;
   }
 
   // Checks to see if children are in map. If they exist in map then send them
