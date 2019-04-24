@@ -15,7 +15,7 @@
 import 'dart:async';
 import '../model/arc.dart';
 import '../model/task.dart';
-//import '../model/user.dart';
+import '../model/user.dart';
 import '../util/databaseHelper.dart';
 import '../blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
@@ -32,7 +32,6 @@ class Bloc extends Object with Validators {
   final _arcViewController = StreamController<dynamic>.broadcast();
 
   // Streams for add_arc_screen
-  final _arcLocationFieldController = BehaviorSubject<String>();
   final _arcTitleFieldController = BehaviorSubject<String>();
   final _arcEndDateFieldController = BehaviorSubject<String>();
   final _arcDescriptionFieldController = BehaviorSubject<String>();
@@ -41,9 +40,7 @@ class Bloc extends Object with Validators {
   Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
 
   // Add data to streams for Add Arc Screen
-  Stream<String> get arcLocationFieldStream => _arcLocationFieldController.stream;
-
-  Stream<String> get arcTitleFieldStream => _arcTitleFieldController.stream.transform(validateTitle);
+  Stream<String> get arcTitleFieldStream => _arcTitleFieldController.stream; //.transform(validateTitle);
 
   Stream<String> get arcEndDateFieldStream => _arcEndDateFieldController.stream;
 
@@ -56,7 +53,6 @@ class Bloc extends Object with Validators {
     arcDescriptionFieldStream, (t, d) => true);
 
   // Change data for Add Arc Screen
-  Function(String) get changeLocation => _arcLocationFieldController.sink.add;
   Function(String) get changeTitle => _arcTitleFieldController.sink.add;
   Function(String) get changeEndDate => _arcEndDateFieldController.sink.add;
   Function(String) get changeDescription => _arcDescriptionFieldController.sink.add;
@@ -84,7 +80,7 @@ class Bloc extends Object with Validators {
   // Reads from the DB and returns an Arc object
   Arc toArc(Map map) {
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
-        map['Description'], parentArc: map['ParentArc'], completed: 
+        map['Description'], dueDate: map['DueDate'], parentArc: map['ParentArc'], completed: 
         map['Completed'], childrenUUIDs: map['ChildrenUUIDs']);
   }
 
@@ -168,17 +164,30 @@ class Bloc extends Object with Validators {
   }
 
   submitArc() {
-    final arcLoc = _arcLocationFieldController.value;
     final validArcTitle = _arcTitleFieldController.value;
     final arcEndDate = _arcEndDateFieldController.value;
-    final arcDescription = _arcEndDateFieldController.value;
+    final arcDescription = _arcDescriptionFieldController.value;
+    final arcParent = _arcParentFieldController.value;
 
-    print("$validArcTitle");
-    //TODO create arc with new data
-    //User sally = new User("sally", "seashells", "this@that.com");
-    //Arc ar = new Arc(sally.uid, validArcTitle);
-    //db.insertArc(ar);
-    //TODO insert to new arc
+    //Create arc with new data
+    // This section should be removed when we decide how to procede 
+    // with definingt `user` or removing the paramerter from Arc constructor
+    User tempUser = new User("Temp", "seashells", "this@that.com");
+
+    if(arcParent == null) {
+      Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate);
+      db.insertArc(ar);
+    }
+    else {
+      Arc ar = new Arc(tempUser.uid, validArcTitle, description: arcDescription, dueDate: arcEndDate, parentArc: arcParent.aid);
+      db.insertArc(ar);
+    }
+
+    bloc.changeTitle(null);
+    bloc.changeEndDate(null);
+    bloc.changeDescription(null);
+    bloc.changeParent(null);
+    
   }
 
   // Closes the stream controller
@@ -188,7 +197,6 @@ class Bloc extends Object with Validators {
     // Close Add Arc Screen streams
     _arcDescriptionFieldController.close();
     _arcEndDateFieldController.close();
-    _arcLocationFieldController.close();
     _arcTitleFieldController.close();
     _arcViewController.close();
     _arcParentFieldController.close();

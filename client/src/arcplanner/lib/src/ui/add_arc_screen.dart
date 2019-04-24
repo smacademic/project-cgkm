@@ -14,8 +14,9 @@
 
 import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
-import '../model/arc.dart';
 import 'drawer_menu.dart';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class AddArcScreen extends StatelessWidget {
   
@@ -26,16 +27,18 @@ class AddArcScreen extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.cancel),
-            onPressed: () {Navigator.pop(context);},
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
+            },
           )
         ],
       ),
       
       body: Container(
-        margin: EdgeInsets.only(left: 15.0, right: 15.0),
+        margin: EdgeInsets.only(left: 10.0, right: 10.0),
         child: ListView(
           children:[
-            Container(margin: EdgeInsets.only(top: 20)),
+            Container(margin: EdgeInsets.only(top: 15)),
             titleField(),
             dueDate(),
             descriptionField(),
@@ -48,12 +51,11 @@ class AddArcScreen extends StatelessWidget {
                   Flexible(
                     child: Container(
                       width:MediaQuery.of(context).size.width * 0.25 , 
-                      child: selectParent(),
+                      child: selectParent(context),
                     ),
                   ),   
                 ]
               ),
-              //TODO: add additional fields as needed
             ),
           ],
         ),
@@ -74,21 +76,6 @@ class AddArcScreen extends StatelessWidget {
   }
 }
 
- Widget locationField(){
-  return StreamBuilder(
-      stream: bloc.arcTitleFieldStream,
-      builder: (context, snapshot) {
-        return TextField(
-          onChanged: bloc.changeTitle,
-          keyboardType: TextInputType.datetime,
-          decoration: InputDecoration(
-            hintText: 'Location'
-          ),
-        );
-      }
-    );
- }
-
  Widget titleField(){
   return StreamBuilder(
     stream: bloc.arcTitleFieldStream,
@@ -97,7 +84,7 @@ class AddArcScreen extends StatelessWidget {
         onChanged: bloc.changeTitle,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
-          hintText: 'Title',
+          hintText: snapshot.hasData? snapshot.data: 'Title',
           errorText: snapshot.error,
         ),
       );
@@ -109,13 +96,14 @@ Widget dueDate(){
   return StreamBuilder(
     stream: bloc.arcEndDateFieldStream,
     builder: (context, snapshot) {
-      return TextField(
-        keyboardType: TextInputType.datetime,
-        onChanged: bloc.changeEndDate,
+      return DateTimePickerFormField(
+        inputType: InputType.date,
+        format: DateFormat.yMEd(),
+        editable: false,
         decoration: InputDecoration(
-          hintText: 'Due Date'
-          //TODO add errorText when used
+          labelText: 'Due Date',
         ),
+        onChanged: (date) => bloc.changeEndDate(date.toString()),
       );
     }
   );
@@ -130,9 +118,8 @@ Widget descriptionField(){
         onChanged: bloc.changeDescription,
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.done,
-        autocorrect: true,
         decoration: InputDecoration(
-          hintText: 'Description',
+          hintText: snapshot.hasData? snapshot.data:'Description',
           errorText: snapshot.error,
         ),
       );
@@ -144,58 +131,37 @@ Widget descriptionField(){
   return StreamBuilder(
       stream: bloc.arcParentFieldStream,
       builder: (context, snapshot) {
-        return Text(snapshot.hasData? snapshot.data.title : "Parent");
+        return Text(
+          snapshot.hasData? snapshot.data.title : "Parent",
+        );
       }
     );
  }
 
-Widget arcTile(Arc arc, BuildContext context) {
-  var description = arc.description;
-  if (description == null) {
-    description = '';
-  }
-
-  return Container(
-    decoration: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color: Colors.grey[350],
-        ),
-        top: BorderSide(
-          color: Colors.grey[350],
-        ),
-      ),
-    ),
-    child: ListTile(
-      title: Text(arc.title),
-    ),
-  );
-}
-
-Widget selectParent(){
+Widget selectParent(BuildContext context){
   return RaisedButton(
     child: Text('Select'),
     color: Colors.blue,
     textColor: Colors.white,
-    onPressed: (){
-    //TODO add call to new select_arc_screen
-   },
+    onPressed: () {
+      Navigator.popAndPushNamed(context, '/parent');   },
   );
 }
 
 Widget submitArc() {
   return StreamBuilder(
     stream: bloc.arcTitleFieldStream, 
-    builder: (context, snapshot){
+    builder: (context, snapshot) {
       return RaisedButton(
         child: Text('Submit'),
         color: Colors.white,
         textColor: Colors.blue,
-        onPressed: snapshot.hasData ? (){ 
-          bloc.submitArc; //Currently just returns to previous screen
-          Navigator.pop(context);
+        onPressed: snapshot.hasData ? () { 
+          bloc.submitArc(); //Currently just returns to previous screen
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
+          //bloc.changeTitle(null);
           }
-        :  null
+        : null
       );
     },
   );
