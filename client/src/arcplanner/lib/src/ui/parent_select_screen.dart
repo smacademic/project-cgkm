@@ -56,7 +56,7 @@ class ParentSelectScreen extends StatelessWidget {
                   future: snapshot.data,
                   builder: (context, snapshot) {
                     if (firstTimeLoading) {
-                      bloc.parentSelectInsert({ 'object' : null, 'flag': 'getChildren'});
+                      bloc.parentSelectInsert({ 'object' : null, 'flag': 'getChildArcs'});
                       firstTimeLoading = false;
                     }
                     
