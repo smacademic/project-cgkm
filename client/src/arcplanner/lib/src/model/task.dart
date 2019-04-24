@@ -37,7 +37,7 @@ class Task {
   Task.read(this._tid, this._aid, this._title, 
       {description, dueDate, location, completed}) {
     this._description = description;
-    this._dueDate = duedate;
+    this._dueDate = dueDate;
     this._location = location;
     if (completed == 'true') {
       this._completed = true;
