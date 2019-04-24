@@ -84,8 +84,8 @@ class Bloc extends Object with Validators {
     } else if (data['flag'] == "backButton") {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
-    } else if (data['flag'] == 'getUpcoming') {
-      return await getUpcomingTasks();
+    } else if (data['flag'] == 'getUpcomingItems') {
+      return await getUpcomingItems();
     } else if (data['flag'] == "clear") {
       return null;
     }
@@ -143,7 +143,7 @@ class Bloc extends Object with Validators {
   }
 
   // Pulls all Arcs and Tasks that are due in the next 7 days into the app
-  Future<List<dynamic>> getUpcomingTasks() async {
+  Future<List<dynamic>> getUpcomingItems() async {
     List<dynamic> upcomingTasks = new List();
 
     return upcomingTasks;

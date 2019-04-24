@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                     future: snapshot.data,
                     builder: (context, snapshot) {
                       if (firstTimeLoading) {
-                        bloc.homeInsert({ 'object' : null, 'flag': 'getUpcomingTasks'});
+                        bloc.homeInsert({ 'object' : null, 'flag': 'getUpcomingItems'});
                         firstTimeLoading = false;
                       }
                       
