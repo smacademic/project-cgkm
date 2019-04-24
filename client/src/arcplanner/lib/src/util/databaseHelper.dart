@@ -79,10 +79,12 @@ class DatabaseHelper {
     return arcDb;
   }
 
+  /// Runs the BEGIN TRANSACTION; query in the database.
   startTransaction() async {
     _db.rawQuery("BEGIN TRANSACTION;");
   }
 
+  /// Runs the ROLLBACK; command in the database.
   rollback() async {
     _db.rawQuery("ROLLBACK;");
   }
