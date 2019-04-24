@@ -27,7 +27,9 @@ class AddArcScreen extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.cancel),
-            onPressed: () {Navigator.pop(context);},
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
+            },
           )
         ],
       ),
