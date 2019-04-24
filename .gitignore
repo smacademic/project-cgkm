@@ -2,3 +2,4 @@
 .vscode/settings.json
 database/src/spoolCreateTables.txt
 server/src/node_modules/*
+server/.env
