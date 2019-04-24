@@ -23,12 +23,8 @@ class ParentSelectScreen extends StatelessWidget {
   static String currentParent = "Home";
   static bool atNoArcTaskScreen = false;
 
-  _toTaskView(Task task) {
-  }
-
   Widget build(context) {
     bool firstTimeLoading = true;
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -54,13 +50,13 @@ class ParentSelectScreen extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: StreamBuilder(
-              stream: bloc.arcViewStream,
+              stream: bloc.arcParentSelectViewStream,
               builder: (context, snapshot) {
                 return new FutureBuilder(
                   future: snapshot.data,
                   builder: (context, snapshot) {
                     if (firstTimeLoading) {
-                      bloc.arcViewInsert({ 'object' : null, 'flag': 'getChildren'});
+                      bloc.parentSelectInsert({ 'object' : null, 'flag': 'getChildren'});
                       firstTimeLoading = false;
                     }
                     
@@ -85,30 +81,6 @@ class ParentSelectScreen extends StatelessWidget {
 
       drawer: drawerMenu(context),
 
-      // bottomNavigationBar: BottomAppBar(
-      //   color: Colors.blue[400],
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //     children: <Widget>[
-      //       RaisedButton(
-      //         child: Text('New Task'),
-      //         color: Colors.white,
-      //         textColor: Colors.blue[400],
-      //         // Needs to open New Task dialog
-      //         onPressed: () {},
-      //       ),
-      //       RaisedButton(
-      //         child: Text('New Arc'),
-      //         color: Colors.white,
-      //         textColor: Colors.blue[400],
-      //         // Needs to open New Arc dialog
-      //         onPressed: () {
-      //          // Navigator.popAndPushNamed(context, '/addarc'); 
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.blue[400],
         child: Row(
@@ -118,14 +90,14 @@ class ParentSelectScreen extends StatelessWidget {
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                if (currentParent == null && !atNoArcTaskScreen) {
-                  Navigator.pop(context);
+                   Navigator.of(context).pop();
                 } else {
                   if (atNoArcTaskScreen) {
-                    bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
+                    bloc.parentSelectInsert({ 'object' : currentParent, 'flag': 'getChildren'});
                     atNoArcTaskScreen = false;
                   } 
                   else
-                    bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
+                    bloc.parentSelectInsert({ 'object' : currentParent, 'flag': 'backButton'});
                 }
               },
             )
