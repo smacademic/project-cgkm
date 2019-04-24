@@ -3,15 +3,13 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: Matthew Chastain
+ *    Primary: Matthew Chastain, Kevin Kelly
  *    Contributors: Justin Grabowski
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
  *  This file contains widgets to create the parent arc selection screen 
  */
-
-
 
 import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
