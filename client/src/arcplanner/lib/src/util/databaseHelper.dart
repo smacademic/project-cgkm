@@ -183,7 +183,14 @@ class DatabaseHelper {
       return new List.from(arcList)..addAll(taskList);
     } else
       return arcList;
-      
+  }
+
+  // Pulls all Arcs and Tasks that are due in the next 7 days from DB into app
+  Future<List<Map>> getUpcomingItems() async {
+    var dbClient = await db;
+    List<Map> arcList = await dbClient.rawQuery('');
+    List<Map> taskList = await dbClient.rawQuery('');
+    return new List.from(arcList)..addAll(taskList);
   }
 
   // pulls all Arcs and Tasks out of the database and creates objects out of them
