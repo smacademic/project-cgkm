@@ -18,14 +18,14 @@ import '../model/arc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'arc_view_screen.dart';
 import 'package:intl/intl.dart';
-import 'add_arc_screen.dart';
+import 'parent_select_screen.dart';
 
 
 Widget parentArcTile(Arc arc, BuildContext context) {
   
   var description = arc.description;
 
-  ArcViewScreen.currentParent = arc.parentArc;
+  ParentSelectScreen.currentParent = arc.parentArc;
 
   if (description == null) {
     description = '';
