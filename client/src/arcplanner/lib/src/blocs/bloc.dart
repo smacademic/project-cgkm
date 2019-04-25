@@ -19,6 +19,7 @@ import '../model/task.dart';
 import '../util/databaseHelper.dart';
 import '../blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
+import '../helpers/date.dart';
 
 
 class Bloc extends Object with Validators {
@@ -85,7 +86,8 @@ class Bloc extends Object with Validators {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
     } else if (data['flag'] == 'getUpcomingItems') {
-      return await getUpcomingItems();
+      //return await getUpcomingItems();
+      return await getItemsBetweenDates('2019-04-25', '2019-05-01');
     } else if (data['flag'] == "clear") {
       return null;
     }
@@ -143,18 +145,38 @@ class Bloc extends Object with Validators {
     return loadedObjects[uuid];
   }
 
-  // Pulls all Arcs and Tasks that are due in the next 7 days into the app
-  Future<List<dynamic>> getUpcomingItems() async {
-    List<dynamic> upcomingTasks = await db.getUpcomingItems();
-    return upcomingTasks;
-  }
+  // // Pulls all Arcs and Tasks that are due in the next 7 days into the app
+  // Future<List<dynamic>> getUpcomingItems() async {
+  //   List<dynamic> upcomingTasks = await db.getUpcomingItems();
+  //   return upcomingTasks;
+  // }
+
+  // Future<List<dynamic>> getItemsBetweenDates(String fromDate, String toDate) async {
+  //   List<Map> upcomingItemsMapList = await db.getItemsBetweenDates(fromDate, toDate);
+  //   print(upcomingItemsMapList);
+  //   List<dynamic> upcomingItems = new List();
+
+  //   for (Map map in upcomingItemsMapList) {
+  //     if (map.containsKey('TID')) {
+  //       // Task task = toTask(map);
+  //       // loadedObjects[map['TID']] = task;
+  //       upcomingItems.add(toTask(map));
+  //     } else {
+  //       // Arc arc = toArc(map);
+  //       // loadedObjects[map['AID'].toString()] = arc;
+  //       upcomingItems.add(toArc(map));
+  //     }
+  //   }
+  //   //insertListIntoMap(upcomingItems);  NOT CORRECT FUNCTION
+  //   print(upcomingItems);
+  //   return upcomingItems;
+  // }
 
   // Checks to see if children are in map. If they exist in map then send them
   //  back via stream. Otherwise load them from database and into map. Then
   //  to the UI via stream
   Future<List<dynamic>> getChildren (String parentUUID) async {
     List<dynamic> children = new List();
-
 
     // If there is no supplied UUID supply parentArc = null, the masterArcs
     if (parentUUID == null) {

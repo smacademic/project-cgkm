@@ -185,13 +185,26 @@ class DatabaseHelper {
       return arcList;
   }
 
-  // Pulls all Arcs and Tasks that are due in the next 7 days from DB into app
-  Future<List<Map>> getUpcomingItems() async {
+  // // Pulls all Arcs and Tasks that are due in the next 7 days from DB into app
+  // Future<List<Map>> getUpcomingItems() async {
+  //   var dbClient = await db;
+  //   //print(dbClient.rawQuery('SELECT * FROM Arc'));
+  //   //print(dbClient.rawQuery('SELECT * FROM Task'));
+  //   List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE DueDate BETWEEN strftime(\'%Y-%m-%d\',\'now\') AND strftime(\'%Y-%m-%d\',\'now\', \'+7 days\')');
+  //   print(arcList);
+  //   List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE DueDate BETWEEN strftime(\'%Y-%m-%d\',\'now\') AND strftime(\'%Y-%m-%d\',\'now\', \'+7 days\')');
+  //   print(taskList);
+  //   return new List.from(arcList)..addAll(taskList);
+  // }
+  
+  Future<List<Map>> getItemsBetweenDates(String fromDate, String toDate) async {
     var dbClient = await db;
-    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE DueDate BETWEEN strftime(\'%Y-%m-%d\',\'now\') AND strftime(\'%Y-%m-%d\',\'now\', \'+7 days\')');
-    print(arcList);
-    List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE DueDate BETWEEN strftime(\'%Y-%m-%d\',\'now\') AND strftime(\'%Y-%m-%d\',\'now\', \'+7 days\')');
-    print(taskList);
+    //print(dbClient.rawQuery('SELECT * FROM Arc'));
+    //print(dbClient.rawQuery('SELECT * FROM Task'));
+    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE DueDate BETWEEN "$fromDate" AND "$toDate"');
+    print('Arc List:\n$arcList\n\n');
+    List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE DueDate BETWEEN "$fromDate" AND "$toDate"');
+    print('Task List:\n$taskList\n\n');
     return new List.from(arcList)..addAll(taskList);
   }
 
@@ -199,8 +212,7 @@ class DatabaseHelper {
   Future<List<Map>> getArcList() async {
     var dbClient = await db;
     return await dbClient.rawQuery('SELECT * FROM Arc');
-  } 
-
+  }
   
   Future<List<Map>> getTaskList() async {
     var dbClient = await db;
