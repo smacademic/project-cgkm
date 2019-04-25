@@ -25,6 +25,7 @@ import '../helpers/date.dart';
 class Bloc extends Object with Validators {
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
+  //var dateFormat = new DateFormat('yyyy-MM-dd');
   
   // Constructor
   Bloc();  
@@ -87,7 +88,9 @@ class Bloc extends Object with Validators {
       return await getChildren(parent.parentArc);
     } else if (data['flag'] == 'getUpcomingItems') {
       //return await getUpcomingItems();
-      return await getItemsBetweenDates('2019-04-25', '2019-05-01');
+      var now = new DateTime.now();
+      print(DateTime.now(now.year, now.month, now.day));
+      return await getItemsBetweenDates(DateTime.now()., '2019-05-01');
     } else if (data['flag'] == "clear") {
       return null;
     }

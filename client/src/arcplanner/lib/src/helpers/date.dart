@@ -16,7 +16,9 @@ import '../blocs/bloc.dart';
 
 Future<List<dynamic>> getItemsBetweenDates(String fromDate, String toDate) async {
   List<Map> upcomingItemsMapList = await bloc.db.getItemsBetweenDates(fromDate, toDate);
-  print(upcomingItemsMapList);
+  //bloc.insertListIntoMap(await bloc.db.getItemsBetweenDates(fromDate, toDate));
+
+
   List<dynamic> upcomingItems = new List();
 
   for (Map map in upcomingItemsMapList) {
@@ -31,6 +33,5 @@ Future<List<dynamic>> getItemsBetweenDates(String fromDate, String toDate) async
     }
   }
   //insertListIntoMap(upcomingItems);  NOT CORRECT FUNCTION
-  print(upcomingItems);
   return upcomingItems;
 }
