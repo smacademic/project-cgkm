@@ -30,6 +30,8 @@ class AddArcScreen extends StatelessWidget {
             icon: Icon(Icons.cancel),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
+              // Empty the stream
+              bloc.initializeAddArcStreams();
             },
           )
         ],
