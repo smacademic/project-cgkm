@@ -172,10 +172,17 @@ Widget submitArc() {
   return StreamBuilder(
     stream: bloc.arcTitleFieldStream, 
     builder: (context, snapshot) {
-      return RaisedButton(
-        child: Text('Submit'),
-        color: Colors.white,
-        textColor: Colors.blue,
+      return FlatButton.icon(
+        icon: Icon(Icons.library_add, color: Colors.white,),
+        label: Text (
+          'Submit',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18
+          ),
+        ),
+        textColor: Colors.white,
+        //textColor: Colors.blue,
         onPressed: snapshot.hasData ? () { 
           bloc.submitArc(); 
           Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
