@@ -108,13 +108,15 @@ Widget dueDate(){
         format: DateFormat.yMEd(),
         editable: false,
         decoration: InputDecoration(
-          hintText: snapshot.hasData ? DateFormat.yMEd().format(DateTime.parse(snapshot.data)): 'Due Date',
+          hintText: snapshot.hasData ? 
+          DateFormat.yMEd().format(DateTime.parse(snapshot.data))
+          : 'Due Date',
           hintStyle: TextStyle(
             color: Colors.black,
             fontSize: 16
           )
         ),
-        onChanged: (date) => bloc.changeEndDate(date.toString()),
+        onFieldSubmitted: (date) => bloc.changeEndDate(date.toString()),
       );
     }
   );
