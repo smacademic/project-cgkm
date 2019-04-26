@@ -230,11 +230,16 @@ class Bloc extends Object with Validators {
       db.insertArc(ar);
     }
 
+    initializeAddArcStreams();
+    
+  }
+
+  // Reset the streams used by the add arc screen
+  initializeAddArcStreams() {
     bloc.changeTitle(null);
     bloc.changeEndDate(null);
     bloc.changeDescription(null);
     bloc.changeParent(null);
-    
   }
 
   // Closes the stream controller
