@@ -87,6 +87,10 @@ class AddArcScreen extends StatelessWidget {
         decoration: InputDecoration(
           hintText: snapshot.hasData? snapshot.data: 'Title',
           errorText: snapshot.error,
+           hintStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.black
+          ),
         ),
       );
     }
@@ -102,7 +106,11 @@ Widget dueDate(){
         format: DateFormat.yMEd(),
         editable: false,
         decoration: InputDecoration(
-          labelText: 'Due Date',
+          hintText: snapshot.hasData ? DateFormat.yMEd().format(DateTime.parse(snapshot.data)): 'Due Date',
+          hintStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 16
+          )
         ),
         onChanged: (date) => bloc.changeEndDate(date.toString()),
       );
@@ -122,6 +130,10 @@ Widget descriptionField(){
         decoration: InputDecoration(
           hintText: snapshot.hasData? snapshot.data:'Description',
           errorText: snapshot.error,
+          hintStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.black
+          ),
         ),
       );
     }
@@ -130,13 +142,17 @@ Widget descriptionField(){
 
  Widget parentField(){
   return StreamBuilder(
-      stream: bloc.arcParentFieldStream,
-      builder: (context, snapshot) {
-        return Text(
-          snapshot.hasData? snapshot.data.title : "Parent",
-        );
-      }
-    );
+    stream: bloc.arcParentFieldStream,
+    builder: (context, snapshot) {
+      return Text(
+        snapshot.hasData? snapshot.data.title : "Parent",
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.black
+        ),
+      );
+    }
+  );
  }
 
 Widget selectParent(BuildContext context){
@@ -146,7 +162,6 @@ Widget selectParent(BuildContext context){
     textColor: Colors.white,
     onPressed: () {
       _openParentSelectDialog(context);
-     // Navigator.popAndPushNamed(context, '/parent');   },
     }
   );
 }
@@ -160,9 +175,8 @@ Widget submitArc() {
         color: Colors.white,
         textColor: Colors.blue,
         onPressed: snapshot.hasData ? () { 
-          bloc.submitArc(); //Currently just returns to previous screen
+          bloc.submitArc(); 
           Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
-          //bloc.changeTitle(null);
           }
         : null
       );
