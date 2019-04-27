@@ -87,7 +87,7 @@ class AddArcScreen extends StatelessWidget {
         onChanged: bloc.changeTitle,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
-          hintText: snapshot.hasData? snapshot.data: 'Title',
+          hintText: 'Title',
           errorText: snapshot.error,
            hintStyle: TextStyle(
             fontSize: 16,
@@ -99,24 +99,46 @@ class AddArcScreen extends StatelessWidget {
   );
 }
 
+// Widget dueDate(){
+//   return StreamBuilder(
+//     stream: bloc.arcEndDateFieldStream,
+//     builder: (context, snapshot) {
+//       return DateTimePickerFormField(
+//         inputType: InputType.date,
+//         format: DateFormat.yMEd(),
+//         editable: false,
+//         decoration: InputDecoration(
+//           hintText: snapshot.hasData ? 
+//           DateFormat.yMEd().format(DateTime.parse(snapshot.data))
+//           : 'Due Date',
+//           hintStyle: TextStyle(
+//             color: Colors.black,
+//             fontSize: 16
+//           )
+//         ),
+//         onChanged: (date) => bloc.changeEndDate(date.toString()),
+//       );
+//     }
+//   );
+// }
+
 Widget dueDate(){
   return StreamBuilder(
     stream: bloc.arcEndDateFieldStream,
     builder: (context, snapshot) {
+
       return DateTimePickerFormField(
         inputType: InputType.date,
         format: DateFormat.yMEd(),
         editable: false,
         decoration: InputDecoration(
-          hintText: snapshot.hasData ? 
-          DateFormat.yMEd().format(DateTime.parse(snapshot.data))
-          : 'Due Date',
+          hintText: 'Due Date',
           hintStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 16
-          )
+            fontSize: 16,
+            color: Colors.black
+          ),
         ),
-        onFieldSubmitted: (date) => bloc.changeEndDate(date.toString()),
+        onChanged: (date) => bloc.changeEndDate(date.toString()),
       );
     }
   );
@@ -132,7 +154,7 @@ Widget descriptionField(){
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
-          hintText: snapshot.hasData? snapshot.data:'Description',
+          hintText: 'Description',
           errorText: snapshot.error,
           hintStyle: TextStyle(
             fontSize: 16,
@@ -175,16 +197,10 @@ Widget submitArc() {
     stream: bloc.arcTitleFieldStream, 
     builder: (context, snapshot) {
       return FlatButton.icon(
+        disabledTextColor: Colors.grey,
         icon: Icon(Icons.library_add, color: Colors.white,),
-        label: Text (
-          'Submit',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18
-          ),
-        ),
+        label: Text ('Submit'),
         textColor: Colors.white,
-        //textColor: Colors.blue,
         onPressed: snapshot.hasData ? () { 
           bloc.submitArc(); 
           Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
