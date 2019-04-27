@@ -23,27 +23,40 @@ class ParentSelectScreen extends StatelessWidget {
   static String currentParent = "Home";
   static bool atNoArcTaskScreen = false;
 
-  _toTaskView(Task task) {
-  }
-
   Widget build(context) {
     bool firstTimeLoading = true;
 
-
     return Scaffold(
       backgroundColor: Colors.white,
+
+      appBar: AppBar(
+        backgroundColor: Colors.blue[400],
+        title: Text(
+          'Select Parent Arc',
+          textAlign: TextAlign.center,
+        ),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.cancel),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ),
 
       body: Column(
         children: <Widget>[
           Expanded(
             child: StreamBuilder(
-              stream: bloc.arcViewStream,
+              stream: bloc.arcParentSelectViewStream,
               builder: (context, snapshot) {
                 return new FutureBuilder(
                   future: snapshot.data,
                   builder: (context, snapshot) {
                     if (firstTimeLoading) {
-                      bloc.arcViewInsert({ 'object' : null, 'flag': 'getChildren'});
+                      bloc.parentSelectInsert({ 'object' : null, 'flag': 'getChildArcs'});
                       firstTimeLoading = false;
                     }
                     
@@ -71,43 +84,25 @@ class ParentSelectScreen extends StatelessWidget {
       bottomNavigationBar: BottomAppBar(
         color: Colors.blue[400],
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            RaisedButton(
-              child: Text('New Task'),
+            IconButton(
               color: Colors.white,
-              textColor: Colors.blue[400],
-              // Needs to open New Task dialog
-              onPressed: () {},
-            ),
-            RaisedButton(
-              child: Text('New Arc'),
-              color: Colors.white,
-              textColor: Colors.blue[400],
-              // Needs to open New Arc dialog
+              icon: Icon(Icons.arrow_back),
               onPressed: () {
-               // Navigator.popAndPushNamed(context, '/addarc'); 
+               if (currentParent == null && !atNoArcTaskScreen) {
+                   Navigator.of(context).pop();
+                } else {
+                  if (atNoArcTaskScreen) {
+                    bloc.parentSelectInsert({ 'object' : currentParent, 'flag': 'getChildArcs'});
+                    atNoArcTaskScreen = false;
+                  } 
+                  else
+                    bloc.parentSelectInsert({ 'object' : currentParent, 'flag': 'backButton'});
+                }
               },
-            ),
+            )
           ],
         ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue[400],
-        child: Icon(Icons.arrow_back),
-        onPressed: () {
-          if (currentParent == null && !atNoArcTaskScreen) {
-            Navigator.pop(context);
-          } else {
-            if (atNoArcTaskScreen) {
-              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
-              atNoArcTaskScreen = false;
-            } 
-            else
-              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
-          }
-        },
       ),
     );
   }

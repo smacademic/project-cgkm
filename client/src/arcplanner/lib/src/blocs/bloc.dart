@@ -31,6 +31,9 @@ class Bloc extends Object with Validators {
   // Create stream and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
 
+  // Create stream and getters for parent)sdelection view
+  final _arcParentSelectViewController = StreamController<dynamic>.broadcast();
+
   // Streams for add_arc_screen
   final _arcTitleFieldController = BehaviorSubject<String>();
   final _arcEndDateFieldController = BehaviorSubject<String>();
@@ -38,6 +41,8 @@ class Bloc extends Object with Validators {
   final _arcParentFieldController = BehaviorSubject<Arc>();
   
   Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
+
+  Stream<dynamic> get arcParentSelectViewStream => _arcParentSelectViewController.stream.map(transformData);
 
   // Add data to streams for Add Arc Screen
   Stream<String> get arcTitleFieldStream => _arcTitleFieldController.stream; //.transform(validateTitle);
@@ -62,6 +67,10 @@ class Bloc extends Object with Validators {
     _arcViewController.sink.add(obj);
   } 
 
+  void parentSelectInsert(dynamic obj) {
+    _arcParentSelectViewController.sink.add(obj);
+  }
+
   // Map function that based on the given flag from stream will perform
   //  varying operations that return needed arcs to stream 
   dynamic transformData(data) async {
@@ -69,6 +78,8 @@ class Bloc extends Object with Validators {
       return await data['object'];
     } else if (data['flag'] == "getChildren") {
       return await getChildren(data['object']);
+    } else if (data['flag'] == "getChildArcs") {
+      return await getChildArcs(data['object']);
     } else if (data['flag'] == "backButton") {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
@@ -163,6 +174,42 @@ class Bloc extends Object with Validators {
     return children;
   }
 
+ // Checks to see if children are in map. If they exist in map then send them
+  //  back via stream. Otherwise load them from database and into map. Then
+  //  to the UI via stream
+  Future<List<dynamic>> getChildArcs (String parentUUID) async {
+    List<dynamic> children = new List();
+
+
+    // If there is no supplied UUID supply parentArc = null, the masterArcs
+    if (parentUUID == null) {
+      children = insertListIntoMap(await db.getMasterArcs());
+      return children;
+    }
+
+    Arc parent = getFromMap(parentUUID);
+    
+    // If childrenUUIDs is empty then it has no children
+    if (parent.childrenUUIDs?.isEmpty ?? true) { // Key does not exist in map yet or doesn't have children
+      return null;
+    } else {
+      // If Children exist in map already
+      for (String uuid in parent.childrenUUIDs) {
+        if (checkMap(uuid)) {
+          children.add(getFromMap(uuid));
+        }    
+        else {
+          // If one child UUID is missing use query to get all children and
+          //  add to map. This is to avoid many queries if large list of children
+          children = insertListIntoMap(await db.getChildArcs(parentUUID));
+          break;
+        }          
+      }
+    }
+    return children;
+  }
+
+
   submitArc() {
     final validArcTitle = _arcTitleFieldController.value;
     final arcEndDate = _arcEndDateFieldController.value;
@@ -183,16 +230,22 @@ class Bloc extends Object with Validators {
       db.insertArc(ar);
     }
 
+    initializeAddArcStreams();
+    
+  }
+
+  // Reset the streams used by the add arc screen
+  initializeAddArcStreams() {
     bloc.changeTitle(null);
     bloc.changeEndDate(null);
     bloc.changeDescription(null);
     bloc.changeParent(null);
-    
   }
 
   // Closes the stream controller
   dispose() {
     _arcViewController.close();
+    _arcParentSelectViewController.close();
 
     // Close Add Arc Screen streams
     _arcDescriptionFieldController.close();

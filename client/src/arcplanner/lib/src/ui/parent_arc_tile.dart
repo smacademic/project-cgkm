@@ -18,14 +18,14 @@ import '../model/arc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'arc_view_screen.dart';
 import 'package:intl/intl.dart';
-import 'add_arc_screen.dart';
+import 'parent_select_screen.dart';
 
 
 Widget parentArcTile(Arc arc, BuildContext context) {
   
   var description = arc.description;
 
-  ArcViewScreen.currentParent = arc.parentArc;
+  ParentSelectScreen.currentParent = arc.parentArc;
 
   if (description == null) {
     description = '';
@@ -121,7 +121,7 @@ Widget parentArcTile(Arc arc, BuildContext context) {
                     textColor: Colors.white,
                     onPressed: () {
                       bloc.changeParent(arc);
-                      Navigator.pushNamedAndRemoveUntil(context, '/addarc', (Route<dynamic> route) => false);   
+                      Navigator.of(context).pop();  
                       //TODO add call to new select_arc_screen
                       },
                   ),
@@ -135,9 +135,9 @@ Widget parentArcTile(Arc arc, BuildContext context) {
         //If going to a screen that shows no children then set flag to true
         if (arc.childrenUUIDs?.isEmpty ?? true) {
           ArcViewScreen.atNoArcTaskScreen = true;
-          bloc.arcViewInsert({ 'object' : null, 'flag': 'clear'});
+          bloc.parentSelectInsert({ 'object' : null, 'flag': 'clear'});
         } else {
-          bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+          bloc.parentSelectInsert({ 'object' : arc.aid, 'flag': 'getChildArcs'});
         }
       } 
       //onLongPress: ,
