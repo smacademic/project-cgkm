@@ -23,10 +23,11 @@ class AddArcScreen extends StatelessWidget {
   
   Widget build(context) {
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
+    return WillPopScope(
+    onWillPop: () async => false,
+      child :Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
             icon: Icon(Icons.cancel),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
@@ -34,47 +35,47 @@ class AddArcScreen extends StatelessWidget {
               bloc.initializeAddArcStreams();
             },
           )
-        ],
-      ),
-      
-      body: Container(
-        margin: EdgeInsets.only(left: 10.0, right: 10.0),
-        child: ListView(
-          children:[
-            Container(margin: EdgeInsets.only(top: 15)),
-            titleField(),
-            dueDate(),
-            descriptionField(),
-            Container(
-              margin: EdgeInsets.only(top: 20),
-              child: Row( 
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:[ 
-                  parentField(),
-                  Flexible(
-                    child: Container(
-                      width:MediaQuery.of(context).size.width * 0.25 , 
-                      child: selectParent(context),
-                    ),
-                  ),   
-                ]
+        ),
+        
+        body: Container(
+          margin: EdgeInsets.only(left: 10.0, right: 10.0),
+          child: ListView(
+            children:[
+              Container(margin: EdgeInsets.only(top: 15)),
+              titleField(),
+              dueDate(),
+              descriptionField(),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: Row( 
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children:[ 
+                    parentField(),
+                    Flexible(
+                      child: Container(
+                        width:MediaQuery.of(context).size.width * 0.25 , 
+                        child: selectParent(context),
+                      ),
+                    ),   
+                  ]
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
 
-      drawer: drawerMenu(context),
+        //drawer: drawerMenu(context),
 
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.blue,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            submitArc(),
-          ],
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.blue,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              submitArc(),
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }
