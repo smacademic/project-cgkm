@@ -99,29 +99,6 @@ class AddArcScreen extends StatelessWidget {
   );
 }
 
-// Widget dueDate(){
-//   return StreamBuilder(
-//     stream: bloc.arcEndDateFieldStream,
-//     builder: (context, snapshot) {
-//       return DateTimePickerFormField(
-//         inputType: InputType.date,
-//         format: DateFormat.yMEd(),
-//         editable: false,
-//         decoration: InputDecoration(
-//           hintText: snapshot.hasData ? 
-//           DateFormat.yMEd().format(DateTime.parse(snapshot.data))
-//           : 'Due Date',
-//           hintStyle: TextStyle(
-//             color: Colors.black,
-//             fontSize: 16
-//           )
-//         ),
-//         onChanged: (date) => bloc.changeEndDate(date.toString()),
-//       );
-//     }
-//   );
-// }
-
 Widget dueDate(){
   return StreamBuilder(
     stream: bloc.arcEndDateFieldStream,
