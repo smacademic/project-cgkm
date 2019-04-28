@@ -120,7 +120,7 @@ Widget parentArcTile(Arc arc, BuildContext context) {
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-                      bloc.changeParent(arc);
+                      bloc.changeArcParent(arc);
                       Navigator.of(context).pop();  
                       //TODO add call to new select_arc_screen
                       },

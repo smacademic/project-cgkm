@@ -85,7 +85,7 @@ class AddArcScreen extends StatelessWidget {
     stream: bloc.arcTitleFieldStream,
     builder: (context, snapshot) {
       return TextField(
-        onChanged: bloc.changeTitle,
+        onChanged: bloc.changeArcTitle,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
           hintText: 'Title',
@@ -116,7 +116,7 @@ Widget dueDate(){
             color: Colors.black
           ),
         ),
-        onChanged: (date) => bloc.changeEndDate(date.toString()),
+        onChanged: (date) => bloc.changeArcEndDate(date.toString()),
       );
     }
   );
@@ -128,7 +128,7 @@ Widget descriptionField(){
     builder: (context, snapshot) {
       return TextField(
         maxLines: 7,
-        onChanged: bloc.changeDescription,
+        onChanged: bloc.changeArcDescription,
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
