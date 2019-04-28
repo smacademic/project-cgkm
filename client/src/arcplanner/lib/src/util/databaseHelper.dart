@@ -129,7 +129,7 @@ class DatabaseHelper {
               UNION
               SELECT TID As UUID
               FROM Task
-              WHERE Task.AID = Arc1.UID
+              WHERE Task.AID = Arc1.AID
           )
         ) As ChildrenUUIDs
         FROM Arc_t AS Arc1
