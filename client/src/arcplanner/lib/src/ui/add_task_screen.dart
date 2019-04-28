@@ -170,7 +170,7 @@ Widget selectParent(BuildContext context){
 
 Widget submitTask() {
   return StreamBuilder(
-    stream: bloc.taskTitleFieldStream, 
+    stream: bloc.submitValidTask, 
     builder: (context, snapshot) {
       return FlatButton.icon(
         disabledTextColor: Colors.grey,

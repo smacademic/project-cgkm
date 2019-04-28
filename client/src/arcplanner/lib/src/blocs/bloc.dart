@@ -92,7 +92,7 @@ class Bloc extends Object with Validators {
       _taskLocationFieldController.stream;
 
   Stream<bool> get submitValidTask => Observable.combineLatest2(
-      taskTitleFieldStream, taskDescriptionFieldStream, (t, d) => true);
+      taskTitleFieldStream, arcParentFieldStream, (t, d) => true);
 
   // Change data for Add Arc Screen
   Function(String) get changeTaskTitle => _taskTitleFieldController.sink.add;
@@ -309,6 +309,7 @@ class Bloc extends Object with Validators {
     bloc.changeTaskDescription(null);
     bloc.changeTaskEndDate(null);
     bloc.changeTaskLocation(null);
+    bloc.changeArcParent(null);
   }
 
   // Closes the stream controller
