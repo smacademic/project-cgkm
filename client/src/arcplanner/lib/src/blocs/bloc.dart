@@ -83,10 +83,8 @@ class Bloc extends Object with Validators {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
     } else if (data['flag'] == 'getUpcomingItems') {
-      //return await getUpcomingItems();
-      var now = new DateTime.now();
-      print(DateTime.now(now.year, now.month, now.day));
-      return await getItemsBetweenDates(DateTime.now()., '2019-05-01');
+      print('${DateTime.now().year.toString()}-${DateTime.now().day.toString()}-${DateTime.now().month.toString()}');
+      return await getItemsBetweenDates(DateTime.now().toString(), DateTime.now().add(Duration(days: 7)).toString());
     } else if (data['flag'] == "clear") {
       return null;
     }
