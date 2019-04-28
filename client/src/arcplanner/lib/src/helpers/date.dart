@@ -16,22 +16,16 @@ import '../blocs/bloc.dart';
 
 Future<List<dynamic>> getItemsBetweenDates(String fromDate, String toDate) async {
   List<Map> upcomingItemsMapList = await bloc.db.getItemsBetweenDates(fromDate, toDate);
-  //bloc.insertListIntoMap(await bloc.db.getItemsBetweenDates(fromDate, toDate));
-
 
   List<dynamic> upcomingItems = new List();
 
   for (Map map in upcomingItemsMapList) {
+    bloc.insertObjectIntoMap(map);
     if (map.containsKey('TID')) {
-      // Task task = toTask(map);
-      // loadedObjects[map['TID']] = task;
       upcomingItems.add(bloc.toTask(map));
     } else {
-      // Arc arc = toArc(map);
-      // loadedObjects[map['AID'].toString()] = arc;
       upcomingItems.add(bloc.toArc(map));
     }
   }
-  //insertListIntoMap(upcomingItems);  NOT CORRECT FUNCTION
   return upcomingItems;
 }
