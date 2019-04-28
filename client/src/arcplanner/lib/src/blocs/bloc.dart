@@ -73,7 +73,6 @@ class Bloc extends Object with Validators {
   final _taskTitleFieldController = BehaviorSubject<String>();
   final _taskEndDateFieldController = BehaviorSubject<String>();
   final _taskDescriptionFieldController = BehaviorSubject<String>();
-  final _taskParentFieldController = BehaviorSubject<Arc>();
   final _taskLocationFieldController = BehaviorSubject<String>();
 
   Stream<dynamic> get taskViewStream =>
@@ -310,7 +309,6 @@ class Bloc extends Object with Validators {
     bloc.changeTaskDescription(null);
     bloc.changeTaskEndDate(null);
     bloc.changeTaskLocation(null);
-    // bloc.changeTaskParent(null);
   }
 
   // Closes the stream controller
@@ -331,7 +329,6 @@ class Bloc extends Object with Validators {
     _taskTitleFieldController.close();
     _taskLocationFieldController.close();
     _taskViewController.close();
-    _taskParentFieldController.close();
   }
 }
 
