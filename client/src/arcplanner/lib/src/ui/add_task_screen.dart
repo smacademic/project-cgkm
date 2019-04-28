@@ -4,7 +4,7 @@
  *
  *  Authors: 
  *    Primary: Justin Grabowski, Jonathan Middleton
- *    Contributors: Kevin Kelly
+ *    Contributors:
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
@@ -63,6 +63,8 @@ class AddTaskScreen extends StatelessWidget {
             ],
           ),
         ),
+
+        //drawer: drawerMenu(context),
 
         bottomNavigationBar: BottomAppBar(
           color: Colors.blue,
@@ -144,7 +146,7 @@ Widget descriptionField(){
 
  Widget parentField(){
   return StreamBuilder(
-    stream: bloc.arcParentFieldStream,
+    stream: bloc.taskParentFieldStream,
     builder: (context, snapshot) {
       return Text(
         snapshot.hasData? snapshot.data.title : "Parent (required)",
