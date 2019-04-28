@@ -28,10 +28,10 @@ class Bloc extends Object with Validators {
   // Constructor
   Bloc();  
 
-  // Create stream and getters for views to interact with
+  // Create streams and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
 
-  // Create stream and getters for parent)sdelection view
+  // Create streams and getters for parent selection view
   final _arcParentSelectViewController = StreamController<dynamic>.broadcast();
 
   // Streams for add_arc_screen
@@ -58,10 +58,47 @@ class Bloc extends Object with Validators {
     arcDescriptionFieldStream, (t, d) => true);
 
   // Change data for Add Arc Screen
-  Function(String) get changeTitle => _arcTitleFieldController.sink.add;
-  Function(String) get changeEndDate => _arcEndDateFieldController.sink.add;
-  Function(String) get changeDescription => _arcDescriptionFieldController.sink.add;
-  Function(Arc) get changeParent => _arcParentFieldController.sink.add;
+  Function(String) get changeArcTitle => _arcTitleFieldController.sink.add;
+  Function(String) get changeArcEndDate => _arcEndDateFieldController.sink.add;
+  Function(String) get changeArcDescription => _arcDescriptionFieldController.sink.add;
+  Function(Arc) get changeArcParent => _arcParentFieldController.sink.add;
+
+  // Create stream and getters for parent selection view
+  // final _taskParentSelectViewController = StreamController<dynamic>.broadcast();
+  final _taskViewController = StreamController<dynamic>.broadcast();
+
+  // Streams for add_task_screen
+  final _taskTitleFieldController = BehaviorSubject<String>();
+  final _taskEndDateFieldController = BehaviorSubject<String>();
+  final _taskDescriptionFieldController = BehaviorSubject<String>();
+  final _taskParentFieldController = BehaviorSubject<Arc>();
+  final _taskLocationFieldController = BehaviorSubject<String>();
+  
+  Stream<dynamic> get taskViewStream => _taskViewController.stream.map(transformData);
+
+  // Stream<dynamic> get taskParentSelectViewStream => _taskParentSelectViewController.stream.map(transformData);
+
+  // Add data to streams for Add Arc Screen
+  Stream<String> get taskTitleFieldStream => _taskTitleFieldController.stream; //.transform(validateTitle);
+
+  Stream<String> get taskEndDateFieldStream => _taskEndDateFieldController.stream;
+
+  Stream<String> get taskDescriptionFieldStream => _taskDescriptionFieldController.stream;
+
+  Stream<Arc> get taskParentFieldStream => _taskParentFieldController.stream;
+
+  Stream<String> get taskLocationFieldStream => _taskLocationFieldController.stream;
+
+  Stream<bool> get submitValidTask =>
+      Observable.combineLatest2(taskTitleFieldStream, 
+    taskDescriptionFieldStream, (t, d) => true);
+
+  // Change data for Add Arc Screen
+  Function(String) get changeTaskTitle => _taskTitleFieldController.sink.add;
+  Function(String) get changeTaskEndDate => _taskEndDateFieldController.sink.add;
+  Function(String) get changeTaskDescription => _taskDescriptionFieldController.sink.add;
+  Function(Arc) get changeTaskParent => _taskParentFieldController.sink.add;
+  Function(String) get changeTaskLocation => _taskLocationFieldController.sink.add; 
 
   void arcViewInsert(dynamic obj) {
     _arcViewController.sink.add(obj);
@@ -218,7 +255,7 @@ class Bloc extends Object with Validators {
 
     //Create arc with new data
     // This section should be removed when we decide how to procede 
-    // with definingt `user` or removing the paramerter from Arc constructor
+    // with defining `user` or removing the paramerter from Arc constructor
     User tempUser = new User("Temp", "seashells", "this@that.com");
 
     if(arcParent == null) {
@@ -231,21 +268,45 @@ class Bloc extends Object with Validators {
     }
 
     initializeAddArcStreams();
-    
+  }
+
+  submitTask() {
+    final validTaskTitle = _taskTitleFieldController.value;
+    final taskEndDate = _taskEndDateFieldController.value;
+    final taskDescription = _taskDescriptionFieldController.value;
+    final taskLocation = _taskLocationFieldController.value;
+    final taskParent = _taskParentFieldController.value;
+
+    Task tk = new Task(taskParent.aid, validTaskTitle, description: taskDescription, dueDate: taskEndDate, location: taskLocation);
+
+    db.insertTask(tk);
+
+    initializeAddTaskStreams();
   }
 
   // Reset the streams used by the add arc screen
   initializeAddArcStreams() {
-    bloc.changeTitle(null);
-    bloc.changeEndDate(null);
-    bloc.changeDescription(null);
-    bloc.changeParent(null);
+    bloc.changeArcTitle(null);
+    bloc.changeArcEndDate(null);
+    bloc.changeArcDescription(null);
+    bloc.changeArcParent(null);
+  }
+
+  // Reset the streams used by the add task screen
+  initializeAddTaskStreams(){
+    bloc.changeTaskTitle(null);
+    bloc.changeTaskDescription(null);
+    bloc.changeTaskEndDate(null);
+    bloc.changeTaskLocation(null);
+    bloc.changeTaskParent(null);
   }
 
   // Closes the stream controller
   dispose() {
     _arcViewController.close();
+    _taskViewController.close();
     _arcParentSelectViewController.close();
+    // _taskParentSelectViewController.close();
 
     // Close Add Arc Screen streams
     _arcDescriptionFieldController.close();
@@ -253,6 +314,13 @@ class Bloc extends Object with Validators {
     _arcTitleFieldController.close();
     _arcViewController.close();
     _arcParentFieldController.close();
+
+    _taskDescriptionFieldController.close();
+    _taskEndDateFieldController.close();
+    _taskTitleFieldController.close();
+    _taskLocationFieldController.close();
+    _taskViewController.close();
+    _taskParentFieldController.close();
   }
 }
 
