@@ -29,11 +29,6 @@ Widget arcTile(Arc arc, BuildContext context) {
   if (description == null) {
     description = '';
   }
-  
-  var dueDate = arc.dueDate;
-  if (dueDate == null) {
-    dueDate = '';
-  }
 
   return Container(
     decoration: BoxDecoration(
@@ -85,7 +80,7 @@ Widget arcTile(Arc arc, BuildContext context) {
                 ),
                 Container(
                   child: AutoSizeText(
-                    (arc.dueDate == 'null' || arc.dueDate == null) ? 'No Due Date' 
+                    (arc.dueDate == 'null' || arc.dueDate == null) ? '' 
                      : DateFormat.yMEd().format(DateTime.parse(arc.dueDate)),
                     style: TextStyle(
                       color: Colors.black,
