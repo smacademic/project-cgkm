@@ -25,7 +25,6 @@ import '../helpers/date.dart';
 class Bloc extends Object with Validators {
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
-  //var dateFormat = new DateFormat('yyyy-MM-dd');
   
   // Constructor
   Bloc();  
