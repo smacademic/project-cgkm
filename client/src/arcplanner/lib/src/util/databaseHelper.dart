@@ -193,7 +193,13 @@ class DatabaseHelper {
       return new List.from(arcList)..addAll(taskList);
     } else
       return arcList;
-      
+  }
+  
+  Future<List<Map>> getItemsBetweenDates(String fromDate, String toDate) async {
+    var dbClient = await db;
+    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE DueDate BETWEEN "$fromDate" AND "$toDate"');
+    List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE DueDate BETWEEN "$fromDate" AND "$toDate"');
+    return new List.from(arcList)..addAll(taskList);
   }
 
     // given a UUID, returns a list of mapped children
@@ -207,8 +213,7 @@ class DatabaseHelper {
   Future<List<Map>> getArcList() async {
     var dbClient = await db;
     return await dbClient.rawQuery('SELECT * FROM Arc');
-  } 
-
+  }
   
   Future<List<Map>> getTaskList() async {
     var dbClient = await db;

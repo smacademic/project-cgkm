@@ -19,6 +19,7 @@ import '../model/user.dart';
 import '../util/databaseHelper.dart';
 import '../blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
+import '../helpers/date.dart';
 
 
 class Bloc extends Object with Validators {
@@ -30,6 +31,7 @@ class Bloc extends Object with Validators {
 
   // Create stream and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
+  final _homeController = StreamController<dynamic>.broadcast();
 
   // Create stream and getters for parent)sdelection view
   final _arcParentSelectViewController = StreamController<dynamic>.broadcast();
@@ -42,6 +44,9 @@ class Bloc extends Object with Validators {
   
   Stream<dynamic> get arcViewStream => _arcViewController.stream.map(transformData);
 
+  // Stream for interaction with Home screen
+  Stream<dynamic> get homeStream => _homeController.stream.map(transformData);
+  
   Stream<dynamic> get arcParentSelectViewStream => _arcParentSelectViewController.stream.map(transformData);
 
   // Add data to streams for Add Arc Screen
@@ -65,7 +70,11 @@ class Bloc extends Object with Validators {
 
   void arcViewInsert(dynamic obj) {
     _arcViewController.sink.add(obj);
-  } 
+  }
+
+  void homeInsert(dynamic obj) {
+    _homeController.sink.add(obj);
+  }
 
   void parentSelectInsert(dynamic obj) {
     _arcParentSelectViewController.sink.add(obj);
@@ -83,6 +92,8 @@ class Bloc extends Object with Validators {
     } else if (data['flag'] == "backButton") {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
+    } else if (data['flag'] == 'getUpcomingItems') {
+      return await getItemsBetweenDates(DateTime.now().toString(), DateTime.now().add(Duration(days: 7)).toString());
     } else if (data['flag'] == "clear") {
       return null;
     }
@@ -91,8 +102,9 @@ class Bloc extends Object with Validators {
   // Reads from the DB and returns an Arc object
   Arc toArc(Map map) {
     return Arc.read(map['UID'], map['AID'], map['Title'], description: 
-        map['Description'], dueDate: map['DueDate'], parentArc: map['ParentArc'], completed: 
-        map['Completed'], childrenUUIDs: map['ChildrenUUIDs']);
+        map['Description'], dueDate: map['DueDate'], parentArc: 
+        map['ParentArc'], completed: map['Completed'], childrenUUIDs: 
+        map['ChildrenUUIDs']);
   }
 
   // Reads from the DB and returns a Task object
@@ -144,7 +156,6 @@ class Bloc extends Object with Validators {
   //  to the UI via stream
   Future<List<dynamic>> getChildren (String parentUUID) async {
     List<dynamic> children = new List();
-
 
     // If there is no supplied UUID supply parentArc = null, the masterArcs
     if (parentUUID == null) {
@@ -245,6 +256,7 @@ class Bloc extends Object with Validators {
   // Closes the stream controller
   dispose() {
     _arcViewController.close();
+    _homeController.close();
     _arcParentSelectViewController.close();
 
     // Close Add Arc Screen streams
