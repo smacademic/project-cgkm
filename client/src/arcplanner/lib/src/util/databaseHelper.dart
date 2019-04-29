@@ -129,7 +129,7 @@ class DatabaseHelper {
               UNION
               SELECT TID As UUID
               FROM Task
-              WHERE Task.AID = Arc1.UID
+              WHERE Task.AID = Arc1.AID
           )
         ) As ChildrenUUIDs
         FROM Arc_t AS Arc1
@@ -193,15 +193,27 @@ class DatabaseHelper {
       return new List.from(arcList)..addAll(taskList);
     } else
       return arcList;
-      
+  }
+  
+  Future<List<Map>> getItemsBetweenDates(String fromDate, String toDate) async {
+    var dbClient = await db;
+    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE DueDate BETWEEN "$fromDate" AND "$toDate"');
+    List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE DueDate BETWEEN "$fromDate" AND "$toDate"');
+    return new List.from(arcList)..addAll(taskList);
+  }
+
+    // given a UUID, returns a list of mapped children
+  Future<List<Map>> getChildArcs(String uuid) async {
+    var dbClient = await db;
+    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
+    return arcList;
   }
 
   // pulls all Arcs and Tasks out of the database and creates objects out of them
   Future<List<Map>> getArcList() async {
     var dbClient = await db;
     return await dbClient.rawQuery('SELECT * FROM Arc');
-  } 
-
+  }
   
   Future<List<Map>> getTaskList() async {
     var dbClient = await db;

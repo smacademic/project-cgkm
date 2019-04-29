@@ -15,16 +15,12 @@
 import 'package:flutter/material.dart';
 import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:intl/intl.dart';
 
 Widget taskTile(Task task, BuildContext context) {
   var description = task.description;
   if (description == null) {
     description = 'No Description';
-  }
-
-  var dueDate = task.duedate;
-  if (dueDate == null) {
-    dueDate = '';
   }
 
   var location = task.location;
@@ -56,7 +52,8 @@ Widget taskTile(Task task, BuildContext context) {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Task',
+                    Text(
+                      'Task',
                       style: TextStyle(
                         fontSize: 8.0,
                       ),
@@ -77,25 +74,42 @@ Widget taskTile(Task task, BuildContext context) {
               ),
               Container(
                 child: AutoSizeText(
-                  'dueDate',
-                  //dueDate,
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                  maxFontSize: 14.0,
-                  minFontSize: 14.0,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
+                  (task.dueDate == 'null' || task.dueDate == null) ? '' 
+                     : DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                    maxFontSize: 14.0,
+                    minFontSize: 14.0,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
           Container(
             padding: EdgeInsets.only(
-              top: 10.0,
+              top: 0.0,
+              bottom: 0.0,
+            ),
+            child: AutoSizeText(
+              location,
+              style: TextStyle(
+                color: Colors.grey[800],
+              ),
+              maxFontSize: 18.0,
+              minFontSize: 12.0,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(
+              top: 5.0,
               bottom: 10.0,
             ),
-            child: AutoSizeText(description,
+            child: AutoSizeText(
+              description,
               style: TextStyle(
                 color: Colors.grey[600],
               ),

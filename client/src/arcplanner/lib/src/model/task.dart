@@ -37,7 +37,7 @@ class Task {
   Task.read(this._tid, this._aid, this._title, 
       {description, dueDate, location, completed}) {
     this._description = description;
-    this._dueDate = duedate;
+    this._dueDate = dueDate;
     this._location = location;
     if (completed == 'true') {
       this._completed = true;
@@ -63,7 +63,7 @@ class Task {
   String get aid => _aid;
   String get title => _title;
   String get description => _description;
-  String get duedate => _dueDate;
+  String get dueDate => _dueDate;
   String get location => _location;
   bool get completed => _completed;
 
