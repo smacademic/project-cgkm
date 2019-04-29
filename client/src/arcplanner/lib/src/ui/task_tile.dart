@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:intl/intl.dart';
 
 Widget taskTile(Task task, BuildContext context) {
   var description = task.description;
@@ -76,17 +77,17 @@ Widget taskTile(Task task, BuildContext context) {
                 ),
               ),
               Container(
-                child: AutoSizeText(
-                  'dueDate',
-                  //dueDate,
-                  style: TextStyle(
-                    color: Colors.black,
+                  child: AutoSizeText(
+                    (task.duedate == 'null' || task.duedate == null) ? '' 
+                     : DateFormat.yMEd().format(DateTime.parse(task.duedate)),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                    maxFontSize: 14.0,
+                    minFontSize: 14.0,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxFontSize: 14.0,
-                  minFontSize: 14.0,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                ),
               ),
             ],
           ),
