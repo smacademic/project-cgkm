@@ -23,11 +23,6 @@ Widget taskTile(Task task, BuildContext context) {
     description = 'No Description';
   }
 
-  var dueDate = task.duedate;
-  if (dueDate == null) {
-    dueDate = '';
-  }
-
   var location = task.location;
   if (location == null) {
     location = '';
@@ -79,16 +74,15 @@ Widget taskTile(Task task, BuildContext context) {
               ),
               Container(
                 child: AutoSizeText(
-                  (task.duedate == 'null' || task.duedate == null)
-                      ? ''
-                      : DateFormat.yMEd().format(DateTime.parse(task.duedate)),
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                  maxFontSize: 14.0,
-                  minFontSize: 14.0,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
+                  (task.dueDate == 'null' || task.dueDate == null) ? '' 
+                     : DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                    maxFontSize: 14.0,
+                    minFontSize: 14.0,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
