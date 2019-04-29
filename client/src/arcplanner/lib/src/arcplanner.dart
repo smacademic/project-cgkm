@@ -22,6 +22,7 @@ import 'ui/settings_screen.dart';
 import 'ui/arc_view_screen.dart';
 import 'ui/task_view_screen.dart';
 import 'ui/add_arc_screen.dart';
+import 'ui/add_task_screen.dart';
 import 'ui/parent_select_screen.dart';
 import 'ui/calendar_screen.dart';
 
@@ -37,6 +38,7 @@ class ArcPlanner extends StatelessWidget {
   static ArcViewScreen arcViewScreen = ArcViewScreen();
   static TaskViewScreen taskViewScreen = TaskViewScreen();
   static AddArcScreen addArcScreen = AddArcScreen();
+  static AddTaskScreen addTaskScreen = AddTaskScreen();
   static ParentSelectScreen parentSelectScreen = ParentSelectScreen();
   static CalendarScreen calendarScreen = CalendarScreen();
 
@@ -59,6 +61,7 @@ class ArcPlanner extends StatelessWidget {
         '/arcview': (BuildContext context) => arcViewScreen,
         '/taskview': (BuildContext context) => taskViewScreen,
         '/addarc': (BuildContext context) => addArcScreen,
+        '/addtask': (BuildContext context) => addTaskScreen,
         '/parent': (BuildContext context) => parentSelectScreen,
         '/calendar': (BuildContext context) => calendarScreen,
       },

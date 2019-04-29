@@ -54,7 +54,7 @@ Drawer drawerMenu(BuildContext context) {
               ),
           ),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.popAndPushNamed(context, '/addtask');
           },
         ),
         ListTile(
