@@ -50,6 +50,7 @@ class ArcPlanner extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      debugShowCheckedModeBanner: false,
       home: homeScreen,  //setting home as 'homeScreen' for app development
       // Sets up the routes the Navigator can go through
       routes: <String, WidgetBuilder> {
