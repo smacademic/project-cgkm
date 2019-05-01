@@ -48,10 +48,6 @@ Widget arcTile(Arc arc, BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(
-              //top: 10.0,
-              bottom: 10.0,
-            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -96,6 +92,7 @@ Widget arcTile(Arc arc, BuildContext context) {
           ),
           Container(
             padding: EdgeInsets.only(
+              top: 5.0,
               bottom: 10.0,
             ),
             child: AutoSizeText(description,
