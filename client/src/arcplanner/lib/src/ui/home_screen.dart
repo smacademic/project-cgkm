@@ -21,6 +21,7 @@ import 'arc_tile.dart';
 import 'task_tile.dart';
 import '../model/arc.dart';
 import '../model/task.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   void _newTask() {}
@@ -31,6 +32,21 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+
+      appBar: AppBar(
+        title: Text("Today is " 
+          + DateFormat.MEd().format(DateTime.now()),
+          ),
+          centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                _newTask();
+              },
+            )
+          ],
+      ),
 
       body: SafeArea(
         child: Column(
