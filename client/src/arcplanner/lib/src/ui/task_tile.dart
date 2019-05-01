@@ -37,7 +37,7 @@ Widget taskTile(Task task, BuildContext context) {
         child: AutoSizeText(
           'Location: $location',
           style: TextStyle(
-            color: Colors.grey[600],
+            color: Colors.grey[800],
           ),
           maxFontSize: 14.0,
           minFontSize: 10.0,
