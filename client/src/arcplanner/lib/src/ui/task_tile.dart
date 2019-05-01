@@ -28,6 +28,28 @@ Widget taskTile(Task task, BuildContext context) {
     location = '';
   }
 
+  Widget getLocation() {
+    if (location != '') {
+      return Container(
+        padding: EdgeInsets.only(
+          top: 5.0,
+        ),
+        child: AutoSizeText(
+          'Location: $location',
+          style: TextStyle(
+            color: Colors.grey[600],
+          ),
+          maxFontSize: 14.0,
+          minFontSize: 10.0,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    } else {
+      return null;
+    }
+  }
+
   return Container(
     decoration: BoxDecoration(
       border: Border(
@@ -92,16 +114,7 @@ Widget taskTile(Task task, BuildContext context) {
               top: 0.0,
               bottom: 0.0,
             ),
-            child: AutoSizeText(
-              location,
-              style: TextStyle(
-                color: Colors.grey[800],
-              ),
-              maxFontSize: 18.0,
-              minFontSize: 12.0,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            child: getLocation(),
           ),
           Container(
             padding: EdgeInsets.only(
@@ -128,3 +141,4 @@ Widget taskTile(Task task, BuildContext context) {
     ),
   );
 }
+
