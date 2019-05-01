@@ -35,10 +35,6 @@ class ArcViewScreen extends StatelessWidget {
       backgroundColor: Colors.white,
 
       appBar: AppBar(
-        title: Text(
-          'Arcs',           
-          textAlign: TextAlign.center,
-        ),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
