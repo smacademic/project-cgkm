@@ -34,6 +34,31 @@ class ArcViewScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
 
+      appBar: AppBar(
+        title: Text(
+          'Arcs',           
+          textAlign: TextAlign.center,
+        ),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+           onPressed: () {
+              if (currentParent == null && !atNoArcTaskScreen) {
+                Navigator.pop(context);
+              } else {
+                if (atNoArcTaskScreen) {
+                  bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
+                  atNoArcTaskScreen = false;
+                } 
+                else
+                  bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
+              }
+            },
+          )
+        ],
+      ),
+
       body: Column(
         children: <Widget>[
           Expanded(
