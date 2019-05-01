@@ -30,128 +30,86 @@ class HomeScreen extends StatelessWidget {
     bool firstTimeLoading = true;
     
 
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: Colors.white,
 
-      appBar: AppBar(
-        title: Text("Today is " 
-          + DateFormat.MEd().format(DateTime.now()),
+        appBar: AppBar(
+          bottom: TabBar(
+            tabs: <Widget>[
+              Tab(
+                text: 'Upcoming Tasks'
+              ),
+              Tab(
+                text: 'Past Due Tasks'
+              ),
+            ],
+          ),
+          title: Text("Today is " 
+            + DateFormat.MEd().format(DateTime.now()),
           ),
           centerTitle: true,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                _newTask();
-              },
-            )
-          ],
-      ),
-
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            topBar(context),
-            Expanded(
-              child: StreamBuilder(
-                stream: bloc.homeStream,
-                builder: (context, snapshot) {
-                  return new FutureBuilder(
-                    future: snapshot.data,
-                    builder: (context, snapshot) {
-                      if (firstTimeLoading) {
-                        bloc.homeInsert({ 'object' : null, 'flag': 'getUpcomingItems'});
-                        firstTimeLoading = false;
-                      }
-                      
-                      if (snapshot.hasData) {
-                        dynamic snapshotData = snapshot.data;
-                        return ListView.builder(
-                          itemCount: snapshotData.length,
-                          itemBuilder: (context, index) {
-                            return tile(snapshotData[index], context);
-                          },
-                        );
-                      } else {
-                        return Text('There are no Arcs/Tasks');
-                      }
-                    },
-                  );
-                }
-              ),
-            ),
-          ],
-        ),
-      ),
-
-      drawer: drawerMenu(context),
-    );
-  }
-}
-
-Widget topBar(BuildContext context) {
-  var width = MediaQuery.of(context).size.width;
-  return Column(
-    children: <Widget>[
-    Container(
-        color: Colors.blue[400],
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          actions: <Widget> [
             Container(
-              padding: EdgeInsets.all(8),
-              width: width * 0.60,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget> [
-                  AutoSizeText(
-                    'Hello userName',
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      color: Colors.white,
-                    ),
-                    maxLines: 1,
-                  ),
-                  AutoSizeText(
-                    'You have X upcoming tasks due in the next week',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      color: Colors.white,
-                    ),
-                    maxLines: 3,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                right: 10.0,
-              ),
               child: ButtonTheme(
-                height: 55.0,
-                buttonColor: Colors.white,
-                child: RaisedButton.icon(
-                  textColor: Colors.blue[400],
+                child: FlatButton.icon(
+                  textColor: Colors.white,
                   icon: Icon(
                     Icons.add,
-                    size: 45.0,
                   ),
                   label: Text(
                     'New\nTask',
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 14.0,
                     ),
                   ),
-                  // TODO: Replace _newTask with a Bloc method
-                  //onPressed: _newTask,
+                  onPressed: _newTask,
                 ),
               ),
             ),
           ],
         ),
+
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: StreamBuilder(
+                  stream: bloc.homeStream,
+                  builder: (context, snapshot) {
+                    return new FutureBuilder(
+                      future: snapshot.data,
+                      builder: (context, snapshot) {
+                        if (firstTimeLoading) {
+                          bloc.homeInsert({ 'object' : null, 'flag': 'getUpcomingItems'});
+                          firstTimeLoading = false;
+                        }
+                        
+                        if (snapshot.hasData) {
+                          dynamic snapshotData = snapshot.data;
+                          return ListView.builder(
+                            itemCount: snapshotData.length,
+                            itemBuilder: (context, index) {
+                              return tile(snapshotData[index], context);
+                            },
+                          );
+                        } else {
+                          return Text('There are no Arcs/Tasks');
+                        }
+                      },
+                    );
+                  }
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        drawer: drawerMenu(context),
       ),
-    ],
-  );
+    );
+  }
 }
 
 Widget tile(dynamic obj, BuildContext context) {
