@@ -103,6 +103,7 @@ Widget dueDate(){
   return StreamBuilder(
     stream: bloc.taskEndDateFieldStream,
     builder: (context, snapshot) {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
 
       return DateTimePickerFormField(
         inputType: InputType.date,
