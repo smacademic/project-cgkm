@@ -25,7 +25,7 @@ class TaskScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            //TODO add call to go back
+             Navigator.of(context).pop();
           },
         )
       ),
