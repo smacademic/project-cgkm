@@ -78,7 +78,7 @@ for filePath in fileList:
                 returnType = functionHeader[0]
                 functionName = functionHeader[1]
             else:
-                functionName = functionHeader
+                functionName = functionHeader[0].lstrip()
                 returnType = "void"
             documentation.write(f"### _{functionName} Function_\n")
             documentation.write(f"{' '.join(definition)} \n")
@@ -87,8 +87,9 @@ for filePath in fileList:
                 for param in parameters:
                     param = param.split(" ", 1)
                     documentation.write(f"| {param[0]} | {param[1].rstrip()} |\n")
+                documentation.write("\n")
             if returnLine != "":
-                documentation.write(f"**return type**: {returnType}  ")
+                documentation.write(f"\n  **return type**: `{returnType}`  ")
                 documentation.write(f"\n**return**: {returnLine}\n")
             
             #function return type is functionHeader[2]
