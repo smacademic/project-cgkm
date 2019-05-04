@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
+ 
 
 Widget taskTile(Task task, BuildContext context) {
   var description = task.description;
@@ -26,6 +27,11 @@ Widget taskTile(Task task, BuildContext context) {
   var location = task.location;
   if (location == null) {
     location = '';
+  }
+
+  _toTaskView(Task _task){
+    //insert bloc setter
+    Navigator.pushNamed(context, '/task');
   }
 
   Widget getLocation() {
@@ -135,9 +141,9 @@ Widget taskTile(Task task, BuildContext context) {
           // onTap: () {
           //   _toTaskView(task),
           // }
-          // onLongPress: ,
         ],
       ),
+      onTap: _toTaskView(task),
     ),
   );
 }
