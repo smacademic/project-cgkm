@@ -19,9 +19,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'arc_view_screen.dart';
 import 'package:intl/intl.dart';
 
-
 Widget arcTile(Arc arc, BuildContext context) {
-  
   var description = arc.description;
 
   ArcViewScreen.currentParent = arc.parentArc;
@@ -55,7 +53,8 @@ Widget arcTile(Arc arc, BuildContext context) {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Arc',
+                      Text(
+                        'Arc',
                         style: TextStyle(
                           fontSize: 8.0,
                         ),
@@ -76,8 +75,9 @@ Widget arcTile(Arc arc, BuildContext context) {
                 ),
                 Container(
                   child: AutoSizeText(
-                    (arc.dueDate == 'null' || arc.dueDate == null) ? '' 
-                     : DateFormat.yMEd().format(DateTime.parse(arc.dueDate)),
+                    (arc.dueDate == 'null' || arc.dueDate == null)
+                        ? ''
+                        : DateFormat.yMEd().format(DateTime.parse(arc.dueDate)),
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -95,7 +95,8 @@ Widget arcTile(Arc arc, BuildContext context) {
               top: 5.0,
               bottom: 10.0,
             ),
-            child: AutoSizeText(description,
+            child: AutoSizeText(
+              description,
               style: TextStyle(
                 color: Colors.grey[600],
               ),
@@ -111,12 +112,64 @@ Widget arcTile(Arc arc, BuildContext context) {
         //If going to a screen that shows no children then set flag to true
         if (arc.childrenUUIDs?.isEmpty ?? true) {
           ArcViewScreen.atNoArcTaskScreen = true;
-          bloc.arcViewInsert({ 'object' : null, 'flag': 'clear'});
+          bloc.arcViewInsert({'object': null, 'flag': 'clear'});
         } else {
-          bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+          bloc.arcViewInsert({'object': arc.aid, 'flag': 'getChildren'});
         }
-      } 
-      //onLongPress: ,
+      },
+      onLongPress: () {
+        // Show option to mark complete/delete
+            // if delete
+                // if has children
+                    // "no delete" message
+                // else
+                    // delete
+
+            // if complete
+              // if has incomplete children
+                  // "not complete" message
+              // if else, and all children complete
+                  // complete
+            // update for arcView
+
+        return showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              // title: Text("Make changes to this Arc?"),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  FlatButton(  // leaving this commented until edit is implemented
+                    
+                    textColor: Colors.blue,
+              
+                    child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  FlatButton(
+                    textColor: Colors.blue,
+                    child: Text('Mark Complete', style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  FlatButton(
+                    textColor: Colors.blue,
+                    child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     ),
   );
 }
