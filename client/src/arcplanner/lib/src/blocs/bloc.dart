@@ -20,8 +20,10 @@ import '../util/databaseHelper.dart';
 import '../blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
 import '../helpers/date.dart';
+import 'package:intl/intl.dart';
 
 class Bloc extends Object with Validators {
+  var formatter = new DateFormat('yyyy-MM-dd');
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
 
@@ -314,15 +316,19 @@ class Bloc extends Object with Validators {
     // This section should be removed when we decide how to proceed
     // with defining `user` or removing the parameter from Arc constructor
     User tempUser = new User("Temp", "seashells", "this@that.com");
+    DateTime parsedDueDate = DateTime.parse(arcEndDate);
+    String formattedDueDate = formatter.format(parsedDueDate);
 
     if (arcParent == null) {
       Arc ar = new Arc(tempUser.uid, validArcTitle,
-          description: arcDescription, dueDate: arcEndDate);
+          description: arcDescription, 
+          dueDate: formattedDueDate);
       db.insertArc(ar);
     } else {
+
       Arc ar = new Arc(tempUser.uid, validArcTitle,
           description: arcDescription,
-          dueDate: arcEndDate,
+          dueDate: formattedDueDate,
           parentArc: arcParent.aid);
       db.insertArc(ar);
     }
@@ -339,9 +345,12 @@ class Bloc extends Object with Validators {
     final taskLocation = _taskLocationFieldController.value;
     final taskParent = _arcParentFieldController.value;
 
+    DateTime parsedDueDate = DateTime.parse(taskEndDate);
+    String formattedDueDate = formatter.format(parsedDueDate);
+
     Task tk = new Task(taskParent.aid, validTaskTitle,
         description: taskDescription,
-        dueDate: taskEndDate,
+        dueDate: formattedDueDate,
         location: taskLocation);
 
     db.insertTask(tk);
