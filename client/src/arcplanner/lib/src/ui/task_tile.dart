@@ -132,12 +132,48 @@ Widget taskTile(Task task, BuildContext context) {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          // onTap: () {
-          //   _toTaskView(task),
-          // }
-          // onLongPress: ,
         ],
       ),
+      onTap:(){},
+      onLongPress:(){
+                return showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              // title: Text("Make changes to this Arc?"),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  FlatButton(  // leaving this commented until edit is implemented
+                    
+                    textColor: Colors.blue,
+              
+                    child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  FlatButton(
+                    textColor: Colors.blue,
+                    child: Text('Mark Complete', style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  FlatButton(
+                    textColor: Colors.blue,
+                    child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     ),
   );
 }
