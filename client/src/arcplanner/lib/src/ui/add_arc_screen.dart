@@ -64,8 +64,6 @@ class AddArcScreen extends StatelessWidget {
           ),
         ),
 
-        //drawer: drawerMenu(context),
-
         bottomNavigationBar: BottomAppBar(
           color: Colors.blue,
           child: Row(
