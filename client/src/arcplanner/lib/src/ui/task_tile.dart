@@ -1,3 +1,4 @@
+import 'package:arcplanner/src/ui/task_screen.dart';
 /** 
  *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
  *  CS298 Spring 2019 
@@ -140,9 +141,19 @@ Widget taskTile(Task task, BuildContext context) {
       ),
       onTap: (){
         bloc.changeTask(task);
-        Navigator.popAndPushNamed(context, '/task');
+        _openTaskScreen(context);
       },
     ),
   );
 }
 
+void _openTaskScreen(BuildContext context) {
+  Navigator.of(context).push(
+    new MaterialPageRoute<Null>(
+      builder: (BuildContext context) {
+        return new TaskScreen();
+      },
+      fullscreenDialog: true
+    )
+  );
+}
