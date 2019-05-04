@@ -34,6 +34,9 @@ class Bloc extends Object with Validators {
 
   // Create streams and getters for parent selection view
   final _arcParentSelectViewController = StreamController<dynamic>.broadcast();
+  
+  // Stream for task_screen 
+  final _taskController = BehaviorSubject<Task>();
 
   // Streams for add_arc_screen
   final _arcTitleFieldController = BehaviorSubject<String>();
@@ -64,12 +67,18 @@ class Bloc extends Object with Validators {
   Stream<bool> get submitValidArc => Observable.combineLatest2(
       arcTitleFieldStream, arcDescriptionFieldStream, (t, d) => true);
 
+  // Add data to the stream for Task Screen
+  Stream<Task> get taskStream => _taskController.stream;
+
   // Change data for Add Arc Screen
   Function(String) get changeArcTitle => _arcTitleFieldController.sink.add;
   Function(String) get changeArcEndDate => _arcEndDateFieldController.sink.add;
   Function(String) get changeArcDescription =>
       _arcDescriptionFieldController.sink.add;
   Function(Arc) get changeArcParent => _arcParentFieldController.sink.add;
+
+  // Change data for Task Stream
+  Function(Task) get changeTask => _taskController.sink.add;
 
   // Create stream and getters for parent selection view
   final _taskViewController = StreamController<dynamic>.broadcast();
@@ -83,7 +92,7 @@ class Bloc extends Object with Validators {
   Stream<dynamic> get taskViewStream =>
       _taskViewController.stream.map(transformData);
 
-  // Add data to streams for Add Arc Screen
+  // Add data to streams for Add Task Screen
   Stream<String> get taskTitleFieldStream =>
       _taskTitleFieldController.stream; //.transform(validateTitle);
 
@@ -99,7 +108,7 @@ class Bloc extends Object with Validators {
   Stream<bool> get submitValidTask => Observable.combineLatest2(
       taskTitleFieldStream, arcParentFieldStream, (t, d) => true);
 
-  // Change data for Add Arc Screen
+  // Change data for Add Task Screen
   Function(String) get changeTaskTitle => _taskTitleFieldController.sink.add;
   Function(String) get changeTaskEndDate =>
       _taskEndDateFieldController.sink.add;
@@ -344,6 +353,9 @@ class Bloc extends Object with Validators {
     _taskTitleFieldController.close();
     _taskLocationFieldController.close();
     _taskViewController.close();
+
+    // Close Task Screen stream
+    _taskController.close();
   }
 }
 
