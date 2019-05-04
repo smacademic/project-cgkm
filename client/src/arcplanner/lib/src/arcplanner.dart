@@ -26,7 +26,7 @@ import 'ui/add_task_screen.dart';
 import 'ui/parent_select_screen.dart';
 import 'ui/calendar_screen.dart';
 
-/// Observer for tracking page changes
+// Observer for tracking page changes
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class ArcPlanner extends StatelessWidget {
