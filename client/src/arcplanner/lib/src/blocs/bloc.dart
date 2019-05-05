@@ -335,6 +335,8 @@ class Bloc extends Object with Validators {
   completeArc() {}
 
   ///  Deletes an arc from the database BLOC
+  ///  Removes reference to itself if it has a parent; deletes arc from
+  ///   loadedObjects, and deletes the arc from the db
   ///  @param arc, the Arc to be deleted
   ///
   deleteArc(Arc arc) async {
@@ -377,7 +379,9 @@ class Bloc extends Object with Validators {
 
   completeTask(Task task){}
 
-  ///  Deletes a task from the database BLOC
+  ///  Deletes a atask from the database BLOC
+  ///  Removes reference to itself if it has a parent; deletes task from
+  ///   loadedObjects, and deletes the task from the db
   ///  @param task, the Task to be deleted
   ///
   deleteTask(Task task) async {
