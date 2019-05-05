@@ -4,7 +4,7 @@
  *
  *  Authors: 
  *    Primary: Matthew Chastain
- *    Contributors: Kevin Kelly
+ *    Contributors: Kevin Kelly, Jonathan Middleton
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
@@ -192,6 +192,7 @@ Widget deleteArc(Arc arc) {
           if (arc.childrenUUIDs == null) {
             print("delete the arc");
             bloc.deleteArc(arc);
+            // TODO update current screen (arcview or home)
           } else {
             print("Arc has children");
             return showDialog(
