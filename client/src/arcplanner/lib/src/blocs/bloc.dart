@@ -31,6 +31,7 @@ class Bloc extends Object with Validators {
   // Create streams and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
   final _homeController = StreamController<dynamic>.broadcast();
+  final _calendarController = StreamController<dynamic>.broadcast();
 
   // Create streams and getters for parent selection view
   final _arcParentSelectViewController = StreamController<dynamic>.broadcast();
@@ -40,6 +41,9 @@ class Bloc extends Object with Validators {
   final _arcEndDateFieldController = BehaviorSubject<String>();
   final _arcDescriptionFieldController = BehaviorSubject<String>();
   final _arcParentFieldController = BehaviorSubject<Arc>();
+
+  Stream<dynamic> get calendarStream => 
+      _calendarController.stream.map(transformData);
 
   Stream<dynamic> get arcViewStream =>
       _arcViewController.stream.map(transformData);
