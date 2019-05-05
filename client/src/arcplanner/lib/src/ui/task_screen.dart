@@ -93,7 +93,7 @@ Widget dueDate(Task task, BuildContext context){
           Text('Due Date'),
           Padding(padding: EdgeInsets.only(bottom: 5)),
           Text(
-            task.title != null ? DateFormat.yMEd().format(DateTime.parse(task.dueDate)): 'No due date',
+            (task.dueDate == 'null' || task.dueDate == null) ? 'No Due Date'  :DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
             style: TextStyle(
             fontSize: 16,
             color: Colors.black,
