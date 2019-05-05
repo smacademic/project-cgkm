@@ -201,6 +201,8 @@ class DatabaseHelper {
 
   /// Returns a list of mapped children of the given Arc
   /// @param uuid the UUID of the parent Arc
+  /// @param arcs determines whether arcs should be returned. Default is true
+  /// @param tasks determines whether tasks should be returned. Default is true
   /// @returns a list of all children Tasks and Arcs
   Future<List<Map>> getChildren(String uuid, {arcs = true, tasks = true}) async {
     var dbClient = await db;

@@ -234,6 +234,8 @@ class Bloc extends Object with Validators {
   ///   back via stream. Otherwise load them from database and into map. Then
   ///   to the UI via stream
   /// @param parentUUID the UUID of the parent whos children will be returned
+  /// @param arcs determines whether arcs should be returned. Default is true
+  /// @param tasks determines whether tasks should be returned. Default is true
   /// @returns All Tasks and Arcs that have `parentUUID` set as their `parentArc`
   Future<List<dynamic>> getChildren(String parentUUID, {arcs = true, tasks = true}) async {
     List<dynamic> children = new List();
