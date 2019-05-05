@@ -232,15 +232,6 @@ class DatabaseHelper {
     return new List.from(arcList)..addAll(taskList);
   }
 
-  /// Returns a list of mapped children of the given Arc, only arcs
-  /// @param uuid the UUID of the parent Arc
-  /// @returns a list of all children Arcs
-  Future<List<Map>> getChildArcs(String uuid) async {
-    var dbClient = await db;
-    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
-    return arcList;
-  }
-
   /// Retrieves all Arcs from the database
   /// @returns All Arcs in the database
   Future<List<Map>> getArcList() async {
