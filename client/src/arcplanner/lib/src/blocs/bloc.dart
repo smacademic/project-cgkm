@@ -290,6 +290,14 @@ class Bloc extends Object with Validators {
     initializeAddArcStreams();
   }
 
+  editArc() {}
+
+  completeArc() {}
+
+  deleteArc(Arc arc) {
+    db.deleteArc(arc.aid);
+  }
+
   submitTask() {
     final validTaskTitle = _taskTitleFieldController.value;
     final taskEndDate = _taskEndDateFieldController.value;

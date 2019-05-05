@@ -118,52 +118,24 @@ Widget arcTile(Arc arc, BuildContext context) {
         }
       },
       onLongPress: () {
-        // Show option to mark complete/delete
-            // if delete
-                // if has children
-                    // "no delete" message
-                // else
-                    // delete
-
-            // if complete
-              // if has incomplete children
-                  // "not complete" message
-              // if else, and all children complete
-                  // complete
-            // update for arcView
+        // if complete
+        // if has incomplete children
+        // "not complete" message
+        // if else, and all children complete
+        // complete
+        // update for arcView
 
         return showDialog<void>(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              // title: Text("Make changes to this Arc?"),
               content: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  FlatButton(  // leaving this commented until edit is implemented
-                    
-                    textColor: Colors.blue,
-              
-                    child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  FlatButton(
-                    textColor: Colors.blue,
-                    child: Text('Mark Complete', style: TextStyle(fontWeight: FontWeight.bold)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  FlatButton(
-                    textColor: Colors.blue,
-                    child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
+                  editArc(arc),
+                  completeArc(arc),
+                  deleteArc(arc),
                 ],
               ),
             );
@@ -171,5 +143,77 @@ Widget arcTile(Arc arc, BuildContext context) {
         );
       },
     ),
+  );
+}
+
+Widget editArc(Arc arc) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.editArc();
+          // edit screen?
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
+}
+
+Widget completeArc(Arc arc) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child:
+            Text('Complete Arc', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.completeArc();
+          //mark complete
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
+}
+
+Widget deleteArc(Arc arc) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          if (arc.childrenUUIDs == null) {
+            print("delete the arc");
+            bloc.deleteArc(arc);
+          } else {
+            print("Arc has children");
+            return showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      content: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                        Text("Cannot delete Arc with existing tasks or arcs."),
+                        FlatButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            })
+                      ]));
+                });
+          }
+          Navigator.of(context).pop();
+        },
+      );
+    },
   );
 }
