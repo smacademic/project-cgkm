@@ -141,7 +141,7 @@ class Bloc extends Object with Validators {
     } else if (data['flag'] == "getChildren") {
       return await getChildren(data['object']);
     } else if (data['flag'] == "getChildArcs") {
-      return await getChildArcs(data['object']);
+      return await getChildren(data['object'], tasks: false);
     } else if (data['flag'] == "backButton") {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
@@ -235,7 +235,7 @@ class Bloc extends Object with Validators {
   ///   to the UI via stream
   /// @param parentUUID the UUID of the parent whos children will be returned
   /// @returns All Tasks and Arcs that have `parentUUID` set as their `parentArc`
-  Future<List<dynamic>> getChildren(String parentUUID) async {
+  Future<List<dynamic>> getChildren(String parentUUID, {arcs = true, tasks = true}) async {
     List<dynamic> children = new List();
 
     // If there is no supplied UUID supply parentArc = null, the masterArcs
@@ -258,7 +258,7 @@ class Bloc extends Object with Validators {
         } else {
           // If one child UUID is missing use query to get all children and
           //  add to map. This is to avoid many queries if large list of children
-          children = insertListIntoMap(await db.getChildren(parentUUID));
+          children = insertListIntoMap(await db.getChildren(parentUUID, arcs: arcs, tasks: tasks));
           break;
         }
       }

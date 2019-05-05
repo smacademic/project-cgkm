@@ -202,14 +202,22 @@ class DatabaseHelper {
   /// Returns a list of mapped children of the given Arc
   /// @param uuid the UUID of the parent Arc
   /// @returns a list of all children Tasks and Arcs
-  Future<List<Map>> getChildren(String uuid) async {
+  Future<List<Map>> getChildren(String uuid, {arcs = true, tasks = true}) async {
     var dbClient = await db;
-    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
-    if (uuid != null) {
+    if (arcs && tasks) {
+      List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
+      if (uuid != null) {
+        List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"');
+        return new List.from(arcList)..addAll(taskList);
+      } else
+        return arcList;
+    } else if (arcs && !tasks) {
+        List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
+        return arcList;
+    } else {
       List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"');
-      return new List.from(arcList)..addAll(taskList);
-    } else
-      return arcList;
+      return taskList;
+    }
   }
 
   /// Retrieves all Arcs and Tasks inclusively between the given two dates. 
