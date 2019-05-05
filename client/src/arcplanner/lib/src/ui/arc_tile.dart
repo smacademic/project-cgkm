@@ -154,7 +154,7 @@ Widget editArc(Arc arc) {
         textColor: Colors.blue,
         child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold)),
         onPressed: () {
-          bloc.editArc();
+          bloc.editArc(arc);
           // edit screen?
           Navigator.of(context).pop();
         },
@@ -172,7 +172,7 @@ Widget completeArc(Arc arc) {
         child:
             Text('Complete Arc', style: TextStyle(fontWeight: FontWeight.bold)),
         onPressed: () {
-          bloc.completeArc();
+          bloc.completeArc(arc);
           //mark complete
           Navigator.of(context).pop();
         },

@@ -330,9 +330,9 @@ class Bloc extends Object with Validators {
     initializeAddArcStreams();
   }
 
-  editArc() {}
+  editArc(Arc arc) {}
 
-  completeArc() {}
+  completeArc(Arc arc) {}
 
   ///  Deletes an arc from the database BLOC
   ///  @param arc, the Arc to be deleted
