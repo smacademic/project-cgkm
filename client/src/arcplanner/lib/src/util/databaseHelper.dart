@@ -175,7 +175,7 @@ class DatabaseHelper {
   // pulls a single Arc from db given a UUID
   Future<List<Map>> getArc(String uuid) async {
     var dbClient = await db;
-    return await dbClient.rawQuery('SELECT 1 FROM Arc WHERE AID = $uuid');
+    return await dbClient.rawQuery("SELECT 1 FROM Arc WHERE AID = '$uuid'");
   } 
 
   // pulls a single Task from db given a UUID
