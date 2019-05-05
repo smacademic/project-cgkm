@@ -28,15 +28,6 @@ class User {
     this._uid = new Uuid().v4();
   }
 
-  // Defines a user map.  Helps with moving info between the db
-  //   and the app
-  User.map(dynamic obj){
-    _uid = obj["uid"];
-    _firstName = obj["firstname"];
-    _lastName = obj["lastname"];
-    _email = obj["email"];
-  }
-
   // Getters
   String get uid => _uid;
   String get firstName => _firstName;
@@ -54,14 +45,5 @@ class User {
       map["uid"] = _uid;
     }
     return map;
-  }
-
-  // Puts user map data into a user object
-  User.fromMap(Map<String, dynamic> map)
-  {
-    _uid = map["uid"];
-    _firstName = map["firstname"];
-    _lastName = map["lastname"];
-    _email = map["email"];
   }
 }
