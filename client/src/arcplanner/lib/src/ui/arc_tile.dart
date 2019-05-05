@@ -118,13 +118,6 @@ Widget arcTile(Arc arc, BuildContext context) {
         }
       },
       onLongPress: () {
-        // if complete
-        // if has incomplete children
-        // "not complete" message
-        // if else, and all children complete
-        // complete
-        // update for arcView
-
         return showDialog<void>(
           context: context,
           builder: (BuildContext context) {

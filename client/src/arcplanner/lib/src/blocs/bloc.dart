@@ -373,6 +373,30 @@ class Bloc extends Object with Validators {
     initializeAddTaskStreams();
   }
 
+  editTask(Task task){}
+
+  completeTask(Task task){}
+
+  ///  Deletes a task from the database BLOC
+  ///  @param task, the Task to be deleted
+  ///
+  deleteTask(Task task) async {
+
+    List<Map> parentList = await db.getArc(task.aid);
+
+    if (parentList.length > 0) {
+      Arc parent = new Arc.fromMap(parentList.first);
+      parent.childrenUUIDs.remove(task.tid);
+      await db.updateArc(parent);
+    }
+
+    if (loadedObjects.containsKey(task.tid)) {
+      loadedObjects.remove(task.tid);
+    }
+    await db.deleteTask(task.tid);
+  }
+
+
   /// Resets the streams used by the add arc screen
   void initializeAddArcStreams() {
     bloc.changeArcTitle(null);
