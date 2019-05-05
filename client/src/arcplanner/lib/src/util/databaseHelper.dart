@@ -71,7 +71,7 @@ class DatabaseHelper {
 
   DatabaseHelper.internal();
 
-// Initialization implementation
+  /// Initializes the database
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, "arcplanner_db.db");
@@ -80,16 +80,18 @@ class DatabaseHelper {
   }
 
   /// Runs the BEGIN TRANSACTION; query in the database.
-  startTransaction() async {
+  dynamic startTransaction() async {
     _db.rawQuery("BEGIN TRANSACTION;");
   }
 
   /// Runs the ROLLBACK; command in the database.
-  rollback() async {
+  dynamic rollback() async {
     _db.rawQuery("ROLLBACK;");
   }
 
-  // Creates database tables
+  /// Creates database tables and views
+  /// @param db the db object which the tables will be created
+  /// @param version the version of the database
   void _onCreate(Database db, int version) async {
     await db.execute("""
         CREATE TABLE $_userTable(
@@ -137,14 +139,18 @@ class DatabaseHelper {
     print("Tables created");
   }
 
-  // Inserts a new user to the DB using a User object as an input
+  /// Inserts a new user to the DB using a User object as an input
+  /// @param usr a User object that will be inserted into the database
+  /// @returns the result of inserting a user into the database
   Future<int> insertUser(User usr) async {
     var dbClient = await db;
     int result = await dbClient.insert("$_userTable", usr.toMap());
     return result;
   }
 
-  // Deletes a user with the given ID
+  /// Deletes a user with the given ID
+  /// @param id the UUID of the user that will be deleted from database
+  /// @returns the status code result of delete a user into the database
   Future<int> deleteUser(String id) async {
     var dbClient = await db;
     int result = await dbClient
@@ -152,39 +158,50 @@ class DatabaseHelper {
     return result;
   }
 
-  // Updates a user in the DB using a User object (with matching UID)
+  /// Updates a user in the DB using a User object (with matching UID)
+  /// @param usr the user object that will be used to update the user information
+  ///   in the database
+  /// @returns the status code result of updating a user into the database
   Future<int> updateUser(User usr) async {
     var dbClient = await db;
     return await dbClient.update(_userTable, usr.toMap(),
         where: "$_userUID = ?", whereArgs: [usr.uid]);
   }
 
-  // Get count of users
+  /// Gets count of all users within the datbase
+  /// @returns the count of users in database
   Future<int> getUserCount() async {
     var dbClient = await db;
     return Sqflite.firstIntValue(
         await dbClient.rawQuery("SELECT COUNT(*) FROM $_userTable"));
   }
 
-  // returns a list of Arcs with no parent. Highest level Arcs
+  /// Returns a list of Arcs with no parent. Highest level Arcs
+  /// @returns a list of Arcs with no parent aka null parent
   Future<List<Map>> getMasterArcs() async {
     var dbClient = await db;
     return await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc IS NULL');
   }
 
-  // pulls a single Arc from db given a UUID
+  /// Gets a single Arc from the database
+  /// @param uuid the UUID of the Arc that is being returned
+  /// @returns the Arc associated with the given UUID
   Future<List<Map>> getArc(String uuid) async {
     var dbClient = await db;
     return await dbClient.rawQuery("SELECT 1 FROM Arc WHERE AID = '$uuid'");
   } 
 
-  // pulls a single Task from db given a UUID
+  /// Gets a single Arc from the database
+  /// @param uuid the UUID of the Task that is being returned
+  /// @returns the Task associated with the given UUID
   Future<List<Map>> getTask(String uuid) async {
     var dbClient = await db;
     return await dbClient.rawQuery('SELECT 1 FROM Task WHERE TID = $uuid');
   }
 
-  // given a UUID, returns a list of mapped children
+  /// Returns a list of mapped children of the given Arc
+  /// @param uuid the UUID of the parent Arc
+  /// @returns a list of all children Tasks and Arcs
   Future<List<Map>> getChildren(String uuid) async {
     var dbClient = await db;
     List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
@@ -194,7 +211,12 @@ class DatabaseHelper {
     } else
       return arcList;
   }
-  
+
+  /// Retrieves all Arcs and Tasks inclusively between the given two dates. 
+  /// @param fromDate Represents the starting date of range of dates to be searched
+  /// @param toDate Represents the ending date of range of dates to be searched
+  /// @returns a future list of Arcs and Tasks from the data. This inherently will
+  ///   result in maps of these objects
   Future<List<Map>> getItemsBetweenDates(String fromDate, String toDate) async {
     var dbClient = await db;
     List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE DueDate BETWEEN "$fromDate" AND "$toDate"');
@@ -202,19 +224,24 @@ class DatabaseHelper {
     return new List.from(arcList)..addAll(taskList);
   }
 
-    // given a UUID, returns a list of mapped children
+  /// Returns a list of mapped children of the given Arc, only arcs
+  /// @param uuid the UUID of the parent Arc
+  /// @returns a list of all children Arcs
   Future<List<Map>> getChildArcs(String uuid) async {
     var dbClient = await db;
     List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
     return arcList;
   }
 
-  // pulls all Arcs and Tasks out of the database and creates objects out of them
+  /// Retrieves all Arcs from the database
+  /// @returns All Arcs in the database
   Future<List<Map>> getArcList() async {
     var dbClient = await db;
     return await dbClient.rawQuery('SELECT * FROM Arc');
   }
   
+  /// Retrieves all Tasks from the database
+  /// @returns All Tasks in the database
   Future<List<Map>> getTaskList() async {
     var dbClient = await db;
     return await dbClient.rawQuery('SELECT * FROM Task');
@@ -222,14 +249,18 @@ class DatabaseHelper {
 
   // -----Insert, update and remove ops for task-----
 
-  // Inserts a new task to the DB using a Task object as an input
+  /// Inserts a new Task to the DB
+  /// @param tsk The Task object to be inserted into the database
+  /// @returns the status code of the database operation
   Future<int> insertTask(Task tsk) async {
     var dbClient = await db;
     int result = await dbClient.insert("$_taskTable", tsk.toMap());
     return result;
   }
 
-  // Deletes a task with the given ID
+  /// Deletes a Task
+  /// @param id the UUID of the Task that will be deleted
+  /// @returns the status code of the database operation
   Future<int> deleteTask(String id) async {
     var dbClient = await db;
     int result = await dbClient
@@ -237,30 +268,37 @@ class DatabaseHelper {
     return result;
   }
 
-  // Updates a task in the DB using a Task object (with matching TID)
+  /// Updates Task information in the database
+  /// @param tsk the Task that will be used to update information in the database
+  /// @returns the status code of the database operation
   Future<int> updateTask(Task tsk) async {
     var dbClient = await db;
     return await dbClient.update(_taskTable, tsk.toMap(),
         where: "$_taskTID = ?", whereArgs: [tsk.tid]);
   }
 
-  // Get count of tasks
+  /// Get count of all tasks
+  /// @returns the count of all tasks within the database
   Future<int> getTaskCount() async {
     var dbClient = await db;
     return Sqflite.firstIntValue(
         await dbClient.rawQuery("SELECT COUNT(*) FROM $_taskTable"));
   }
   
-  // -----Insert, update and remove ops for arc-----
+  // -----Insert, update and remove ops for Arc-----
 
-  // Inserts a new arc to the DB using a Arc object as an input
+  /// Inserts a new Arc to the DB
+  /// @param ar The Arc object to be inserted into the database
+  /// @returns the status code of the database operation
   Future<int> insertArc(Arc ar) async {
     var dbClient = await db;
     int result = await dbClient.insert("$_arcTable", ar.toMap());
     return result;
   }
 
-  // Deletes a arc with the given ID
+  /// Deletes an Arc
+  /// @param id the UUID of the Arc that will be deleted
+  /// @returns the status code of the database operation
   Future<int> deleteArc(String id) async {
     var dbClient = await db;
     int result = await dbClient
@@ -268,20 +306,24 @@ class DatabaseHelper {
     return result;
   }
 
-  // Updates a arc in the DB using a User object (with matching AID)
+  /// Updates Arc information in the database
+  /// @param ar the Arc that will be used to update information in the database
+  /// @returns the status code of the database operation
   Future<int> updateArc(Arc ar) async {
     var dbClient = await db;
     return await dbClient.update(_arcTable, ar.toMap(),
         where: "$_arcAID = ?", whereArgs: [ar.aid]);
   }
   
-  // Get count of tasks
+  /// Gets count of all Arcs in the database
+  /// @returns the count of all Arcs within the database
   Future<int> getArcCount() async {
     var dbClient = await db;
     return Sqflite.firstIntValue(
         await dbClient.rawQuery("SELECT COUNT(*) FROM $_arcTable"));
   }
 
+  /// Closes the database object
   Future close() async {
     var dbClient = await db;
     return dbClient.close();
