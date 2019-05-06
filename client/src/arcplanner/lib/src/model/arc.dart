@@ -20,6 +20,7 @@ class Arc {
   String _title;
   String _description;
   String _dueDate;
+  String _timeDue;
   String _parentArc;
   bool _completed;
   List<String> childrenUUIDs = new List();
@@ -33,10 +34,11 @@ class Arc {
   ///   of the given arc. The default is null
   /// @param parentArc an optional parameter representing the UUID of the parent
   ///   arc. The default is null
-  Arc(this._uid, this._title, {description, dueDate, parentArc}) {
+  Arc(this._uid, this._title, {description, timeDue, dueDate, parentArc,}) {
     this._aid = new Uuid().v4();
     this._description = description;
     this._dueDate = dueDate;
+    this._timeDue = timeDue;
     this._parentArc = parentArc;
     this._completed = false;
   }
@@ -55,9 +57,10 @@ class Arc {
   /// @param childrenUUIDs A list of UUIDs repesenting the UUIDs of the children
   ///   Arcs and Tasks
   Arc.read(this._uid, this._aid, this._title, 
-      {description, dueDate, parentArc, completed, childrenUUIDs}) {
+      {description, dueDate, timeDue, parentArc, completed, childrenUUIDs}) {
     this._description = description;
     this._dueDate = dueDate;
+    this._timeDue = timeDue;
     this._parentArc = parentArc;
     this.childrenUUIDs = childrenUUIDs?.split(",");
     if (completed == '1') {
@@ -74,6 +77,7 @@ class Arc {
     _title = obj["title"];
     _description = obj["description"];
     _dueDate = obj["dueDate"];
+    _timeDue = obj["TimeDue"];
     _parentArc = obj["parentarc"];
     _completed = obj["completed"];
   }
@@ -95,6 +99,7 @@ class Arc {
     map["title"] = _title;
     map["description"] = _description;
     map["dueDate"] = _dueDate;
+    map["timeDue"] = _timeDue;
     map["parentarc"] = _parentArc;
     map["completed"] =_completed;
 
@@ -111,6 +116,7 @@ class Arc {
     _title = map["title"];
     _description = map["description"];
     _dueDate = map["dueDate"];
+    _timeDue = map["timeDue"];
     _parentArc = map["parentarc"];
     _completed = map["completed"];
   }

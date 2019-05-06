@@ -162,6 +162,7 @@ class Bloc extends Object with Validators {
     return Arc.read(map['UID'], map['AID'], map['Title'],
         description: map['Description'],
         dueDate: map['DueDate'],
+        timeDue: map['TimeDue'],
         parentArc: map['ParentArc'],
         completed: map['Completed'],
         childrenUUIDs: map['ChildrenUUIDs']);
@@ -176,6 +177,7 @@ class Bloc extends Object with Validators {
     return Task.read(map['TID'], map['AID'], map['Title'],
         description: map['Description'],
         dueDate: map['DueDate'],
+        timeDue: map['TimeDue'],
         location: map['Location'],
         completed: map['Completed']);
   }
