@@ -60,18 +60,6 @@ class Task {
     }
   }
 
-  // Defines a user map.  Helps with moving info between the db
-  //  and the app
-  Task.map(dynamic obj) {
-    _tid = obj["tid"]; // Represents the PK TID from SQLite db
-    _aid = obj["aid"];
-    _title = obj["title"];
-    _description = obj["description"];
-    _dueDate = obj["duedate"];
-    _location = obj["location"];
-    _completed = obj["completed"];
-  }
-
   // Getters
   String get tid => _tid;
   String get aid => _aid;
