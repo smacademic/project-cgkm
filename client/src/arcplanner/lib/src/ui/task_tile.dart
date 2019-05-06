@@ -16,8 +16,10 @@ import 'package:flutter/material.dart';
 import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
+import 'arc_view_screen.dart';
 
 Widget taskTile(Task task, BuildContext context) {
+  ArcViewScreen.currentParent = task.aid;
   var description = task.description;
   if (description == null) {
     description = 'No Description';
