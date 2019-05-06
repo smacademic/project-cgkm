@@ -204,10 +204,8 @@ Widget deleteTask(Task task) {
         textColor: Colors.blue,
         child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
         onPressed: () {
-          print("delete the task");
           bloc.deleteTask(task);
           // TODO update current screen (arcview or home)
-
           Navigator.of(context).pop();
         },
       );
