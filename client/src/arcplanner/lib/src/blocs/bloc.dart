@@ -379,7 +379,7 @@ class Bloc extends Object with Validators {
 
   completeTask(Task task){}
 
-  ///  Deletes a atask from the database BLOC
+  ///  Deletes a task from the database BLOC
   ///  Removes reference to itself if it has a parent; deletes task from
   ///   loadedObjects, and deletes the task from the db
   ///  @param task, the Task to be deleted
