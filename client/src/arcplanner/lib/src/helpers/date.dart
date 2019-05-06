@@ -14,6 +14,12 @@
 
 import '../blocs/bloc.dart';
 
+
+/// Retrieves all Arcs and Tasks inclusively between the given two dates
+/// @param fromDate Represents the starting date of range of dates to be searched
+/// @param toDate Represents the ending date of range of dates to be searched
+/// @returns a future list of Arcs and Tasks from the data. This inherently will
+///   result in maps of these objects
 Future<List<dynamic>> getItemsBetweenDates(String fromDate, String toDate) async {
   List<Map> upcomingItemsMapList = await bloc.db.getItemsBetweenDates(fromDate, toDate);
 

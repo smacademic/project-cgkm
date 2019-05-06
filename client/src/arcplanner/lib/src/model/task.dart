@@ -24,7 +24,14 @@ class Task {
   String _location;
   bool _completed;
 
-  // Constructor
+  /// The default Constructor for Task object
+  /// @param aid The UUID of the parent Arc
+  /// @param description an optional parameter which is the description of Task.
+  ///   The default is null
+  /// @param dueDate an optional parameter which is the expected completion date
+  ///   of the Task. The default is null
+  /// @param location an optional parameter representing the location where
+  ///   task is to be completed. The default is null
   Task(this._aid, this._title, {description, dueDate, location}) {
     this._tid = new Uuid().v4();
     this._description = description;
@@ -33,7 +40,14 @@ class Task {
     this._completed = false;
   }
 
-  // Constructor to build object read from database
+  /// The default Constructor for Task object
+  /// @param aid The UUID of the parent Arc
+  /// @param description an optional parameter which is the description of Task.
+  ///   The default is null
+  /// @param dueDate an optional parameter which is the expected completion date
+  ///   of the Task. The default is null
+  /// @param location an optional parameter representing the location where
+  ///   task is to be completed. The default is null
   Task.read(this._tid, this._aid, this._title, 
       {description, dueDate, location, completed}) {
     this._description = description;
@@ -46,7 +60,7 @@ class Task {
     }
   }
 
-  // Defines a user map.  Helps with moving info betwen the db
+  // Defines a user map.  Helps with moving info between the db
   //  and the app
   Task.map(dynamic obj) {
     _tid = obj["tid"]; // Represents the PK TID from SQLite db
@@ -67,8 +81,9 @@ class Task {
   String get location => _location;
   bool get completed => _completed;
 
-  // Puts object data onto a user map
-  Map<String, dynamic> toMap() {
+  /// Puts object data onto a map and returns it
+  /// @returns A map of the Task
+  Map<String,dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map["aid"] = _aid;
     map["title"] = _title;
