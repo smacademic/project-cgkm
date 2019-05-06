@@ -147,7 +147,7 @@ Widget editArc(Arc arc) {
         textColor: Colors.blue,
         child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold)),
         onPressed: () {
-          bloc.editArc();
+          bloc.editArc(arc);
           // edit screen?
           Navigator.of(context).pop();
         },
@@ -165,7 +165,7 @@ Widget completeArc(Arc arc) {
         child:
             Text('Complete Arc', style: TextStyle(fontWeight: FontWeight.bold)),
         onPressed: () {
-          bloc.completeArc();
+          bloc.completeArc(arc);
           //mark complete
           Navigator.of(context).pop();
         },
@@ -183,11 +183,9 @@ Widget deleteArc(Arc arc) {
         child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
         onPressed: () {
           if (arc.childrenUUIDs == null) {
-            print("delete the arc");
             bloc.deleteArc(arc);
             // TODO update current screen (arcview or home)
           } else {
-            print("Arc has children");
             return showDialog(
                 context: context,
                 builder: (BuildContext context) {

@@ -330,9 +330,9 @@ class Bloc extends Object with Validators {
     initializeAddArcStreams();
   }
 
-  editArc() {}
+  editArc(Arc arc) {}
 
-  completeArc() {}
+  completeArc(Arc arc) {}
 
   ///  Deletes an arc from the database BLOC
   ///  Removes reference to itself if it has a parent; deletes arc from
@@ -353,6 +353,7 @@ class Bloc extends Object with Validators {
       loadedObjects.remove(arc.aid);
     }
     await db.deleteArc(arc.aid);
+    
   }
 
 
