@@ -168,6 +168,14 @@ class DatabaseHelper {
         where: "$_userUID = ?", whereArgs: [usr.uid]);
   }
 
+  /// Gets count of all users within the datbase
+  /// @returns the count of users in database
+  Future<int> getUserCount() async {
+    var dbClient = await db;
+    return Sqflite.firstIntValue(
+        await dbClient.rawQuery("SELECT COUNT(*) FROM $_userTable"));
+  }
+
   /// Returns a list of Arcs with no parent. Highest level Arcs
   /// @returns a list of Arcs with no parent aka null parent
   Future<List<Map>> getMasterArcs() async {
