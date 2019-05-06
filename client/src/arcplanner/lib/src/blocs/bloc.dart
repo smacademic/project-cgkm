@@ -351,6 +351,7 @@ class Bloc extends Object with Validators {
       loadedObjects.remove(arc.aid);
     }
     await db.deleteArc(arc.aid);
+    
   }
 
 
