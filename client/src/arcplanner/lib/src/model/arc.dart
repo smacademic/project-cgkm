@@ -70,18 +70,6 @@ class Arc {
     }
   }
 
-  /// Defines a Arc map. Converts a map to arc
-  Arc.map(dynamic obj) {
-    _aid = obj["aid"];
-    _uid = obj["uid"];
-    _title = obj["title"];
-    _description = obj["description"];
-    _dueDate = obj["dueDate"];
-    _timeDue = obj["TimeDue"];
-    _parentArc = obj["parentarc"];
-    _completed = obj["completed"];
-  }
-
   // Getters
   String get aid => _aid;
   String get uid => _uid;
