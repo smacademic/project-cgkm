@@ -4,7 +4,7 @@
  *
  *  Authors: 
  *    Primary: Matthew Chastain, Justin Grabowski, Kevin Kelly
- *    Contributors: 
+ *    Contributors: Jonathan Middleton
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
@@ -49,7 +49,7 @@ class Bloc extends Object with Validators {
 
   // Stream for interaction with Home screen
   Stream<dynamic> get homeStream => _homeController.stream.map(transformData);
-  
+
   // Add data to streams for Add Arc Screen
   Stream<String> get arcTitleFieldStream =>
       _arcTitleFieldController.stream; //.transform(validateTitle);
@@ -146,7 +146,8 @@ class Bloc extends Object with Validators {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
     } else if (data['flag'] == 'getUpcomingItems') {
-      return await getItemsBetweenDates(DateTime.now().toString(), DateTime.now().add(Duration(days: 7)).toString());
+      return await getItemsBetweenDates(DateTime.now().toString(),
+          DateTime.now().add(Duration(days: 7)).toString());
     } else if (data['flag'] == "clear") {
       return null;
     }
@@ -164,7 +165,6 @@ class Bloc extends Object with Validators {
         parentArc: map['ParentArc'],
         completed: map['Completed'],
         childrenUUIDs: map['ChildrenUUIDs']);
-
   }
 
   /// When given a map of an Task object, presumably from the database, this
@@ -329,6 +329,31 @@ class Bloc extends Object with Validators {
 
     initializeAddArcStreams();
   }
+
+  editArc(Arc arc) {}
+
+  completeArc(Arc arc) {}
+
+  ///  Deletes an arc from the database BLOC
+  ///  @param arc, the Arc to be deleted
+  ///
+  deleteArc(Arc arc) async {
+
+    List<Map> parentList = await db.getArc(arc.parentArc);
+
+    if (parentList.length > 0) {
+      Arc parent = new Arc.fromMap(parentList.first);
+      parent.childrenUUIDs.remove(arc.aid);
+      await db.updateArc(parent);
+    }
+
+    if (loadedObjects.containsKey(arc.aid)) {
+      loadedObjects.remove(arc.aid);
+    }
+    await db.deleteArc(arc.aid);
+    
+  }
+
 
   /// Using the various streams from `add_task_screen.dart` an Task object is
   ///   created and then added to the database

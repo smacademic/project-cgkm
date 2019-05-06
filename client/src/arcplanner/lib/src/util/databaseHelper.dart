@@ -188,7 +188,7 @@ class DatabaseHelper {
   /// @returns the Arc associated with the given UUID
   Future<List<Map>> getArc(String uuid) async {
     var dbClient = await db;
-    return await dbClient.rawQuery('SELECT 1 FROM Arc WHERE AID = $uuid');
+    return await dbClient.rawQuery("SELECT 1 FROM Arc WHERE AID = '$uuid'");
   } 
 
   /// Gets a single Arc from the database
