@@ -126,6 +126,12 @@ class Bloc extends Object with Validators {
     _homeController.sink.add(obj);
   }
 
+  /// Inserts a dynamic object into the `calendarController` sink
+  /// @param obj any object that needs to be added to the `calendarController` sink
+  void calendarInsert(dynamic obj) {
+    _calendarController.sink.add(obj);
+  }
+
   /// Inserts a dynamic object into the `arcParentSelectViewController` sink
   /// @param obj any object that needs to be added to the `arcParentSelectViewController` sink
   void parentSelectInsert(dynamic obj) {
@@ -154,6 +160,8 @@ class Bloc extends Object with Validators {
     } else if (data['flag'] == 'getUpcomingItems') {
       return await getItemsBetweenDates(DateTime.now().toString(),
           DateTime.now().add(Duration(days: 7)).toString());
+    } else if (data['flag'] == 'getCalendarEvents') {
+      return await getItemsBetweenDates(DateTime(data['year'], data['month']).toString(), DateTime(data['year'], data['month'] + 1).toString());
     } else if (data['flag'] == "clear") {
       return null;
     }
@@ -409,6 +417,7 @@ class Bloc extends Object with Validators {
     _arcViewController.close();
     _taskViewController.close();
     _homeController.close();
+    _calendarController.close();
     _arcParentSelectViewController.close();
 
     // Close Add Arc Screen streams
