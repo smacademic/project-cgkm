@@ -105,12 +105,12 @@ class Task {
   /*
   * Description: Updates the SQLite related task completed field to true. It then also changes its on instance variable to true.
   */
-  void completeTask() {
+  void completeTask() async{
     var db = new DatabaseHelper();
 
     _completed = true;
     
     // Update database with updated task
-    db.updateTask(this);
+    await db.updateTask(this);
   } 
 }
