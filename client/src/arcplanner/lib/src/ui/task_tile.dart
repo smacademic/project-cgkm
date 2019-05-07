@@ -1,4 +1,3 @@
-import 'package:arcplanner/src/ui/task_screen.dart';
 /** 
  *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
  *  CS298 Spring 2019 
@@ -19,6 +18,7 @@ import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
 import 'arc_view_screen.dart';
+import 'package:arcplanner/src/ui/task_screen.dart';
 
 Widget taskTile(Task task, BuildContext context) {
   ArcViewScreen.currentParent = task.aid;
@@ -165,7 +165,6 @@ Widget taskTile(Task task, BuildContext context) {
   );
 }
 
-
 void _openTaskScreen(BuildContext context) {
   Navigator.of(context).push(
     new MaterialPageRoute<Null>(
@@ -174,6 +173,8 @@ void _openTaskScreen(BuildContext context) {
       },
       fullscreenDialog: true
     )
+  );
+}
 
 Widget editTask(Task task) {
   return StreamBuilder(
