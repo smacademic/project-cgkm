@@ -389,8 +389,9 @@ class Bloc extends Object with Validators {
 
   editTask(Task task){}
 
-  completeTask(Task task){
+  completeTask(Task task) async {
     task.completeTask();
+    await db.updateTask(task);
   }
 
   ///  Deletes a task from the database BLOC
