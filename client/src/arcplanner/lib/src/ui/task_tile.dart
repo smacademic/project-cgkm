@@ -18,6 +18,7 @@ import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
 import 'arc_view_screen.dart';
+import 'package:arcplanner/src/ui/task_screen.dart';
 
 Widget taskTile(Task task, BuildContext context) {
   ArcViewScreen.currentParent = task.aid;
@@ -136,9 +137,12 @@ Widget taskTile(Task task, BuildContext context) {
               overflow: TextOverflow.ellipsis,
             ),
           ),
+
         ],
       ),
-      onTap: () {},
+      onTap: () {
+        bloc.changeTask(task);
+        _openTaskScreen(context);},
       onLongPress: () {
         return showDialog<void>(
           context: context,
@@ -158,6 +162,17 @@ Widget taskTile(Task task, BuildContext context) {
         );
       },
     ),
+  );
+}
+
+void _openTaskScreen(BuildContext context) {
+  Navigator.of(context).push(
+    new MaterialPageRoute<Null>(
+      builder: (BuildContext context) {
+        return new TaskScreen();
+      },
+      fullscreenDialog: true
+    )
   );
 }
 
