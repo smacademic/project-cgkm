@@ -340,7 +340,10 @@ class Bloc extends Object with Validators {
 
   editArc(Arc arc) {}
 
-  completeArc(Arc arc) {}
+  completeArc(Arc arc) async {
+    arc.completeArc();
+    await db.updateArc(arc);
+  }
 
   ///  Deletes an arc from the database BLOC
   ///  Removes reference to itself if it has a parent; deletes arc from
