@@ -13,10 +13,9 @@
 
 import 'package:flutter/material.dart';
 import 'src/arcplanner.dart';
-import 'src/blocs/bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-void main() async {
+void main() {
   initializeDateFormatting().then((_) => runApp(ArcPlanner()));
 }
 
