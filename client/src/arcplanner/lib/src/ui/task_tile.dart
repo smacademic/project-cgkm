@@ -98,17 +98,22 @@ Widget taskTile(Task task, BuildContext context) {
                 ),
               ),
               Container(
-                child: AutoSizeText(
-                  (task.dueDate == 'null' || task.dueDate == null)
-                      ? ''
-                      : DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                  maxFontSize: 14.0,
-                  minFontSize: 14.0,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  children: <Widget>[   
+                    AutoSizeText(
+                      (task.dueDate == 'null' || task.dueDate == null)
+                          ? ''
+                          : DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                      maxFontSize: 14.0,
+                      minFontSize: 14.0,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(task.completed == true ? 'Complete': ''),
+                  ],
                 ),
               ),
             ],
