@@ -17,7 +17,6 @@ import 'src/blocs/bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
-  await bloc.initBloc();
   initializeDateFormatting().then((_) => runApp(ArcPlanner()));
 }
 

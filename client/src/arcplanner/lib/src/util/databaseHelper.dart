@@ -20,6 +20,7 @@ import 'dart:async';
 import '../model/user.dart';
 import '../model/task.dart';
 import '../model/arc.dart';
+import '../blocs/bloc.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -77,7 +78,8 @@ class DatabaseHelper {
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, "arcplanner_db.db");
-    var arcDb = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var arcDb = await openDatabase(path, version: 1, onCreate: _onCreate, 
+        onOpen: _onOpen);
     return arcDb;
   }
 
@@ -141,8 +143,13 @@ class DatabaseHelper {
         FROM Arc_t AS Arc1
         """);
     User user = new User("exampleFirstName", "exampleLastName", "example@email.com");
-    await insertUser(user);
+    await db.insert("$_userTable", user.toMap());
     print("Tables, view and user created");
+  }
+
+  FutureOr<void> _onOpen(Database db) async {
+    var user = await db.rawQuery("SELECT UID FROM $_userTable");
+    bloc.userID = user[0]["UID"];
   }
 
   /// Inserts a new user to the DB using a User object as an input
@@ -172,14 +179,6 @@ class DatabaseHelper {
     var dbClient = await db;
     return await dbClient.update(_userTable, usr.toMap(),
         where: "$_userUID = ?", whereArgs: [usr.uid]);
-  }
-
-  Future<List<Map>> getUser() async {
-    print('getting to getUser');
-    var dbClient = await db;
-    //var user = await dbClient.rawQuery("SELECT UID FROM $_userTable");
-    print('getting out of getUser'); 
-    //Sreturn user; 
   }
 
   /// Gets count of all users within the datbase

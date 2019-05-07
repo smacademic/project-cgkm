@@ -15,7 +15,6 @@
 import 'dart:async';
 import '../model/arc.dart';
 import '../model/task.dart';
-import '../model/user.dart';
 import '../util/databaseHelper.dart';
 import '../blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
@@ -26,19 +25,10 @@ class Bloc extends Object with Validators {
   var formatter = new DateFormat('yyyy-MM-dd');
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
-  String userId;
+  String userID;
 
   // Constructor
   Bloc();
-
-  Future initBloc() async {
-    print("getting to bloc constructor");
-    List mapOfUser = await db.getUser();
-    print(mapOfUser);
-    userId = mapOfUser[0];
-    print("getitng here");
-    print(userId);
-  }
 
   // Create streams and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
@@ -148,7 +138,6 @@ class Bloc extends Object with Validators {
   /// @returns a list of objects. That list type and quantity is determined by
   ///   the given flag
   dynamic transformData(data) async {
-    print("userID = "+userId.toString());
     if (data['flag'] == "add") {
       return await data['object'];
     } else if (data['flag'] == "getChildren") {
@@ -325,21 +314,17 @@ class Bloc extends Object with Validators {
     final arcDescription = _arcDescriptionFieldController.value;
     final arcParent = _arcParentFieldController.value;
 
-    //Create arc with new data
-    // This section should be removed when we decide how to proceed
-    // with defining `user` or removing the parameter from Arc constructor
-    User tempUser = new User("Temp", "seashells", "this@that.com");
     DateTime parsedDueDate = DateTime.parse(arcEndDate);
     String formattedDueDate = formatter.format(parsedDueDate);
 
     if (arcParent == null) {
-      Arc ar = new Arc(tempUser.uid, validArcTitle,
+      Arc ar = new Arc(bloc.userID, validArcTitle,
           description: arcDescription, 
           dueDate: formattedDueDate);
       db.insertArc(ar);
     } else {
 
-      Arc ar = new Arc(tempUser.uid, validArcTitle,
+      Arc ar = new Arc(bloc.userID, validArcTitle,
           description: arcDescription,
           dueDate: formattedDueDate,
           parentArc: arcParent.aid);
