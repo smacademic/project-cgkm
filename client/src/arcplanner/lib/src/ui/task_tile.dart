@@ -193,7 +193,7 @@ Widget completeTask(Task task) {
             style: TextStyle(fontWeight: FontWeight.bold)),
         onPressed: () {
           bloc.completeTask(task);
-          //mark complete
+          bloc.arcViewInsert({ 'object' : task.aid, 'flag': 'getChildren'});
           Navigator.of(context).pop();
         },
       );
