@@ -4,7 +4,7 @@
  *
  *  Authors: 
  *    Primary: Matthew Chastain, Justin Grabowski, Kevin Kelly
- *    Contributors: 
+ *    Contributors: Jonathan Middleton
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
@@ -20,8 +20,10 @@ import '../util/databaseHelper.dart';
 import '../blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
 import '../helpers/date.dart';
+import 'package:intl/intl.dart';
 
 class Bloc extends Object with Validators {
+  var formatter = new DateFormat('yyyy-MM-dd');
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
 
@@ -52,7 +54,7 @@ class Bloc extends Object with Validators {
 
   // Stream for interaction with Home screen
   Stream<dynamic> get homeStream => _homeController.stream.map(transformData);
-  
+
   // Add data to streams for Add Arc Screen
   Stream<String> get arcTitleFieldStream =>
       _arcTitleFieldController.stream; //.transform(validateTitle);
@@ -117,20 +119,33 @@ class Bloc extends Object with Validators {
   Function(String) get changeTaskLocation =>
       _taskLocationFieldController.sink.add;
 
+  /// Inserts a dynamic object into the `arcViewController` sink
+  /// @param obj any object that needs to be added to the `arcViewController` sink
   void arcViewInsert(dynamic obj) {
     _arcViewController.sink.add(obj);
   }
 
+  /// Inserts a dynamic object into the `homeController` sink
+  /// @param obj any object that needs to be added to the `homeController` sink
   void homeInsert(dynamic obj) {
     _homeController.sink.add(obj);
   }
 
+  /// Inserts a dynamic object into the `arcParentSelectViewController` sink
+  /// @param obj any object that needs to be added to the `arcParentSelectViewController` sink
   void parentSelectInsert(dynamic obj) {
     _arcParentSelectViewController.sink.add(obj);
   }
 
-  // Map function that based on the given flag from stream will perform
-  //  varying operations that return needed arcs to stream
+  /// Map function that based on the given flag from stream will perform
+  ///  varying operations that return needed arcs to stream
+  /// @param data a map containing a flag and object
+  /// @param flag `data` map attribute that signifies what operation to use
+  ///   on given object
+  /// @param object `data` map attribute that hold the objects to be sent by the
+  ///   stream
+  /// @returns a list of objects. That list type and quantity is determined by
+  ///   the given flag
   dynamic transformData(data) async {
     if (data['flag'] == "add") {
       return await data['object'];
@@ -142,33 +157,46 @@ class Bloc extends Object with Validators {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
     } else if (data['flag'] == 'getUpcomingItems') {
-      return await getItemsBetweenDates(DateTime.now().toString(), DateTime.now().add(Duration(days: 7)).toString());
+      return await getItemsBetweenDates(DateTime.now().toString(),
+          DateTime.now().add(Duration(days: 7)).toString());
     } else if (data['flag'] == "clear") {
       return null;
     }
   }
 
-  // Reads from the DB and returns an Arc object
+  /// When given a map of an Arc object, presumably from the database, this
+  ///   function converts the map into a Arc object using the `Arc.read`
+  ///   constructor
+  /// @param map A map of an Arc object
+  /// @returns The Arc object that was constructed 
   Arc toArc(Map map) {
     return Arc.read(map['UID'], map['AID'], map['Title'],
         description: map['Description'],
         dueDate: map['DueDate'],
+        timeDue: map['TimeDue'],
         parentArc: map['ParentArc'],
         completed: map['Completed'],
         childrenUUIDs: map['ChildrenUUIDs']);
-
   }
 
-  // Reads from the DB and returns a Task object
+  /// When given a map of an Task object, presumably from the database, this
+  ///   function converts the map into a Task object using the `Task.read`
+  ///   constructor
+  /// @param map A map of a Task object
+  /// @returns The Task object that was constructed 
   Task toTask(Map map) {
     return Task.read(map['TID'], map['AID'], map['Title'],
         description: map['Description'],
         dueDate: map['DueDate'],
+        timeDue: map['TimeDue'],
         location: map['Location'],
         completed: map['Completed']);
   }
 
-  // Takes a task or arc as an argument and places it into their respective maps
+  /// Given a map of a Task or Arc object it will insert its UUID and itself
+  ///   into the `loadedObjects` map. UUID represents the key of the map
+  /// @param map contains a map of either a Task or Arc
+  /// @returns Task or Arc object that was sent via map
   dynamic insertObjectIntoMap(Map map) {
     if (map.containsKey('TID')) {
       Task task = toTask(map);
@@ -181,8 +209,11 @@ class Bloc extends Object with Validators {
     }
   }
 
-  // Inserts a map of Arcs/Tasks into the map using insertObjectIntoMap for
-  //   each object in list.
+  /// Inserts a map of Arcs/Tasks into the `LoadedObjects` map using
+  ///   `insertObjectIntoMap` function foreach object in list.
+  /// @param list A list of Arc and/or Task maps to be converted and added 
+  ///   to the `LoadedObjects` map
+  /// @returns the List of objects that was converted from the list of maps
   List<dynamic> insertListIntoMap(List<Map> list) {
     List<dynamic> objects = List<dynamic>();
     for (Map map in list) {
@@ -191,7 +222,11 @@ class Bloc extends Object with Validators {
     return objects;
   }
 
-  // Determines whether the given UUID exists within the map
+  /// Determines whether the given UUID exists within the `LoadedObjects` map
+  /// @param uuid A uuid to be checked if it exists within the `LoadedObjects`
+  ///   map
+  /// @returns boolean value representing whether the UUID exists in the 
+  ///   `LoadedObjects` map
   bool checkMap(String uuid) {
     if (loadedObjects.containsKey(uuid)) {
       return true;
@@ -200,14 +235,19 @@ class Bloc extends Object with Validators {
     }
   }
 
-  // Loads Arc or Task from loaded objects map given a UUID
+  /// Loads Arc or Task from `LoadedObjects` map given a UUID.
+  /// @param UUID represents a UUID of the object that will be returned
+  /// @returns The object whos UUID matches the given UUID. UUID is the key of
+  ///   `LoadedObjects` map
   dynamic getFromMap(String uuid) {
     return loadedObjects[uuid];
   }
 
-  // Checks to see if children are in map. If they exist in map then send them
-  //  back via stream. Otherwise load them from database and into map. Then
-  //  to the UI via stream
+  /// Checks to see if children are in map. If they exist in map then send them
+  ///   back via stream. Otherwise load them from database and into map. Then
+  ///   to the UI via stream
+  /// @param parentUUID the UUID of the parent whos children will be returned
+  /// @returns All Tasks and Arcs that have `parentUUID` set as their `parentArc`
   Future<List<dynamic>> getChildren(String parentUUID) async {
     List<dynamic> children = new List();
 
@@ -239,9 +279,11 @@ class Bloc extends Object with Validators {
     return children;
   }
 
-  // Checks to see if children are in map. If they exist in map then send them
-  //  back via stream. Otherwise load them from database and into map. Then
-  //  to the UI via stream
+  /// Checks to see if children are in map. If they exist in map then send them
+  ///   back via stream. Otherwise load them from database and into map. Then
+  ///   to the UI via stream
+  /// @param parentUUID the UUID of the parent whos children will be returned
+  /// @returns All Arcs that have `parentUUID` set as their `parentArc`
   Future<List<dynamic>> getChildArcs(String parentUUID) async {
     List<dynamic> children = new List();
 
@@ -273,25 +315,31 @@ class Bloc extends Object with Validators {
     return children;
   }
 
-  submitArc() {
+  /// Using the various streams from `add_arc_screen.dart` an arc object is
+  ///   created and then added to the database
+  void submitArc() {
     final validArcTitle = _arcTitleFieldController.value;
     final arcEndDate = _arcEndDateFieldController.value;
     final arcDescription = _arcDescriptionFieldController.value;
     final arcParent = _arcParentFieldController.value;
 
     //Create arc with new data
-    // This section should be removed when we decide how to procede
-    // with defining `user` or removing the paramerter from Arc constructor
+    // This section should be removed when we decide how to proceed
+    // with defining `user` or removing the parameter from Arc constructor
     User tempUser = new User("Temp", "seashells", "this@that.com");
+    DateTime parsedDueDate = DateTime.parse(arcEndDate);
+    String formattedDueDate = formatter.format(parsedDueDate);
 
     if (arcParent == null) {
       Arc ar = new Arc(tempUser.uid, validArcTitle,
-          description: arcDescription, dueDate: arcEndDate);
+          description: arcDescription, 
+          dueDate: formattedDueDate);
       db.insertArc(ar);
     } else {
+
       Arc ar = new Arc(tempUser.uid, validArcTitle,
           description: arcDescription,
-          dueDate: arcEndDate,
+          dueDate: formattedDueDate,
           parentArc: arcParent.aid);
       db.insertArc(ar);
     }
@@ -299,16 +347,48 @@ class Bloc extends Object with Validators {
     initializeAddArcStreams();
   }
 
-  submitTask() {
+  editArc(Arc arc) {}
+
+  completeArc(Arc arc) {}
+
+  ///  Deletes an arc from the database BLOC
+  ///  Removes reference to itself if it has a parent; deletes arc from
+  ///   loadedObjects, and deletes the arc from the db
+  ///  @param arc, the Arc to be deleted
+  ///
+  deleteArc(Arc arc) async {
+
+    List<Map> parentList = await db.getArc(arc.parentArc);
+
+    if (parentList.length > 0) {
+      Arc parent = new Arc.fromMap(parentList.first);
+      parent.childrenUUIDs.remove(arc.aid);
+      await db.updateArc(parent);
+    }
+
+    if (loadedObjects.containsKey(arc.aid)) {
+      loadedObjects.remove(arc.aid);
+    }
+    await db.deleteArc(arc.aid);
+    
+  }
+
+
+  /// Using the various streams from `add_task_screen.dart` an Task object is
+  ///   created and then added to the database
+  void submitTask() {
     final validTaskTitle = _taskTitleFieldController.value;
     final taskEndDate = _taskEndDateFieldController.value;
     final taskDescription = _taskDescriptionFieldController.value;
     final taskLocation = _taskLocationFieldController.value;
     final taskParent = _arcParentFieldController.value;
 
+    DateTime parsedDueDate = DateTime.parse(taskEndDate);
+    String formattedDueDate = formatter.format(parsedDueDate);
+
     Task tk = new Task(taskParent.aid, validTaskTitle,
         description: taskDescription,
-        dueDate: taskEndDate,
+        dueDate: formattedDueDate,
         location: taskLocation);
 
     db.insertTask(tk);
@@ -316,16 +396,42 @@ class Bloc extends Object with Validators {
     initializeAddTaskStreams();
   }
 
-  // Reset the streams used by the add arc screen
-  initializeAddArcStreams() {
+  editTask(Task task){}
+
+  completeTask(Task task){}
+
+  ///  Deletes a task from the database BLOC
+  ///  Removes reference to itself if it has a parent; deletes task from
+  ///   loadedObjects, and deletes the task from the db
+  ///  @param task, the Task to be deleted
+  ///
+  deleteTask(Task task) async {
+
+    List<Map> parentList = await db.getArc(task.aid);
+
+    if (parentList.length > 0) {
+      Arc parent = new Arc.fromMap(parentList.first);
+      parent.childrenUUIDs.remove(task.tid);
+      await db.updateArc(parent);
+    }
+
+    if (loadedObjects.containsKey(task.tid)) {
+      loadedObjects.remove(task.tid);
+    }
+    await db.deleteTask(task.tid);
+  }
+
+
+  /// Resets the streams used by the add arc screen
+  void initializeAddArcStreams() {
     bloc.changeArcTitle(null);
     bloc.changeArcEndDate(null);
     bloc.changeArcDescription(null);
     bloc.changeArcParent(null);
   }
 
-  // Reset the streams used by the add task screen
-  initializeAddTaskStreams() {
+  /// Reset the streams used by the add task screen
+  void initializeAddTaskStreams() {
     bloc.changeTaskTitle(null);
     bloc.changeTaskDescription(null);
     bloc.changeTaskEndDate(null);
@@ -333,8 +439,8 @@ class Bloc extends Object with Validators {
     bloc.changeArcParent(null);
   }
 
-  // Closes the stream controller
-  dispose() {
+  /// Closes the stream controllers
+  void dispose() {
     _arcViewController.close();
     _taskViewController.close();
     _homeController.close();

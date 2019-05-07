@@ -20,18 +20,12 @@ class User {
   String _lastName;
   String _email;
 
-  // Constructor
+  /// The default Constructor for Task object
+  /// @param firstName the first name of the user
+  /// @param lastName the Last name of the user
+  /// @param email the email of the user
   User(this._firstName, this._lastName, this._email) {
     this._uid = new Uuid().v4();
-  }
-
-  // Defines a user map.  Helps with moving info between the db
-  //   and the app
-  User.map(dynamic obj){
-    _uid = obj["uid"];
-    _firstName = obj["firstname"];
-    _lastName = obj["lastname"];
-    _email = obj["email"];
   }
 
   // Getters

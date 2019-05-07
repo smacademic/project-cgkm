@@ -14,12 +14,14 @@ import 'package:arcplanner/src/ui/task_screen.dart';
  */
 
 import 'package:flutter/material.dart';
+import '../blocs/bloc.dart';
 import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
-import '../blocs/bloc.dart';
- 
+import 'arc_view_screen.dart';
+
 Widget taskTile(Task task, BuildContext context) {
+  ArcViewScreen.currentParent = task.aid;
   var description = task.description;
   if (description == null) {
     description = 'No Description';
@@ -98,15 +100,16 @@ Widget taskTile(Task task, BuildContext context) {
               ),
               Container(
                 child: AutoSizeText(
-                  (task.dueDate == 'null' || task.dueDate == null) ? '' 
-                     : DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    maxFontSize: 14.0,
-                    minFontSize: 14.0,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
+                  (task.dueDate == 'null' || task.dueDate == null)
+                      ? ''
+                      : DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                  maxFontSize: 14.0,
+                  minFontSize: 14.0,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -134,18 +137,34 @@ Widget taskTile(Task task, BuildContext context) {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          // onTap: () {
-          //   _toTaskView(task),
-          // }
+
         ],
       ),
-      onTap: (){
+      onTap: () {
         bloc.changeTask(task);
-        _openTaskScreen(context);
+        _openTaskScreen(context);},
+      onLongPress: () {
+        return showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  editTask(task),
+                  completeTask(task),
+                  deleteTask(task),
+                ],
+              ),
+            );
+          },
+        );
       },
     ),
   );
 }
+
 
 void _openTaskScreen(BuildContext context) {
   Navigator.of(context).push(
@@ -155,5 +174,55 @@ void _openTaskScreen(BuildContext context) {
       },
       fullscreenDialog: true
     )
+
+Widget editTask(Task task) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.editTask(task);
+          // edit screen?
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
+}
+
+Widget completeTask(Task task) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Complete Task',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.completeTask(task);
+          //mark complete
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
+}
+
+Widget deleteTask(Task task) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.deleteTask(task);
+          // TODO update current screen (arcview or home)
+          Navigator.of(context).pop();
+        },
+      );
+    },
   );
 }
