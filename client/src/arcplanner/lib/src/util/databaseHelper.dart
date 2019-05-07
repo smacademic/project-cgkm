@@ -140,7 +140,9 @@ class DatabaseHelper {
         ) As ChildrenUUIDs
         FROM Arc_t AS Arc1
         """);
-    print("Tables created");
+    User user = new User("exampleFirstName", "exampleLastName", "example@email.com");
+    await insertUser(user);
+    print("Tables, view and user created");
   }
 
   /// Inserts a new user to the DB using a User object as an input
@@ -170,6 +172,14 @@ class DatabaseHelper {
     var dbClient = await db;
     return await dbClient.update(_userTable, usr.toMap(),
         where: "$_userUID = ?", whereArgs: [usr.uid]);
+  }
+
+  Future<List<Map>> getUser() async {
+    print('getting to getUser');
+    var dbClient = await db;
+    //var user = await dbClient.rawQuery("SELECT UID FROM $_userTable");
+    print('getting out of getUser'); 
+    //Sreturn user; 
   }
 
   /// Gets count of all users within the datbase

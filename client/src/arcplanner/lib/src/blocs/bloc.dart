@@ -26,9 +26,19 @@ class Bloc extends Object with Validators {
   var formatter = new DateFormat('yyyy-MM-dd');
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
+  String userId;
 
   // Constructor
   Bloc();
+
+  Future initBloc() async {
+    print("getting to bloc constructor");
+    List mapOfUser = await db.getUser();
+    print(mapOfUser);
+    userId = mapOfUser[0];
+    print("getitng here");
+    print(userId);
+  }
 
   // Create streams and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
@@ -138,6 +148,7 @@ class Bloc extends Object with Validators {
   /// @returns a list of objects. That list type and quantity is determined by
   ///   the given flag
   dynamic transformData(data) async {
+    print("userID = "+userId.toString());
     if (data['flag'] == "add") {
       return await data['object'];
     } else if (data['flag'] == "getChildren") {
