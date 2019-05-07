@@ -194,6 +194,7 @@ Widget completeTask(Task task) {
         onPressed: () {
           bloc.completeTask(task);
           bloc.arcViewInsert({ 'object' : task.aid, 'flag': 'getChildren'});
+          bloc.homeInsert({ 'object' : null, 'flag': 'getUpcomingItems'});
           Navigator.of(context).pop();
         },
       );
