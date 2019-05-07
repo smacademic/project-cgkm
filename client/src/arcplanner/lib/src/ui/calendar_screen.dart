@@ -17,6 +17,11 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:date_utils/date_utils.dart';
 import 'drawer_menu.dart';
+import '../blocs/bloc.dart';
+import 'arc_tile.dart';
+import 'task_tile.dart';
+import '../model/arc.dart';
+import '../model/task.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -25,6 +30,8 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixin { 
 
+  int _month;
+  int _year;
   DateTime _selectedDay;
   Map<DateTime, List> _events;
   Map<DateTime, List> _visibleEvents;
@@ -34,6 +41,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   @override
   void initState() {
     super.initState();
+    _month = DateTime.now().month;
+    _year = DateTime.now().year;
     _selectedDay = DateTime.now();
     _events = {};
 
@@ -56,6 +65,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   }
 
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
+    _year = first.year;
+    _month = first.month;
     setState(() {
       _visibleEvents = Map.fromEntries(
         _events.entries.where(
@@ -69,19 +80,61 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
   @override
   Widget build(BuildContext context) {
+    bool firstTimeLoading = true;
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Calendar"),
       ),
       
       body: Column(
-        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          // Switch out 2 lines below to play with TableCalendar's settings
-          //-----------------------
           _buildTableCalendarWithBuilders(),
           const SizedBox(height: 8.0),
-          Expanded(child: _buildEventList()),
+          Expanded(
+            child: StreamBuilder(
+              stream: bloc.calendarStream,
+              builder: (context, snapshot) {
+                return new FutureBuilder(
+                  future: snapshot.data,
+                  builder: (context, snapshot) {
+                    if (firstTimeLoading) {
+                      bloc.calendarInsert({'month': _month,'year': _year, 'flag': 'getCalendarEvents'});
+                      firstTimeLoading = false;
+                    }
+
+                    if (snapshot.hasData) {
+                      dynamic snapshotData = snapshot.data;
+                      if (snapshotData.toString() != '[]') {
+                        return ListView.builder(
+                          itemCount: snapshotData.length,
+                          itemBuilder: (context, index) {
+                            return tile(snapshotData[index], context);
+                          },
+                        );
+                      } else {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'There are no items for this day',
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+
+                          ],
+                        );
+                      }
+                    } else {
+                      return Container();
+                    }
+                  }
+                );
+              }
+            ),
+          ),
         ],
       ),
       
@@ -193,5 +246,15 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
         ),
       )).toList(),
     );
+  }
+}
+
+Widget tile(dynamic obj, BuildContext context) {
+  if (obj is Arc) {
+    return arcTile(obj, context);
+  } else if (obj is Task) {
+    return taskTile(obj, context);
+  } else {
+    return Text('tile tried to build not an Arc or Task');
   }
 }
