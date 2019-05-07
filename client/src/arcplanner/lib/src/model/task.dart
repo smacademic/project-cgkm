@@ -21,6 +21,7 @@ class Task {
   String _title;
   String _description;
   String _dueDate; // SQLite will store the dueDate as TEXT type
+  String _timeDue; // SQLite will store the dueDate as TEXT type
   String _location;
   bool _completed;
 
@@ -32,10 +33,11 @@ class Task {
   ///   of the Task. The default is null
   /// @param location an optional parameter representing the location where
   ///   task is to be completed. The default is null
-  Task(this._aid, this._title, {description, dueDate, location}) {
+  Task(this._aid, this._title, {description, dueDate, timeDue, location}) {
     this._tid = new Uuid().v4();
     this._description = description;
     this._dueDate = dueDate;
+    this._timeDue = timeDue;
     this._location = location;
     this._completed = false;
   }
@@ -49,9 +51,10 @@ class Task {
   /// @param location an optional parameter representing the location where
   ///   task is to be completed. The default is null
   Task.read(this._tid, this._aid, this._title, 
-      {description, dueDate, location, completed}) {
+      {description, dueDate, location, timeDue, completed}) {
     this._description = description;
     this._dueDate = dueDate;
+    this._timeDue = timeDue;
     this._location = location;
     if (completed == 'true') {
       this._completed = true;
@@ -77,6 +80,7 @@ class Task {
     map["title"] = _title;
     map["description"] = _description;
     map["duedate"] = _dueDate;
+    map["timeDue"] = _timeDue;
     map["location"] = _location;
     map["completed"] = _completed;
 
@@ -93,6 +97,7 @@ class Task {
     _title = map["title"];
     _description = map["description"];
     _dueDate = map["duedate"];
+    _timeDue = map["timeDue"];
     _location = map["location"];
     _completed = map["completed"];
   }

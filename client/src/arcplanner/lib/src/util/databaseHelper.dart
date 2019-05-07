@@ -47,6 +47,7 @@ class DatabaseHelper {
   static final String _arcTitle = "Title";
   static final String _arcDesc = "Description";
   static final String _arcDueDate = "DueDate";
+  static final String _arcTimeDue = "TimeDue";
   static final String _arcPArc = "ParentArc";
   static final String _arcCompleted = "Completed";
 
@@ -56,6 +57,7 @@ class DatabaseHelper {
   static final String _taskTitle = "Title";
   static final String _taskDesc = "Description";
   static final String _taskDueDate = "DueDate";
+   static final String _taskTimeDue = "TimeDue";
   static final String _taskLoc = "Location";
   static final String _taskCompleted = "Completed";
 
@@ -107,6 +109,7 @@ class DatabaseHelper {
           $_arcTitle TEXT NOT NULL CHECK(LENGTH($_arcTitle) <= $_nameSize), 
           $_arcDesc TEXT, 
           $_arcDueDate TEXT,
+          $_arcTimeDue TEXT,
           $_arcPArc TEXT CHECK(LENGTH($_arcPArc) = $_uuidSize),
           $_arcCompleted INTEGER CHECK($_arcCompleted == 0 OR $_arcCompleted == 1)
           )""");
@@ -116,13 +119,14 @@ class DatabaseHelper {
           $_taskTID TEXT PRIMARY KEY CHECK(LENGTH($_taskTID) = $_uuidSize), 
           $_taskTitle TEXT CHECK(LENGTH($_taskTitle) <= $_nameSize), 
           $_taskDesc TEXT, 
-          $_taskDueDate TEXT, 
+          $_taskDueDate TEXT,
+          $_taskTimeDue TEXT,
           $_taskLoc TEXT CHECK(LENGTH($_taskLoc) <= $_locSize),
           $_taskCompleted INTEGER CHECK($_taskCompleted == 0 OR $_taskCompleted == 1)
           )""");
     await db.execute("""
         CREATE VIEW $_arcView AS
-        SELECT UID, AID, Title, Description, DueDate, ParentArc, Completed, 
+        SELECT UID, AID, Title, Description, DueDate, TimeDue, ParentArc, Completed, 
           ( SELECT group_concat(UUID)
             FROM (
               SELECT Arc2.AID AS UUID
