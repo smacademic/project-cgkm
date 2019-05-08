@@ -34,7 +34,7 @@ class TaskScreen extends StatelessWidget {
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
         child: StreamBuilder(
           stream: bloc.taskStream,
-          initialData: new Task('', ''),
+          initialData: new Task(''),
           builder: (context, snapshot) {
             return  ListView(
               children:[
