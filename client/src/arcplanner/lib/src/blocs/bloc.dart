@@ -122,7 +122,7 @@ class Bloc extends Object with Validators {
   Function(String) get changeTaskTitle => _taskTitleFieldController.sink.add;
   Function(String) get changeTaskEndDate =>
       _taskEndDateFieldController.sink.add;
-  Function(String) get changeTimeDue => _taskTimeDueFieldController.sink.add;
+  Function(String) get changeTaskTimeDue => _taskTimeDueFieldController.sink.add;
   Function(String) get changeTaskDescription =>
       _taskDescriptionFieldController.sink.add;
   Function(String) get changeTaskLocation =>
@@ -395,7 +395,6 @@ class Bloc extends Object with Validators {
     final validTaskTitle = _taskTitleFieldController.value;
     final taskEndDate = _taskEndDateFieldController.value;
     final taskTimeDue = _taskTimeDueFieldController.value;
-
     final taskDescription = _taskDescriptionFieldController.value;
     final taskLocation = _taskLocationFieldController.value;
     final taskParent = _arcParentFieldController.value;
@@ -406,6 +405,7 @@ class Bloc extends Object with Validators {
     Task tk = new Task(taskParent.aid, validTaskTitle,
         description: taskDescription,
         dueDate: formattedDueDate,
+        timeDue: taskTimeDue,
         location: taskLocation);
 
     db.insertTask(tk);
