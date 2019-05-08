@@ -305,7 +305,6 @@ class Bloc extends Object with Validators {
     //Create arc with new data
     // This section should be removed when we decide how to proceed
     // with defining `user` or removing the parameter from Arc constructor
-    User tempUser = new User("Temp", "seashells", "this@that.com");
     String formattedDueDate = null;
 
     if (arcEndDate != null) {
