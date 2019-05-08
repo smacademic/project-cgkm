@@ -43,6 +43,7 @@ class AddTaskScreen extends StatelessWidget {
               Container(margin: EdgeInsets.only(top: 15)),
               titleField(),
               dueDate(),
+              timeDue(),
               locationField(),
               descriptionField(),
               Container(
@@ -115,6 +116,28 @@ Widget dueDate(){
           ),
         ),
         onChanged: (date) => bloc.changeTaskEndDate(date.toString()),
+      );
+    }
+  );
+}
+
+Widget timeDue(){
+  return StreamBuilder(
+    stream: bloc.taskTimeDueFieldStream,
+    builder: (context, snapshot) {
+  
+      return new DateTimePickerFormField(
+        inputType: InputType.time,
+        format: DateFormat.jm(),
+        editable: false,
+        decoration: InputDecoration(
+          hintText: 'Time Due',
+          hintStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.black
+          ),
+        ),
+        onChanged: (time) => bloc.changeTaskTimeDue(time.toString()),
       );
     }
   );
