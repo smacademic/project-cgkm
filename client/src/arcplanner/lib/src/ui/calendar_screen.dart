@@ -78,9 +78,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
     _year = first.year;
     _month = first.month;
-    
-    print('year: $_year');
-    print('month: $_month');
 
     _selectedDay = first;
     _selectedEvents.clear();
@@ -144,11 +141,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                         });
 
                         _updateDayEvents();
-                        
-                        print('DAY EVENTS');
-                        print(_dayEvents);
-                        print('LOADED EVENTS');
-                        print(_loadedEvents);
 
                         if (firstTimeLoading) {
                           _updateFromStream(_month, _year);

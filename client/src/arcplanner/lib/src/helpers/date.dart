@@ -61,8 +61,6 @@ bool checkIfDateRangeInMap(String fromDate, String toDate) {
   DateTime dayAfterEndDate = (DateTime.parse(toDate));
 
   while (date.isBefore(dayAfterEndDate)) {
-    print('           DATE: $date');
-    print('DAYAFTERENDDATE: $dayAfterEndDate');
     if (!loadedDates.containsKey(formatter.format(date))) {
       return false;
     }
