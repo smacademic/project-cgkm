@@ -43,6 +43,7 @@ class Bloc extends Object with Validators {
   // Streams for add_arc_screen
   final _arcTitleFieldController = BehaviorSubject<String>();
   final _arcEndDateFieldController = BehaviorSubject<String>();
+  final _arcTimeDueFieldController= BehaviorSubject<String>();
   final _arcDescriptionFieldController = BehaviorSubject<String>();
   final _arcParentFieldController = BehaviorSubject<Arc>();
 
@@ -61,6 +62,8 @@ class Bloc extends Object with Validators {
 
   Stream<String> get arcEndDateFieldStream => _arcEndDateFieldController.stream;
 
+  Stream<String> get arcTimeDueFieldStream => _arcTimeDueFieldController.stream;
+
   Stream<String> get arcDescriptionFieldStream =>
       _arcDescriptionFieldController.stream;
 
@@ -75,6 +78,7 @@ class Bloc extends Object with Validators {
   // Change data for Add Arc Screen
   Function(String) get changeArcTitle => _arcTitleFieldController.sink.add;
   Function(String) get changeArcEndDate => _arcEndDateFieldController.sink.add;
+  Function(String) get changeArcTimeDue => _arcTimeDueFieldController.sink.add;
   Function(String) get changeArcDescription =>
       _arcDescriptionFieldController.sink.add;
   Function(Arc) get changeArcParent => _arcParentFieldController.sink.add;
@@ -320,6 +324,7 @@ class Bloc extends Object with Validators {
   void submitArc() {
     final validArcTitle = _arcTitleFieldController.value;
     final arcEndDate = _arcEndDateFieldController.value;
+    final arcTimeDue = _arcTimeDueFieldController.value;
     final arcDescription = _arcDescriptionFieldController.value;
     final arcParent = _arcParentFieldController.value;
 
@@ -333,12 +338,14 @@ class Bloc extends Object with Validators {
     if (arcParent == null) {
       Arc ar = new Arc(tempUser.uid, validArcTitle,
           description: arcDescription, 
+          timeDue: arcTimeDue,
           dueDate: formattedDueDate);
       db.insertArc(ar);
     } else {
 
       Arc ar = new Arc(tempUser.uid, validArcTitle,
           description: arcDescription,
+          timeDue: arcTimeDue,
           dueDate: formattedDueDate,
           parentArc: arcParent.aid);
       db.insertArc(ar);
@@ -432,6 +439,7 @@ class Bloc extends Object with Validators {
   void initializeAddArcStreams() {
     bloc.changeArcTitle(null);
     bloc.changeArcEndDate(null);
+    bloc.changeArcTimeDue(null);
     bloc.changeArcDescription(null);
     bloc.changeArcParent(null);
   }

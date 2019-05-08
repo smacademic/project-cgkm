@@ -87,6 +87,17 @@ Widget arcTile(Arc arc, BuildContext context) {
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      AutoSizeText(
+                        (arc.timeDue == 'null' || arc.timeDue == null) ? '' 
+                        : DateFormat.jm().format(DateTime.parse(arc.timeDue)),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        maxFontSize: 14.0,
+                        minFontSize: 14.0,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       Text(arc.completed == true ? 'Complete': ''),
                     ],
                   ),
