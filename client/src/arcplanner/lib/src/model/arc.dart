@@ -63,7 +63,7 @@ class Arc {
     this._timeDue = timeDue;
     this._parentArc = parentArc;
     this.childrenUUIDs = childrenUUIDs?.split(",");
-    if (completed == '1') {
+    if (completed == '1' || completed == 1) {
       this._completed = true;
     } else {
       this._completed = false;
@@ -108,4 +108,10 @@ class Arc {
     _parentArc = map["parentarc"];
     _completed = map["completed"];
   }
+
+  void completeArc() {
+    _completed = true;
+  }
 }
+
+
