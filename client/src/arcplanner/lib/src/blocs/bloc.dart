@@ -92,6 +92,7 @@ class Bloc extends Object with Validators {
   // Streams for add_task_screen
   final _taskTitleFieldController = BehaviorSubject<String>();
   final _taskEndDateFieldController = BehaviorSubject<String>();
+  final _taskTimeDueFieldController= BehaviorSubject<String>();
   final _taskDescriptionFieldController = BehaviorSubject<String>();
   final _taskLocationFieldController = BehaviorSubject<String>();
 
@@ -104,6 +105,9 @@ class Bloc extends Object with Validators {
 
   Stream<String> get taskEndDateFieldStream =>
       _taskEndDateFieldController.stream;
+
+  Stream<String> get taskTimeDueFieldStream => 
+      _taskTimeDueFieldController.stream;
 
   Stream<String> get taskDescriptionFieldStream =>
       _taskDescriptionFieldController.stream;
@@ -118,6 +122,7 @@ class Bloc extends Object with Validators {
   Function(String) get changeTaskTitle => _taskTitleFieldController.sink.add;
   Function(String) get changeTaskEndDate =>
       _taskEndDateFieldController.sink.add;
+  Function(String) get changeTimeDue => _taskTimeDueFieldController.sink.add;
   Function(String) get changeTaskDescription =>
       _taskDescriptionFieldController.sink.add;
   Function(String) get changeTaskLocation =>
@@ -389,6 +394,8 @@ class Bloc extends Object with Validators {
   void submitTask() {
     final validTaskTitle = _taskTitleFieldController.value;
     final taskEndDate = _taskEndDateFieldController.value;
+    final taskTimeDue = _taskTimeDueFieldController.value;
+
     final taskDescription = _taskDescriptionFieldController.value;
     final taskLocation = _taskLocationFieldController.value;
     final taskParent = _arcParentFieldController.value;
@@ -449,6 +456,7 @@ class Bloc extends Object with Validators {
     bloc.changeTaskTitle(null);
     bloc.changeTaskDescription(null);
     bloc.changeTaskEndDate(null);
+    bloc.changeTaskTimeDue(null);
     bloc.changeTaskLocation(null);
     bloc.changeArcParent(null);
   }
@@ -463,6 +471,7 @@ class Bloc extends Object with Validators {
     // Close Add Arc Screen streams
     _arcDescriptionFieldController.close();
     _arcEndDateFieldController.close();
+    _arcTimeDueFieldController.close();
     _arcTitleFieldController.close();
     _arcViewController.close();
     _arcParentFieldController.close();
