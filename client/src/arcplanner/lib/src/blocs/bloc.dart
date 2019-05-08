@@ -327,7 +327,7 @@ class Bloc extends Object with Validators {
     // This section should be removed when we decide how to proceed
     // with defining `user` or removing the parameter from Arc constructor
     User tempUser = new User("Temp", "seashells", "this@that.com");
-    String formattedDueDate = '';
+    String formattedDueDate = null;
 
     if (arcEndDate != null) {
       DateTime parsedDueDate = DateTime.parse(arcEndDate);
@@ -387,7 +387,7 @@ class Bloc extends Object with Validators {
     final taskLocation = _taskLocationFieldController.value;
     final taskParent = _arcParentFieldController.value;
 
-    String formattedDueDate = '';
+    String formattedDueDate = null;
 
     if (taskEndDate != null) {
       DateTime parsedDueDate = DateTime.parse(taskEndDate);
