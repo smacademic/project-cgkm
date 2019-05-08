@@ -88,10 +88,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     _events.clear();
     _loadedEvents.clear();
     
-    // reloads the UI
     setState(() {});
-
-    _updateFromStream(_month, _year);
   }
 
   @override
@@ -116,17 +113,17 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                 return new FutureBuilder(
                   future: snapshot.data,
                   builder: (context, snapshot) {
-                    print('got back here fucko');
-
                     if (firstTimeLoading) {
                       _updateFromStream(_month, _year);
                       firstTimeLoading = false;
                     }
 
-                    if (snapshot.hasData) {
-                      dynamic snapshotData = snapshot.data;
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      
+                      List<dynamic> snapshotData = snapshot.data;
 
                       if (snapshotData.toString() != '[]') {
+
                         // adding objects from stream into _loadedEvents
                         for (dynamic obj in snapshotData) {
                           if (!_isInLoadedEvents(obj)) {
@@ -142,12 +139,21 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                           }
                         }
 
+                        _loadedEvents.removeWhere((String key, dynamic obj) {
+                          return DateTime.parse(obj.dueDate).month != _month;
+                        });
+
                         _updateDayEvents();
                         
                         print('DAY EVENTS');
                         print(_dayEvents);
                         print('LOADED EVENTS');
                         print(_loadedEvents);
+
+                        if (firstTimeLoading) {
+                          _updateFromStream(_month, _year);
+                          firstTimeLoading = false;
+                        }
 
                         if (_dayEvents.isNotEmpty) {
                           _populateBuildList();
@@ -164,7 +170,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                         return _noItemsWidget();
                       }
                     } else {
-                      return Container();
+                      return _noItemsWidget();
                     }
                   },
                 );
@@ -256,6 +262,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
   // More advanced TableCalendar configuration (using Builders & Styles)
   Widget _buildTableCalendarWithBuilders() {
+    print('CALLING BUILD METHOD');
+
     return TableCalendar(
       locale: 'en_US',
       events: _visibleEvents,
