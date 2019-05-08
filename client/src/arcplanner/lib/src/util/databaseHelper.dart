@@ -20,6 +20,7 @@ import 'dart:async';
 import '../model/user.dart';
 import '../model/task.dart';
 import '../model/arc.dart';
+import '../blocs/bloc.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -77,7 +78,8 @@ class DatabaseHelper {
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, "arcplanner_db.db");
-    var arcDb = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var arcDb = await openDatabase(path, version: 1, onCreate: _onCreate, 
+        onOpen: _onOpen);
     return arcDb;
   }
 
@@ -140,7 +142,14 @@ class DatabaseHelper {
         ) As ChildrenUUIDs
         FROM Arc_t AS Arc1
         """);
-    print("Tables created");
+    User user = new User("exampleFirstName", "exampleLastName", "example@email.com");
+    await db.insert("$_userTable", user.toMap());
+    print("Tables, view and user created");
+  }
+
+  FutureOr<void> _onOpen(Database db) async {
+    var user = await db.rawQuery("SELECT UID FROM $_userTable");
+    bloc.userID = user[0]["UID"];
   }
 
   /// Inserts a new user to the DB using a User object as an input
