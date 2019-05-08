@@ -41,6 +41,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   List _selectedEvents;
   AnimationController _controller;
 
+  List<dynamic> snapshotData;
+
   @override
   void initState() {    
     super.initState();
@@ -115,8 +117,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                     }
 
                     if (snapshot.connectionState == ConnectionState.done) {
-                      
-                      List<dynamic> snapshotData = snapshot.data;
+                      snapshotData = snapshot.data;
 
                       if (snapshotData.toString() != '[]') {
 
@@ -140,11 +141,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                         });
 
                         _updateDayEvents();
-
-                        if (firstTimeLoading) {
-                          _updateFromStream(_month, _year);
-                          firstTimeLoading = false;
-                        }
 
                         if (_dayEvents.isNotEmpty) {
                           _populateBuildList();
@@ -186,9 +182,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
   // Takes the Arcs/Tasks in _loadedEvents and adds them to the _events List
   void _updateDayEvents() {
-
-    print('ENTERING _updateEvents');
-
     _dayEvents.clear();
 
     _loadedEvents.forEach((String key, dynamic obj) {
@@ -253,8 +246,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
   // More advanced TableCalendar configuration (using Builders & Styles)
   Widget _buildTableCalendarWithBuilders() {
-    print('CALLING BUILD METHOD');
-
     return TableCalendar(
       locale: 'en_US',
       events: _visibleEvents,
