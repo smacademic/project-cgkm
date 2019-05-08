@@ -115,23 +115,26 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                     if (snapshot.hasData) {
                       dynamic snapshotData = snapshot.data;
 
+                      for (dynamic obj in snapshotData) {
+                        print(obj);
+                      }
+
                       if (snapshotData.toString() != '[]') {
-                        _dayEvents.clear();
-                        _loadedEvents.clear();
+                        // _dayEvents.clear();
+                        // _loadedEvents.clear();
 
+                        // adding objects from stream into _loadedEvents
                         for (dynamic obj in snapshotData) {
-                          _loadedEvents.add(obj);
-                        }
-
-
-
-                        for (dynamic obj in _loadedEvents) {
-                          _events.addAll({DateTime.parse(obj.dueDate): ['']});
-                          if (DateTime.parse(obj.dueDate).year == _selectedDay.year && DateTime.parse(obj.dueDate).month == _selectedDay.month && DateTime.parse(obj.dueDate).day == _selectedDay.day) {
-                            _dayEvents.add(obj);
+                          if (_loadedEvents.contains(obj)) {
+                            // _loadedEvents.add(obj);
+                          } else {
+                            _loadedEvents.add(obj);
                           }
                         }
 
+
+                        _updateEvents();
+                        
                         //_dayEvents.sort((a, b) => a.timeDue.compareTo(b.timeDue));
 
                         if (_dayEvents.isNotEmpty) {
@@ -142,30 +145,10 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                             },
                           );
                         } else {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                'There are no items for this day',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          );
+                          return _noItemsWidget();
                         }
                       } else {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'There are no items for this day',
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        );
+                        return _noItemsWidget();
                       }
                     } else {
                       return Container();
@@ -179,6 +162,33 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
       ),
       
       drawer: drawerMenu(context)
+    );
+  }
+
+  // Takes the Arcs/Tasks in _loadedEvents and adds them to the _events List
+  void _updateEvents() {
+    _dayEvents.clear();
+    for (dynamic obj in _loadedEvents) {
+      _events.addAll({DateTime.parse(obj.dueDate): ['']});
+      if (!_dayEvents.contains(obj) && DateTime.parse(obj.dueDate).year == _selectedDay.year && DateTime.parse(obj.dueDate).month == _selectedDay.month && DateTime.parse(obj.dueDate).day == _selectedDay.day) {
+        _dayEvents.add(obj);
+      }
+    }
+
+    _visibleEvents = _events;
+  }
+
+  Widget _noItemsWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'There are no items for this day',
+          style: TextStyle(
+            color: Colors.grey,
+          ),
+        ),
+      ],
     );
   }
 
