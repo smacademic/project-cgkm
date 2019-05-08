@@ -1,3 +1,4 @@
+import 'package:arcplanner/src/helpers/date.dart';
 /** 
  *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
  *  CS298 Spring 2019 
@@ -56,7 +57,7 @@ class Task {
     this._dueDate = dueDate;
     this._timeDue = timeDue;
     this._location = location;
-    if (completed == 'true') {
+    if (completed == 1 || completed == 'true') {
       this._completed = true;
     } else {
       this._completed = false;
@@ -106,11 +107,6 @@ class Task {
   * Description: Updates the SQLite related task completed field to true. It then also changes its on instance variable to true.
   */
   void completeTask() {
-    var db = new DatabaseHelper();
-
     _completed = true;
-    
-    // Update database with updated task
-    db.updateTask(this);
   } 
 }
