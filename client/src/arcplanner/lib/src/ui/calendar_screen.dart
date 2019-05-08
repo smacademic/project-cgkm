@@ -57,7 +57,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 500),
     );
 
     _controller.forward();
@@ -75,30 +75,23 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   }
 
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
+
     _year = first.year;
-    print('year: $_year');
     _month = first.month;
+    
+    print('year: $_year');
     print('month: $_month');
 
+    _selectedDay = first;
+    _selectedEvents.clear();
+    _visibleEvents.clear();
     _events.clear();
     _loadedEvents.clear();
+    
+    // reloads the UI
+    setState(() {});
+
     _updateFromStream(_month, _year);
-    _updateEvents();
-    
-    print('DAY EVENTS');
-    print(_dayEvents);
-    print('LOADED EVENTS');
-    print(_loadedEvents);    
-    
-    setState(() {
-      _visibleEvents = Map.fromEntries(
-        _events.entries.where(
-          (entry) =>
-              entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
-              entry.key.isBefore(last.add(const Duration(days: 1))),
-        ),
-      );
-    });
   }
 
   @override
@@ -123,6 +116,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                 return new FutureBuilder(
                   future: snapshot.data,
                   builder: (context, snapshot) {
+                    print('got back here fucko');
+
                     if (firstTimeLoading) {
                       _updateFromStream(_month, _year);
                       firstTimeLoading = false;
@@ -147,7 +142,12 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                           }
                         }
 
-                        _updateEvents();
+                        _updateDayEvents();
+                        
+                        print('DAY EVENTS');
+                        print(_dayEvents);
+                        print('LOADED EVENTS');
+                        print(_loadedEvents);
 
                         if (_dayEvents.isNotEmpty) {
                           _populateBuildList();
@@ -188,12 +188,11 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   }
 
   // Takes the Arcs/Tasks in _loadedEvents and adds them to the _events List
-  void _updateEvents() {
+  void _updateDayEvents() {
+
+    print('ENTERING _updateEvents');
+
     _dayEvents.clear();
-    print('DAY EVENTS BEFORE');
-    print(_dayEvents);
-    print('\nLOADED EVENTS BEFORE');
-    print(_loadedEvents);
 
     _loadedEvents.forEach((String key, dynamic obj) {
       if (!_isInDayEvents(obj) &&
@@ -203,11 +202,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
         _dayEvents.addAll({key: obj});
       }
     });
-
-    print('\nDAY EVENTS AFTER');
-    print(_dayEvents);
-    print('\nLOADED EVENTS AFTER');
-    print(_loadedEvents);
 
     _visibleEvents = _events;
 
@@ -347,22 +341,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
         _controller.forward(from: 0.0);
       },
       onVisibleDaysChanged: _onVisibleDaysChanged,
-    );
-  }
-
-  Widget _buildEventList() {
-    return ListView(
-      children: _selectedEvents.map((event) => Container(
-        decoration: BoxDecoration(
-          border: Border.all(width: 0.8),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        child: ListTile(
-          title: Text(event.toString()),
-          onTap: () => print('$event tapped!'),
-        ),
-      )).toList(),
     );
   }
 }
