@@ -37,6 +37,9 @@ class Bloc extends Object with Validators {
 
   // Create streams and getters for parent selection view
   final _arcParentSelectViewController = StreamController<dynamic>.broadcast();
+  
+  // Stream for task_screen 
+  final _taskController = BehaviorSubject<Task>();
 
   // Streams for add_arc_screen
   final _arcTitleFieldController = BehaviorSubject<String>();
@@ -70,12 +73,18 @@ class Bloc extends Object with Validators {
   Stream<bool> get submitValidArc => Observable.combineLatest2(
       arcTitleFieldStream, arcDescriptionFieldStream, (t, d) => true);
 
+  // Add data to the stream for Task Screen
+  Stream<Task> get taskStream => _taskController.stream;
+
   // Change data for Add Arc Screen
   Function(String) get changeArcTitle => _arcTitleFieldController.sink.add;
   Function(String) get changeArcEndDate => _arcEndDateFieldController.sink.add;
   Function(String) get changeArcDescription =>
       _arcDescriptionFieldController.sink.add;
   Function(Arc) get changeArcParent => _arcParentFieldController.sink.add;
+
+  // Change data for Task Stream
+  Function(Task) get changeTask => _taskController.sink.add;
 
   // Create stream and getters for parent selection view
   final _taskViewController = StreamController<dynamic>.broadcast();
@@ -89,7 +98,7 @@ class Bloc extends Object with Validators {
   Stream<dynamic> get taskViewStream =>
       _taskViewController.stream.map(transformData);
 
-  // Add data to streams for Add Arc Screen
+  // Add data to streams for Add Task Screen
   Stream<String> get taskTitleFieldStream =>
       _taskTitleFieldController.stream; //.transform(validateTitle);
 
@@ -105,7 +114,7 @@ class Bloc extends Object with Validators {
   Stream<bool> get submitValidTask => Observable.combineLatest2(
       taskTitleFieldStream, arcParentFieldStream, (t, d) => true);
 
-  // Change data for Add Arc Screen
+  // Change data for Add Task Screen
   Function(String) get changeTaskTitle => _taskTitleFieldController.sink.add;
   Function(String) get changeTaskEndDate =>
       _taskEndDateFieldController.sink.add;
@@ -176,6 +185,7 @@ class Bloc extends Object with Validators {
     return Arc.read(map['UID'], map['AID'], map['Title'],
         description: map['Description'],
         dueDate: map['DueDate'],
+        timeDue: map['TimeDue'],
         parentArc: map['ParentArc'],
         completed: map['Completed'],
         childrenUUIDs: map['ChildrenUUIDs']);
@@ -190,6 +200,7 @@ class Bloc extends Object with Validators {
     return Task.read(map['TID'], map['AID'], map['Title'],
         description: map['Description'],
         dueDate: map['DueDate'],
+        timeDue: map['TimeDue'],
         location: map['Location'],
         completed: map['Completed']);
   }
@@ -353,6 +364,8 @@ class Bloc extends Object with Validators {
   completeArc(Arc arc) {}
 
   ///  Deletes an arc from the database BLOC
+  ///  Removes reference to itself if it has a parent; deletes arc from
+  ///   loadedObjects, and deletes the arc from the db
   ///  @param arc, the Arc to be deleted
   ///
   deleteArc(Arc arc) async {
@@ -395,6 +408,32 @@ class Bloc extends Object with Validators {
     initializeAddTaskStreams();
   }
 
+  editTask(Task task){}
+
+  completeTask(Task task){}
+
+  ///  Deletes a task from the database BLOC
+  ///  Removes reference to itself if it has a parent; deletes task from
+  ///   loadedObjects, and deletes the task from the db
+  ///  @param task, the Task to be deleted
+  ///
+  deleteTask(Task task) async {
+
+    List<Map> parentList = await db.getArc(task.aid);
+
+    if (parentList.length > 0) {
+      Arc parent = new Arc.fromMap(parentList.first);
+      parent.childrenUUIDs.remove(task.tid);
+      await db.updateArc(parent);
+    }
+
+    if (loadedObjects.containsKey(task.tid)) {
+      loadedObjects.remove(task.tid);
+    }
+    await db.deleteTask(task.tid);
+  }
+
+
   /// Resets the streams used by the add arc screen
   void initializeAddArcStreams() {
     bloc.changeArcTitle(null);
@@ -433,6 +472,9 @@ class Bloc extends Object with Validators {
     _taskTitleFieldController.close();
     _taskLocationFieldController.close();
     _taskViewController.close();
+
+    // Close Task Screen stream
+    _taskController.close();
   }
 }
 

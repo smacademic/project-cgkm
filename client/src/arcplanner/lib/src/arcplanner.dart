@@ -25,6 +25,7 @@ import 'ui/add_arc_screen.dart';
 import 'ui/add_task_screen.dart';
 import 'ui/parent_select_screen.dart';
 import 'ui/calendar_screen.dart';
+import 'ui/task_screen.dart';
 
 // Observer for tracking page changes
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -41,6 +42,7 @@ class ArcPlanner extends StatelessWidget {
   static AddTaskScreen addTaskScreen = AddTaskScreen();
   static ParentSelectScreen parentSelectScreen = ParentSelectScreen();
   static CalendarScreen calendarScreen = CalendarScreen();
+  static TaskScreen taskScreen = TaskScreen();
 
 
 
@@ -65,6 +67,7 @@ class ArcPlanner extends StatelessWidget {
         '/addtask': (BuildContext context) => addTaskScreen,
         '/parent': (BuildContext context) => parentSelectScreen,
         '/calendar': (BuildContext context) => calendarScreen,
+        '/task': (BuildContext context) => taskScreen,
       },
       navigatorObservers: [routeObserver],
     );
