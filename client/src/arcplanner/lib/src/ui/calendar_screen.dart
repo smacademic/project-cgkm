@@ -30,8 +30,9 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixin { 
 
-  List<dynamic> _loadedEvents;
-  List<dynamic> _dayEvents;
+  List<dynamic> _buildList;
+  Map<String, dynamic> _loadedEvents;
+  Map<String, dynamic> _dayEvents;
   int _month;
   int _year;
   DateTime _selectedDay;
@@ -47,8 +48,9 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     _year = DateTime.now().year;
     _selectedDay = DateTime.now();
     _events = {};
-    _loadedEvents = [];
-    _dayEvents = [];
+    _loadedEvents = Map<String, dynamic>();
+    _dayEvents = Map<String, dynamic>();
+    _buildList = List<dynamic>();
 
     _selectedEvents = _events[_selectedDay] ?? [];
     _visibleEvents = _events;
@@ -104,6 +106,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
             child: StreamBuilder(
               stream: bloc.calendarStream,
               builder: (context, snapshot) {
+                _controller.forward(from: 0.0);
                 return new FutureBuilder(
                   future: snapshot.data,
                   builder: (context, snapshot) {
@@ -115,33 +118,26 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                     if (snapshot.hasData) {
                       dynamic snapshotData = snapshot.data;
 
-                      for (dynamic obj in snapshotData) {
-                        print(obj);
-                      }
-
                       if (snapshotData.toString() != '[]') {
-                        // _dayEvents.clear();
-                        // _loadedEvents.clear();
-
                         // adding objects from stream into _loadedEvents
                         for (dynamic obj in snapshotData) {
-                          if (_loadedEvents.contains(obj)) {
-                            // _loadedEvents.add(obj);
-                          } else {
-                            _loadedEvents.add(obj);
+                          if (!_isInLoadedEvents(obj)) {
+                            if (obj is Task) {
+                              _loadedEvents.addAll({obj.tid: obj});
+                            } else {
+                              _loadedEvents.addAll({obj.aid: obj});
+                            }
                           }
                         }
 
-
-                        _updateEvents();
-                        
-                        //_dayEvents.sort((a, b) => a.timeDue.compareTo(b.timeDue));
+                        //_updateEvents();
 
                         if (_dayEvents.isNotEmpty) {
+                          _populateBuildList();
                           return ListView.builder(
-                            itemCount: _dayEvents.length,
+                            itemCount: _buildList.length,
                             itemBuilder: (context, index) {
-                              return tile(_dayEvents[index], context);
+                              return tile(_buildList[index], context);
                             },
                           );
                         } else {
@@ -165,17 +161,72 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     );
   }
 
+  void _populateBuildList() {
+    _buildList.clear();
+    _dayEvents.forEach((String key, dynamic obj) {
+      _buildList.add(obj);
+    });
+
+    //_buildList.sort((a, b) => a.timeDue.compareTo(b.timeDue));
+  }
+
   // Takes the Arcs/Tasks in _loadedEvents and adds them to the _events List
   void _updateEvents() {
     _dayEvents.clear();
-    for (dynamic obj in _loadedEvents) {
-      _events.addAll({DateTime.parse(obj.dueDate): ['']});
-      if (!_dayEvents.contains(obj) && DateTime.parse(obj.dueDate).year == _selectedDay.year && DateTime.parse(obj.dueDate).month == _selectedDay.month && DateTime.parse(obj.dueDate).day == _selectedDay.day) {
-        _dayEvents.add(obj);
+    print('DAY EVENTS BEFORE');
+    print(_dayEvents);
+    print('\nLOADED EVENTS BEFORE');
+    print(_loadedEvents);
+
+    _loadedEvents.forEach((String key, dynamic obj) {
+      if (!_isInDayEvents(obj) &&
+      DateTime.parse(obj.dueDate).year == _selectedDay.year && 
+      DateTime.parse(obj.dueDate).month == _selectedDay.month && 
+      DateTime.parse(obj.dueDate).day == _selectedDay.day) {
+        _dayEvents.addAll({key: obj});
       }
-    }
+    });
+
+    print('\nDAY EVENTS AFTER');
+    print(_dayEvents);
+    print('\nLOADED EVENTS AFTER');
+    print(_loadedEvents);
 
     _visibleEvents = _events;
+
+    _controller.forward(from: 0.0);
+  }
+
+  bool _isInDayEvents(dynamic obj) {
+    if (obj is Task) {
+      if (_dayEvents.containsKey(obj.tid)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (_dayEvents.containsKey(obj.aid)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  bool _isInLoadedEvents(dynamic obj) {
+    if (obj is Task) {
+      if (_loadedEvents.containsKey(obj.tid)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (_loadedEvents.containsKey(obj.aid)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   Widget _noItemsWidget() {
