@@ -37,7 +37,13 @@ class Task {
     this._tid = new Uuid().v4();
     this._description = description;
     this._dueDate = dueDate;
-    this._timeDue = timeDue;
+
+    if (timeDue == null) {
+      timeDue = '23:59:59';
+    } else {
+      this._timeDue = timeDue;
+    }
+    
     this._location = location;
     this._completed = false;
   }
@@ -54,7 +60,13 @@ class Task {
       {description, dueDate, location, timeDue, completed}) {
     this._description = description;
     this._dueDate = dueDate;
-    this._timeDue = timeDue;
+
+    if (timeDue == null) {
+      timeDue = '23:59:59';
+    } else {
+      this._timeDue = timeDue;
+    }
+
     this._location = location;
     if (completed == 'true') {
       this._completed = true;
@@ -69,6 +81,7 @@ class Task {
   String get title => _title;
   String get description => _description;
   String get dueDate => _dueDate;
+  String get timeDue => _timeDue;
   String get location => _location;
   bool get completed => _completed;
 
