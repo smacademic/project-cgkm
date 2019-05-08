@@ -123,16 +123,16 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                           _loadedEvents.add(obj);
                         }
 
+
+
                         for (dynamic obj in _loadedEvents) {
                           _events.addAll({DateTime.parse(obj.dueDate): ['']});
-                          if (DateTime.parse(obj.dueDate).compareTo(_selectedDay) == 0) {
+                          if (DateTime.parse(obj.dueDate).year == _selectedDay.year && DateTime.parse(obj.dueDate).month == _selectedDay.month && DateTime.parse(obj.dueDate).day == _selectedDay.day) {
                             _dayEvents.add(obj);
                           }
                         }
 
-                        _dayEvents.sort((a, b) => a.timeDue.compareTo(b.timeDue));
-
-                        _buildTableCalendarWithBuilders();
+                        //_dayEvents.sort((a, b) => a.timeDue.compareTo(b.timeDue));
 
                         if (_dayEvents.isNotEmpty) {
                           return ListView.builder(
