@@ -28,8 +28,8 @@ Future<List<dynamic>> getItemsBetweenDates(String fromDate, String toDate) async
   
   if (checkIfDateRangeInMap(fromDate, toDate)) {
     DateTime date = DateTime.parse(fromDate);
-    DateTime dayAfterEndDate = (DateTime.parse(toDate)).add(Duration(days:1));
-    while (date.isBefore(dayAfterEndDate)) {
+    DateTime dayAfterEndDate = (DateTime.parse(toDate)).add(Duration(days: 1));
+    while (date.isBefore(dayAfterEndDate) || date.isAtSameMomentAs(dayAfterEndDate)) {
       List<String> uuids = loadedDates[formatter.format(date)];
       for (String uuid in uuids) {
         upcomingItems.add(bloc.getFromMap(uuid));
