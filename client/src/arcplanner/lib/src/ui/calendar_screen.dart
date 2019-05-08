@@ -71,6 +71,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
     _year = first.year;
     _month = first.month;
+    
     setState(() {
       _visibleEvents = Map.fromEntries(
         _events.entries.where(
@@ -79,6 +80,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
               entry.key.isBefore(last.add(const Duration(days: 1))),
         ),
       );
+      _selectedDay = first;
     });
   }
 
@@ -146,8 +148,20 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                           );
                         }
                       } else {
-                        return Container();
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'There are no items for this day',
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        );
                       }
+                    } else {
+                      return Container();
                     }
                   },
                 );
