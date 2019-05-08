@@ -41,9 +41,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   AnimationController _controller;
 
   @override
-  void initState() {
-    _updateFromStream();
-    
+  void initState() {    
     super.initState();
     _month = DateTime.now().month;
     _year = DateTime.now().year;
@@ -77,8 +75,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
     _year = first.year;
     _month = first.month;
-    
-    _updateFromStream();
     
     setState(() {
       _visibleEvents = Map.fromEntries(
@@ -134,7 +130,10 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                           }
                         }
 
-                        _dayEvents.sort((a, b) => a.dueDate.compareTo(b.dueDate));
+                        _dayEvents.sort((a, b) => a.timeDue.compareTo(b.timeDue));
+
+                        _buildTableCalendarWithBuilders();
+
                         if (_dayEvents.isNotEmpty) {
                           return ListView.builder(
                             itemCount: _dayEvents.length,
