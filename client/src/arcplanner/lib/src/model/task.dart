@@ -70,6 +70,7 @@ class Task {
   String get title => _title;
   String get description => _description;
   String get dueDate => _dueDate;
+  String get timeDue => _timeDue;
   String get location => _location;
   bool get completed => _completed;
 
