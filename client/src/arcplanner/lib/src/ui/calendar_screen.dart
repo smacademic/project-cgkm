@@ -30,6 +30,8 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixin { 
 
+  List<dynamic> _loadedEvents;
+  List<dynamic> _dayEvents;
   int _month;
   int _year;
   DateTime _selectedDay;
@@ -45,6 +47,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     _year = DateTime.now().year;
     _selectedDay = DateTime.now();
     _events = {};
+    _loadedEvents = [];
+    _dayEvents = [];
 
     _selectedEvents = _events[_selectedDay] ?? [];
     _visibleEvents = _events;
@@ -82,7 +86,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   Widget build(BuildContext context) {
     bool firstTimeLoading = true;
 
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Calendar"),
@@ -106,31 +109,47 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
                     if (snapshot.hasData) {
                       dynamic snapshotData = snapshot.data;
-                      if (snapshotData.toString() != '[]') {
-                        return ListView.builder(
-                          itemCount: snapshotData.length,
-                          itemBuilder: (context, index) {
-                            return tile(snapshotData[index], context);
-                          },
-                        );
-                      } else {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'There are no items for this day',
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
-                            ),
 
-                          ],
-                        );
+                      if (snapshotData.toString() != '[]') {
+                        _dayEvents.clear();
+                        _loadedEvents.clear();
+
+                        for (dynamic obj in snapshotData) {
+                          _loadedEvents.add(obj);
+                        }
+
+                        for (dynamic obj in _loadedEvents) {
+                          if (DateTime.parse(obj.dueDate).compareTo(_selectedDay) == 0) {
+                            _dayEvents.add(obj);
+                          }
+                        }
+
+                        _dayEvents.sort((a, b) => a.dueDate.compareTo(b.dueDate));
+                        if (_dayEvents.isNotEmpty) {
+                          return ListView.builder(
+                            itemCount: _dayEvents.length,
+                            itemBuilder: (context, index) {
+                              return tile(_dayEvents[index], context);
+                            },
+                          );
+                        } else {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                'There are no items for this day',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                      } else {
+                        return Container();
                       }
-                    } else {
-                      return Container();
                     }
-                  }
+                  },
                 );
               }
             ),
