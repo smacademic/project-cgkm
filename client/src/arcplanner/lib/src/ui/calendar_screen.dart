@@ -70,16 +70,25 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     });
   }
 
-  void _updateFromStream() {
-    bloc.calendarInsert({'month': _month,'year': _year, 'flag': 'getCalendarEvents'});
+  void _updateFromStream(int month, int year) {
+    bloc.calendarInsert({'month': month,'year': year, 'flag': 'getCalendarEvents'});
   }
 
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
+    _year = first.year;
+    print('year: $_year');
+    _month = first.month;
+    print('month: $_month');
+
+    _events.clear();
     _loadedEvents.clear();
+    _updateFromStream(_month, _year);
     _updateEvents();
     
-    _year = first.year;
-    _month = first.month;
+    print('DAY EVENTS');
+    print(_dayEvents);
+    print('LOADED EVENTS');
+    print(_loadedEvents);    
     
     setState(() {
       _visibleEvents = Map.fromEntries(
@@ -115,7 +124,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                   future: snapshot.data,
                   builder: (context, snapshot) {
                     if (firstTimeLoading) {
-                      _updateFromStream();
+                      _updateFromStream(_month, _year);
                       firstTimeLoading = false;
                     }
 
@@ -126,6 +135,10 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                         // adding objects from stream into _loadedEvents
                         for (dynamic obj in snapshotData) {
                           if (!_isInLoadedEvents(obj)) {
+                            if (_events[DateTime.parse(obj.dueDate)] == null) {
+                              _events[DateTime.parse(obj.dueDate)] = [];
+                            }
+                            _events[DateTime.parse(obj.dueDate)].add(obj);
                             if (obj is Task) {
                               _loadedEvents.addAll({obj.tid: obj});
                             } else {
