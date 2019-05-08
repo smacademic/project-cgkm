@@ -38,7 +38,13 @@ class Arc {
     this._aid = new Uuid().v4();
     this._description = description;
     this._dueDate = dueDate;
-    this._timeDue = timeDue;
+
+    if (timeDue == null) {
+      timeDue = '23:59:59';
+    } else {
+      this._timeDue = timeDue;
+    }
+    
     this._parentArc = parentArc;
     this._completed = false;
   }
@@ -60,7 +66,13 @@ class Arc {
       {description, dueDate, timeDue, parentArc, completed, childrenUUIDs}) {
     this._description = description;
     this._dueDate = dueDate;
-    this._timeDue = timeDue;
+
+    if (timeDue == null) {
+      timeDue = '23:59:59';
+    } else {
+      this._timeDue = timeDue;
+    }
+
     this._parentArc = parentArc;
     this.childrenUUIDs = childrenUUIDs?.split(",");
     if (completed == '1') {
@@ -76,6 +88,7 @@ class Arc {
   String get title => _title;
   String get description => _description;
   String get dueDate => _dueDate;
+  String get timeDue => _timeDue;
   String get parentArc => _parentArc;
   bool get completed => _completed;
 
