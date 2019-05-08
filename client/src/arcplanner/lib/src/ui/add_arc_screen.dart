@@ -44,6 +44,7 @@ class AddArcScreen extends StatelessWidget {
               Container(margin: EdgeInsets.only(top: 15)),
               titleField(),
               dueDate(),
+              timeDue(),
               descriptionField(),
               Container(
                 margin: EdgeInsets.only(top: 20),
@@ -115,6 +116,28 @@ Widget dueDate(){
           ),
         ),
         onChanged: (date) => bloc.changeArcEndDate(date.toString()),
+      );
+    }
+  );
+}
+
+Widget timeDue(){
+  return StreamBuilder(
+    stream: bloc.arcTimeDueFieldStream,
+    builder: (context, snapshot) {
+
+      return DateTimePickerFormField(
+        inputType: InputType.time,
+        format: DateFormat.jm(),
+        editable: false,
+        decoration: InputDecoration(
+          hintText: 'Time Due',
+          hintStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.black
+          ),
+        ),
+        onChanged: (time) => bloc.changeArcTimeDue(time.toString()),
       );
     }
   );
