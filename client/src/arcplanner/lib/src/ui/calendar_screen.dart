@@ -57,7 +57,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 400),
     );
 
     _controller.forward();
@@ -75,7 +75,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   }
 
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
-
     _year = first.year;
     _month = first.month;
 
