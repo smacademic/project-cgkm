@@ -15,7 +15,6 @@
 import 'dart:async';
 import '../model/arc.dart';
 import '../model/task.dart';
-import '../model/user.dart';
 import '../util/databaseHelper.dart';
 import '../blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
@@ -26,6 +25,7 @@ class Bloc extends Object with Validators {
   var formatter = new DateFormat('yyyy-MM-dd');
   final DatabaseHelper db = DatabaseHelper();
   Map<String, dynamic> loadedObjects = Map<String, dynamic>();
+  String userID;
 
   // Constructor
   Bloc();
@@ -162,7 +162,7 @@ class Bloc extends Object with Validators {
     } else if (data['flag'] == "getChildren") {
       return await getChildren(data['object']);
     } else if (data['flag'] == "getChildArcs") {
-      return await getChildArcs(data['object']);
+      return await getChildren(data['object'], tasks: false);
     } else if (data['flag'] == "backButton") {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
@@ -259,8 +259,10 @@ class Bloc extends Object with Validators {
   ///   back via stream. Otherwise load them from database and into map. Then
   ///   to the UI via stream
   /// @param parentUUID the UUID of the parent whos children will be returned
+  /// @param arcs determines whether arcs should be returned. Default is true
+  /// @param tasks determines whether tasks should be returned. Default is true
   /// @returns All Tasks and Arcs that have `parentUUID` set as their `parentArc`
-  Future<List<dynamic>> getChildren(String parentUUID) async {
+  Future<List<dynamic>> getChildren(String parentUUID, {arcs = true, tasks = true}) async {
     List<dynamic> children = new List();
 
     // If there is no supplied UUID supply parentArc = null, the masterArcs
@@ -283,43 +285,7 @@ class Bloc extends Object with Validators {
         } else {
           // If one child UUID is missing use query to get all children and
           //  add to map. This is to avoid many queries if large list of children
-          children = insertListIntoMap(await db.getChildren(parentUUID));
-          break;
-        }
-      }
-    }
-    return children;
-  }
-
-  /// Checks to see if children are in map. If they exist in map then send them
-  ///   back via stream. Otherwise load them from database and into map. Then
-  ///   to the UI via stream
-  /// @param parentUUID the UUID of the parent whos children will be returned
-  /// @returns All Arcs that have `parentUUID` set as their `parentArc`
-  Future<List<dynamic>> getChildArcs(String parentUUID) async {
-    List<dynamic> children = new List();
-
-    // If there is no supplied UUID supply parentArc = null, the masterArcs
-    if (parentUUID == null) {
-      children = insertListIntoMap(await db.getMasterArcs());
-      return children;
-    }
-
-    Arc parent = getFromMap(parentUUID);
-
-    // If childrenUUIDs is empty then it has no children
-    if (parent.childrenUUIDs?.isEmpty ?? true) {
-      // Key does not exist in map yet or doesn't have children
-      return null;
-    } else {
-      // If Children exist in map already
-      for (String uuid in parent.childrenUUIDs) {
-        if (checkMap(uuid)) {
-          children.add(getFromMap(uuid));
-        } else {
-          // If one child UUID is missing use query to get all children and
-          //  add to map. This is to avoid many queries if large list of children
-          children = insertListIntoMap(await db.getChildArcs(parentUUID));
+          children = insertListIntoMap(await db.getChildren(parentUUID, arcs: arcs, tasks: tasks));
           break;
         }
       }
@@ -335,21 +301,17 @@ class Bloc extends Object with Validators {
     final arcDescription = _arcDescriptionFieldController.value;
     final arcParent = _arcParentFieldController.value;
 
-    //Create arc with new data
-    // This section should be removed when we decide how to proceed
-    // with defining `user` or removing the parameter from Arc constructor
-    User tempUser = new User("Temp", "seashells", "this@that.com");
     DateTime parsedDueDate = DateTime.parse(arcEndDate);
     String formattedDueDate = formatter.format(parsedDueDate);
 
     if (arcParent == null) {
-      Arc ar = new Arc(tempUser.uid, validArcTitle,
+      Arc ar = new Arc(bloc.userID, validArcTitle,
           description: arcDescription, 
           dueDate: formattedDueDate);
       db.insertArc(ar);
     } else {
 
-      Arc ar = new Arc(tempUser.uid, validArcTitle,
+      Arc ar = new Arc(bloc.userID, validArcTitle,
           description: arcDescription,
           dueDate: formattedDueDate,
           parentArc: arcParent.aid);

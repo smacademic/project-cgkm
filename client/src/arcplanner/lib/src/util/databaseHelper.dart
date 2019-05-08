@@ -20,6 +20,7 @@ import 'dart:async';
 import '../model/user.dart';
 import '../model/task.dart';
 import '../model/arc.dart';
+import '../blocs/bloc.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -77,7 +78,8 @@ class DatabaseHelper {
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, "arcplanner_db.db");
-    var arcDb = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var arcDb = await openDatabase(path, version: 1, onCreate: _onCreate, 
+        onOpen: _onOpen);
     return arcDb;
   }
 
@@ -140,7 +142,14 @@ class DatabaseHelper {
         ) As ChildrenUUIDs
         FROM Arc_t AS Arc1
         """);
-    print("Tables created");
+    User user = new User("exampleFirstName", "exampleLastName", "example@email.com");
+    await db.insert("$_userTable", user.toMap());
+    print("Tables, view and user created");
+  }
+
+  FutureOr<void> _onOpen(Database db) async {
+    var user = await db.rawQuery("SELECT UID FROM $_userTable");
+    bloc.userID = user[0]["UID"];
   }
 
   /// Inserts a new user to the DB using a User object as an input
@@ -205,15 +214,25 @@ class DatabaseHelper {
 
   /// Returns a list of mapped children of the given Arc
   /// @param uuid the UUID of the parent Arc
+  /// @param arcs determines whether arcs should be returned. Default is true
+  /// @param tasks determines whether tasks should be returned. Default is true
   /// @returns a list of all children Tasks and Arcs
-  Future<List<Map>> getChildren(String uuid) async {
+  Future<List<Map>> getChildren(String uuid, {arcs = true, tasks = true}) async {
     var dbClient = await db;
-    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
-    if (uuid != null) {
+    if (arcs && tasks) {
+      List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
+      if (uuid != null) {
+        List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"');
+        return new List.from(arcList)..addAll(taskList);
+      } else
+        return arcList;
+    } else if (arcs && !tasks) {
+        List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
+        return arcList;
+    } else {
       List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE AID = "$uuid"');
-      return new List.from(arcList)..addAll(taskList);
-    } else
-      return arcList;
+      return taskList;
+    }
   }
 
   /// Retrieves all Arcs and Tasks inclusively between the given two dates. 
@@ -226,15 +245,6 @@ class DatabaseHelper {
     List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE DueDate BETWEEN "$fromDate" AND "$toDate"');
     List<Map> taskList = await dbClient.rawQuery('SELECT * FROM Task WHERE DueDate BETWEEN "$fromDate" AND "$toDate"');
     return new List.from(arcList)..addAll(taskList);
-  }
-
-  /// Returns a list of mapped children of the given Arc, only arcs
-  /// @param uuid the UUID of the parent Arc
-  /// @returns a list of all children Arcs
-  Future<List<Map>> getChildArcs(String uuid) async {
-    var dbClient = await db;
-    List<Map> arcList = await dbClient.rawQuery('SELECT * FROM Arc WHERE ParentArc = "$uuid"');
-    return arcList;
   }
 
   /// Retrieves all Arcs from the database
