@@ -75,6 +75,9 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   }
 
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
+    _loadedEvents.clear();
+    _updateEvents();
+    
     _year = first.year;
     _month = first.month;
     
@@ -95,6 +98,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("Calendar"),
       ),
       
@@ -130,7 +134,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                           }
                         }
 
-                        //_updateEvents();
+                        _updateEvents();
 
                         if (_dayEvents.isNotEmpty) {
                           _populateBuildList();
