@@ -171,7 +171,7 @@ class Bloc extends Object with Validators {
       return await getItemsBetweenDates(DateTime.now().add(Duration(days: -1)).toString(),
           DateTime.now().add(Duration(days: 7)).toString());
     } else if (data['flag'] == 'getCalendarEvents') {
-      return await getItemsBetweenDates(DateTime(data['year'], data['month']).toString(), DateTime(data['year'], data['month'] + 1).toString());
+      return await getItemsBetweenDates(DateTime(data['year'], data['month']).add(Duration(days: -1)).toString(), DateTime(data['year'], data['month'] + 1).toString());
     } else if (data['flag'] == "clear") {
       return null;
     }
