@@ -42,6 +42,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
 
   @override
   void initState() {
+    _updateFromStream();
+    
     super.initState();
     _month = DateTime.now().month;
     _year = DateTime.now().year;
@@ -68,9 +70,15 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     });
   }
 
+  void _updateFromStream() {
+    bloc.calendarInsert({'month': _month,'year': _year, 'flag': 'getCalendarEvents'});
+  }
+
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
     _year = first.year;
     _month = first.month;
+    
+    _updateFromStream();
     
     setState(() {
       _visibleEvents = Map.fromEntries(
@@ -80,7 +88,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
               entry.key.isBefore(last.add(const Duration(days: 1))),
         ),
       );
-      _selectedDay = first;
     });
   }
 
@@ -105,7 +112,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                   future: snapshot.data,
                   builder: (context, snapshot) {
                     if (firstTimeLoading) {
-                      bloc.calendarInsert({'month': _month,'year': _year, 'flag': 'getCalendarEvents'});
+                      _updateFromStream();
                       firstTimeLoading = false;
                     }
 
@@ -121,6 +128,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                         }
 
                         for (dynamic obj in _loadedEvents) {
+                          _events.addAll({DateTime.parse(obj.dueDate): ['']});
                           if (DateTime.parse(obj.dueDate).compareTo(_selectedDay) == 0) {
                             _dayEvents.add(obj);
                           }
