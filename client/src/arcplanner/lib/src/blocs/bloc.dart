@@ -329,7 +329,10 @@ class Bloc extends Object with Validators {
   }
 
   editArc(Arc arc) {}
-
+  
+  ///  Marks an arc as complete database
+  ///  @param arc, the Arc to be completed
+  ///
   completeArc(Arc arc) async {
     arc.completeArc();
     await db.updateArc(arc);
@@ -388,6 +391,9 @@ class Bloc extends Object with Validators {
 
   editTask(Task task){}
 
+  ///  Marks a task as complete database
+  ///  @param task, the Task to be completed
+  ///
   completeTask(Task task) async {
     task.completeTask();
     await db.updateTask(task);
