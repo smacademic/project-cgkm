@@ -40,8 +40,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   Map<DateTime, List> _visibleEvents;
   List _selectedEvents;
   AnimationController _controller;
-
   List<dynamic> snapshotData;
+
 
   @override
   void initState() {    
@@ -53,17 +53,15 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     _loadedEvents = Map<String, dynamic>();
     _dayEvents = Map<String, dynamic>();
     _buildList = List<dynamic>();
-
     _selectedEvents = _events[_selectedDay] ?? [];
     _visibleEvents = _events;
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
-
-    _controller.forward();
+    // _controller.forward();
   }
+
 
   void _onDaySelected(DateTime day, List events) {
     setState(() {
@@ -72,9 +70,11 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     });
   }
 
+
   void _updateFromStream(int month, int year) {
     bloc.calendarInsert({'month': month,'year': year, 'flag': 'getCalendarEvents'});
   }
+
 
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
     _year = first.year;
@@ -88,6 +88,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     
     setState(() {});
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +123,6 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                       snapshotData = snapshot.data;
 
                       if (snapshotData.toString() != '[]') {
-
                         // adding objects from stream into _loadedEvents
                         for (dynamic obj in snapshotData) {
                           if (!_isInLoadedEvents(obj)) {
@@ -162,6 +162,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     );
   }
 
+
   void _populateBuildList() {
     _buildList.clear();
     _dayEvents.forEach((String key, dynamic obj) {
@@ -171,7 +172,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     //_buildList.sort((a, b) => a.timeDue.compareTo(b.timeDue));
   }
 
-  // Takes the Arcs/Tasks in _loadedEvents and adds them to the _events List
+
   void _updateDayEvents() {
     _dayEvents.clear();
 
@@ -183,11 +184,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
         _dayEvents.addAll({key: obj});
       }
     });
-
-    _visibleEvents = _events;
-
-    _controller.forward(from: 0.0);
   }
+
 
   bool _isInDayEvents(dynamic obj) {
     if (obj is Task) {
@@ -205,6 +203,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     }
   }
 
+
   bool _isInLoadedEvents(dynamic obj) {
     if (obj is Task) {
       if (_loadedEvents.containsKey(obj.tid)) {
@@ -221,6 +220,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     }
   }
 
+
   Widget _noItemsWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -234,6 +234,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
       ],
     );
   }
+
 
   // More advanced TableCalendar configuration (using Builders & Styles)
   Widget _buildTableCalendarWithBuilders() {
@@ -325,6 +326,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     );
   }
 
+
   Widget _buildTileList() {
     if (_dayEvents.isNotEmpty) {
       _populateBuildList();
@@ -339,6 +341,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     }
   }
 }
+
 
 Widget tile(dynamic obj, BuildContext context) {
   if (obj is Arc) {
