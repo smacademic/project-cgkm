@@ -33,6 +33,7 @@ class Bloc extends Object with Validators {
   // Create streams and getters for views to interact with
   final _arcViewController = StreamController<dynamic>.broadcast();
   final _homeController = StreamController<dynamic>.broadcast();
+  final _calendarController = StreamController<dynamic>.broadcast();
 
   // Create streams and getters for parent selection view
   final _arcParentSelectViewController = StreamController<dynamic>.broadcast();
@@ -45,6 +46,9 @@ class Bloc extends Object with Validators {
   final _arcEndDateFieldController = BehaviorSubject<String>();
   final _arcDescriptionFieldController = BehaviorSubject<String>();
   final _arcParentFieldController = BehaviorSubject<Arc>();
+
+  Stream<dynamic> get calendarStream => 
+      _calendarController.stream.map(transformData);
 
   Stream<dynamic> get arcViewStream =>
       _arcViewController.stream.map(transformData);
@@ -131,6 +135,12 @@ class Bloc extends Object with Validators {
     _homeController.sink.add(obj);
   }
 
+  /// Inserts a dynamic object into the `calendarController` sink
+  /// @param obj any object that needs to be added to the `calendarController` sink
+  void calendarInsert(dynamic obj) {
+    _calendarController.sink.add(obj);
+  }
+
   /// Inserts a dynamic object into the `arcParentSelectViewController` sink
   /// @param obj any object that needs to be added to the `arcParentSelectViewController` sink
   void parentSelectInsert(dynamic obj) {
@@ -157,8 +167,10 @@ class Bloc extends Object with Validators {
       Arc parent = getFromMap(data['object']);
       return await getChildren(parent.parentArc);
     } else if (data['flag'] == 'getUpcomingItems') {
-      return await getItemsBetweenDates(DateTime.now().toString(),
+      return await getItemsBetweenDates(DateTime.now().add(Duration(days: -1)).toString(),
           DateTime.now().add(Duration(days: 7)).toString());
+    } else if (data['flag'] == 'getCalendarEvents') {
+      return await getItemsBetweenDates(DateTime(data['year'], data['month'] - 1).add(Duration(days: -1)).toString(), DateTime(data['year'], data['month'] + 2).add(Duration(days: 1)).toString());
     } else if (data['flag'] == "clear") {
       return null;
     }
@@ -420,6 +432,7 @@ class Bloc extends Object with Validators {
     _arcViewController.close();
     _taskViewController.close();
     _homeController.close();
+    _calendarController.close();
     _arcParentSelectViewController.close();
 
     // Close Add Arc Screen streams

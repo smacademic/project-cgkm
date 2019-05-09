@@ -28,8 +28,8 @@ Future<List<dynamic>> getItemsBetweenDates(String fromDate, String toDate) async
   
   if (checkIfDateRangeInMap(fromDate, toDate)) {
     DateTime date = DateTime.parse(fromDate);
-    DateTime dayAfterEndDate = (DateTime.parse(toDate)).add(Duration(days:1));
-    while (date.isBefore(dayAfterEndDate)) {
+    DateTime dayAfterEndDate = (DateTime.parse(toDate)).add(Duration(days: 1));
+    while (date.isBefore(dayAfterEndDate) || date.isAtSameMomentAs(dayAfterEndDate)) {
       List<String> uuids = loadedDates[formatter.format(date)];
       for (String uuid in uuids) {
         upcomingItems.add(bloc.getFromMap(uuid));
@@ -58,20 +58,16 @@ Future<List<dynamic>> getItemsBetweenDates(String fromDate, String toDate) async
 ///   will return false
 bool checkIfDateRangeInMap(String fromDate, String toDate) {
   DateTime date = DateTime.parse(fromDate);
-  DateTime dayAfterEndDate = (DateTime.parse(toDate)).add(Duration(days:1));
-  bool dateMissingInMap = false;
+  DateTime dayAfterEndDate = (DateTime.parse(toDate));
+
   while (date.isBefore(dayAfterEndDate)) {
     if (!loadedDates.containsKey(formatter.format(date))) {
-      dateMissingInMap = true;
-      break;
+      return false;
     }
-    date.add(Duration(days:1));
+    date = date.add(Duration(days: 1));
   }
-  
-  if (dateMissingInMap)
-    return false;
-  else
-    return true;
+
+  return true;
 }
 
 /// Adds map to the `loadedDates` object 
