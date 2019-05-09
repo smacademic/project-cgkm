@@ -14,14 +14,10 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'drawer_menu.dart';
 import '../blocs/bloc.dart';
-import 'arc_tile.dart';
-import 'task_tile.dart';
-import '../model/arc.dart';
-import '../model/task.dart';
 import 'package:intl/intl.dart';
+import '../helpers/tile.dart';
 
 class HomeScreen extends StatelessWidget {
   void _newTask() {}
@@ -29,23 +25,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(context) {
     bool firstTimeLoading = true;
     
-
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
 
         appBar: AppBar(
-          bottom: TabBar(
-            tabs: <Widget>[
-              Tab(
-                text: 'Upcoming Tasks'
-              ),
-              Tab(
-                text: 'Past Due Tasks'
-              ),
-            ],
-          ),
           title: Text("Today is " 
             + DateFormat.MEd().format(DateTime.now()),
           ),
@@ -61,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                   label: Text(
                     'New\nTask',
                     style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                     ),
                   ),
                   onPressed: _newTask,
@@ -88,14 +71,35 @@ class HomeScreen extends StatelessWidget {
                         
                         if (snapshot.hasData) {
                           dynamic snapshotData = snapshot.data;
-                          return ListView.builder(
-                            itemCount: snapshotData.length,
-                            itemBuilder: (context, index) {
-                              return tile(snapshotData[index], context);
-                            },
-                          );
+
+                          print(snapshotData);
+
+                          if (snapshotData.toString() != '[]') {
+                            return ListView.builder(
+                              itemCount: snapshotData.length,
+                              itemBuilder: (context, index) {
+                                return tile(snapshotData[index], context);
+                              },
+                            );
+                          } else {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    'There are no Upcoming Items',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              )
+                            );
+                          }
                         } else {
-                          return Text('There are no Arcs/Tasks');
+                          return Text('');
                         }
                       },
                     );
@@ -107,17 +111,6 @@ class HomeScreen extends StatelessWidget {
         ),
 
         drawer: drawerMenu(context),
-      ),
     );
-  }
-}
-
-Widget tile(dynamic obj, BuildContext context) {
-  if (obj is Arc) {
-    return arcTile(obj, context);
-  } else if (obj is Task) {
-    return taskTile(obj, context);
-  } else {
-    return Text('tile tried to build not an Arc or Task');
   }
 }
