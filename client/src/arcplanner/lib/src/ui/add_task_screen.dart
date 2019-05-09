@@ -43,6 +43,7 @@ class AddTaskScreen extends StatelessWidget {
               Container(margin: EdgeInsets.only(top: 15)),
               titleField(),
               dueDate(),
+              timeDue(),
               locationField(),
               descriptionField(),
               Container(
@@ -85,6 +86,7 @@ class AddTaskScreen extends StatelessWidget {
       return TextField(
         onChanged: bloc.changeTaskTitle,
         keyboardType: TextInputType.text,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           hintText: 'Title',
           errorText: snapshot.error,
@@ -120,6 +122,28 @@ Widget dueDate(){
   );
 }
 
+Widget timeDue(){
+  return StreamBuilder(
+    stream: bloc.taskTimeDueFieldStream,
+    builder: (context, snapshot) {
+  
+      return new DateTimePickerFormField(
+        inputType: InputType.time,
+        format: DateFormat.jm(),
+        editable: false,
+        decoration: InputDecoration(
+          hintText: 'Time Due',
+          hintStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.black
+          ),
+        ),
+        onChanged: (time) => bloc.changeTaskTimeDue(time.toString()),
+      );
+    }
+  );
+}
+
 Widget descriptionField(){
   return StreamBuilder(
     stream: bloc.taskDescriptionFieldStream,
@@ -128,6 +152,7 @@ Widget descriptionField(){
         maxLines: 7,
         onChanged: bloc.changeTaskDescription,
         keyboardType: TextInputType.multiline,
+        textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: 'Description',
@@ -194,6 +219,7 @@ Widget submitTask() {
       return TextField(
         onChanged: bloc.changeTaskLocation,
         keyboardType: TextInputType.text,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           hintText: 'Location',
           errorText: snapshot.error,

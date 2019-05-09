@@ -44,6 +44,7 @@ class Bloc extends Object with Validators {
   // Streams for add_arc_screen
   final _arcTitleFieldController = BehaviorSubject<String>();
   final _arcEndDateFieldController = BehaviorSubject<String>();
+  final _arcTimeDueFieldController= BehaviorSubject<String>();
   final _arcDescriptionFieldController = BehaviorSubject<String>();
   final _arcParentFieldController = BehaviorSubject<Arc>();
 
@@ -65,6 +66,8 @@ class Bloc extends Object with Validators {
 
   Stream<String> get arcEndDateFieldStream => _arcEndDateFieldController.stream;
 
+  Stream<String> get arcTimeDueFieldStream => _arcTimeDueFieldController.stream;
+
   Stream<String> get arcDescriptionFieldStream =>
       _arcDescriptionFieldController.stream;
 
@@ -79,6 +82,7 @@ class Bloc extends Object with Validators {
   // Change data for Add Arc Screen
   Function(String) get changeArcTitle => _arcTitleFieldController.sink.add;
   Function(String) get changeArcEndDate => _arcEndDateFieldController.sink.add;
+  Function(String) get changeArcTimeDue => _arcTimeDueFieldController.sink.add;
   Function(String) get changeArcDescription =>
       _arcDescriptionFieldController.sink.add;
   Function(Arc) get changeArcParent => _arcParentFieldController.sink.add;
@@ -92,6 +96,7 @@ class Bloc extends Object with Validators {
   // Streams for add_task_screen
   final _taskTitleFieldController = BehaviorSubject<String>();
   final _taskEndDateFieldController = BehaviorSubject<String>();
+  final _taskTimeDueFieldController= BehaviorSubject<String>();
   final _taskDescriptionFieldController = BehaviorSubject<String>();
   final _taskLocationFieldController = BehaviorSubject<String>();
 
@@ -104,6 +109,9 @@ class Bloc extends Object with Validators {
 
   Stream<String> get taskEndDateFieldStream =>
       _taskEndDateFieldController.stream;
+
+  Stream<String> get taskTimeDueFieldStream => 
+      _taskTimeDueFieldController.stream;
 
   Stream<String> get taskDescriptionFieldStream =>
       _taskDescriptionFieldController.stream;
@@ -118,6 +126,7 @@ class Bloc extends Object with Validators {
   Function(String) get changeTaskTitle => _taskTitleFieldController.sink.add;
   Function(String) get changeTaskEndDate =>
       _taskEndDateFieldController.sink.add;
+  Function(String) get changeTaskTimeDue => _taskTimeDueFieldController.sink.add;
   Function(String) get changeTaskDescription =>
       _taskDescriptionFieldController.sink.add;
   Function(String) get changeTaskLocation =>
@@ -298,6 +307,7 @@ class Bloc extends Object with Validators {
   void submitArc() {
     final validArcTitle = _arcTitleFieldController.value;
     final arcEndDate = _arcEndDateFieldController.value;
+    final arcTimeDue = _arcTimeDueFieldController.value;
     final arcDescription = _arcDescriptionFieldController.value;
     final arcParent = _arcParentFieldController.value;
 
@@ -314,12 +324,14 @@ class Bloc extends Object with Validators {
     if (arcParent == null) {
       Arc ar = new Arc(bloc.userID, validArcTitle,
           description: arcDescription, 
+          timeDue: arcTimeDue,
           dueDate: formattedDueDate);
       db.insertArc(ar);
     } else {
 
       Arc ar = new Arc(bloc.userID, validArcTitle,
           description: arcDescription,
+          timeDue: arcTimeDue,
           dueDate: formattedDueDate,
           parentArc: arcParent.aid);
       db.insertArc(ar);
@@ -329,8 +341,14 @@ class Bloc extends Object with Validators {
   }
 
   editArc(Arc arc) {}
-
-  completeArc(Arc arc) {}
+  
+  ///  Marks an arc as complete database
+  ///  @param arc, the Arc to be completed
+  ///
+  completeArc(Arc arc) async {
+    arc.completeArc();
+    await db.updateArc(arc);
+  }
 
   ///  Deletes an arc from the database BLOC
   ///  Removes reference to itself if it has a parent; deletes arc from
@@ -360,6 +378,7 @@ class Bloc extends Object with Validators {
   void submitTask() {
     final validTaskTitle = _taskTitleFieldController.value;
     final taskEndDate = _taskEndDateFieldController.value;
+    final taskTimeDue = _taskTimeDueFieldController.value;
     final taskDescription = _taskDescriptionFieldController.value;
     final taskLocation = _taskLocationFieldController.value;
     final taskParent = _arcParentFieldController.value;
@@ -374,6 +393,7 @@ class Bloc extends Object with Validators {
     Task tk = new Task(taskParent.aid, validTaskTitle,
         description: taskDescription,
         dueDate: formattedDueDate,
+        timeDue: taskTimeDue,
         location: taskLocation);
 
     db.insertTask(tk);
@@ -383,6 +403,9 @@ class Bloc extends Object with Validators {
 
   editTask(Task task){}
 
+  ///  Marks a task as complete database
+  ///  @param task, the Task to be completed
+  ///
   completeTask(Task task) async {
     task.completeTask();
     await db.updateTask(task);
@@ -414,6 +437,7 @@ class Bloc extends Object with Validators {
   void initializeAddArcStreams() {
     bloc.changeArcTitle(null);
     bloc.changeArcEndDate(null);
+    bloc.changeArcTimeDue(null);
     bloc.changeArcDescription(null);
     bloc.changeArcParent(null);
   }
@@ -423,6 +447,7 @@ class Bloc extends Object with Validators {
     bloc.changeTaskTitle(null);
     bloc.changeTaskDescription(null);
     bloc.changeTaskEndDate(null);
+    bloc.changeTaskTimeDue(null);
     bloc.changeTaskLocation(null);
     bloc.changeArcParent(null);
   }
@@ -438,6 +463,7 @@ class Bloc extends Object with Validators {
     // Close Add Arc Screen streams
     _arcDescriptionFieldController.close();
     _arcEndDateFieldController.close();
+    _arcTimeDueFieldController.close();
     _arcTitleFieldController.close();
     _arcViewController.close();
     _arcParentFieldController.close();
@@ -445,6 +471,7 @@ class Bloc extends Object with Validators {
     // Close Add Task screen streams
     _taskDescriptionFieldController.close();
     _taskEndDateFieldController.close();
+    _taskTimeDueFieldController.close();
     _taskTitleFieldController.close();
     _taskLocationFieldController.close();
     _taskViewController.close();

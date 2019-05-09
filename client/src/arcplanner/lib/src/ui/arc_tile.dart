@@ -74,19 +74,34 @@ Widget arcTile(Arc arc, BuildContext context) {
                   ),
                 ),
                 Container(
-                  child: AutoSizeText(
-                    (arc.dueDate == 'null' || arc.dueDate == null)
-                        ? ''
+                  child: Column(
+                    children: <Widget>[
+                      AutoSizeText(
+                        (arc.dueDate == 'null' || arc.dueDate == null) ? '' 
                         : DateFormat.yMEd().format(DateTime.parse(arc.dueDate)),
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    maxFontSize: 14.0,
-                    minFontSize: 14.0,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        maxFontSize: 14.0,
+                        minFontSize: 14.0,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      AutoSizeText(
+                        (arc.timeDue == 'null' || arc.timeDue == null) ? '' 
+                        : DateFormat.jm().format(DateTime.parse(arc.timeDue)),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        maxFontSize: 14.0,
+                        minFontSize: 14.0,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(arc.completed == true ? 'Complete': ''),
+                    ],
                   ),
-                ),
+                ),  
               ],
             ),
           ),
@@ -166,7 +181,8 @@ Widget completeArc(Arc arc) {
             Text('Complete Arc', style: TextStyle(fontWeight: FontWeight.bold)),
         onPressed: () {
           bloc.completeArc(arc);
-          //mark complete
+          bloc.arcViewInsert({ 'object' : arc.parentArc, 'flag': 'getChildren'});
+          bloc.homeInsert({ 'object' : null, 'flag': 'getUpcomingItems'});
           Navigator.of(context).pop();
         },
       );
