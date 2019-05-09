@@ -116,7 +116,9 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                       firstTimeLoading = false;
                     }
 
-                    if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return _buildTileList();
+                    } else if (snapshot.connectionState == ConnectionState.done) {
                       snapshotData = snapshot.data;
 
                       if (snapshotData.toString() != '[]') {
@@ -141,23 +143,12 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
                         });
 
                         _updateDayEvents();
-
-                        if (_dayEvents.isNotEmpty) {
-                          _populateBuildList();
-                          return ListView.builder(
-                            itemCount: _buildList.length,
-                            itemBuilder: (context, index) {
-                              return tile(_buildList[index], context);
-                            },
-                          );
-                        } else {
-                          return _noItemsWidget();
-                        }
+                        return _buildTileList();
                       } else {
                         return _noItemsWidget();
                       }
                     } else {
-                      return _noItemsWidget();
+                      return Container();
                     }
                   },
                 );
@@ -332,6 +323,20 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
       },
       onVisibleDaysChanged: _onVisibleDaysChanged,
     );
+  }
+
+  Widget _buildTileList() {
+    if (_dayEvents.isNotEmpty) {
+      _populateBuildList();
+      return ListView.builder(
+        itemCount: _buildList.length,
+        itemBuilder: (context, index) {
+          return tile(_buildList[index], context);
+        },
+      );
+    } else {
+      return _noItemsWidget();
+    }
   }
 }
 
