@@ -147,7 +147,7 @@ Widget descriptionField(){
     stream: bloc.arcParentFieldStream,
     builder: (context, snapshot) {
       return Text(
-        snapshot.hasData? snapshot.data.title : "Parent (required)",
+        snapshot.hasData? snapshot.data.title : "Parent",
         style: TextStyle(
           fontSize: 16,
           color: Colors.black
