@@ -14,10 +14,10 @@
 
 import 'package:flutter/material.dart';
 import '../blocs/bloc.dart';
-// import 'drawer_menu.dart';
 import 'parent_select_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:flutter/cupertino.dart';
 
 class AddArcScreen extends StatelessWidget {
   
@@ -44,6 +44,7 @@ class AddArcScreen extends StatelessWidget {
               Container(margin: EdgeInsets.only(top: 15)),
               titleField(),
               dueDate(),
+              timeDue(),
               descriptionField(),
               Container(
                 margin: EdgeInsets.only(top: 20),
@@ -85,6 +86,7 @@ class AddArcScreen extends StatelessWidget {
       return TextField(
         onChanged: bloc.changeArcTitle,
         keyboardType: TextInputType.text,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           hintText: 'Title',
           errorText: snapshot.error,
@@ -103,10 +105,11 @@ Widget dueDate(){
     stream: bloc.arcEndDateFieldStream,
     builder: (context, snapshot) {
 
-      return DateTimePickerFormField(
+      return new DateTimePickerFormField(
         inputType: InputType.date,
         format: DateFormat.yMEd(),
         editable: false,
+        dateOnly: true,
         decoration: InputDecoration(
           hintText: 'Due Date',
           hintStyle: TextStyle(
@@ -120,6 +123,85 @@ Widget dueDate(){
   );
 }
 
+Widget timeDue(){
+  return StreamBuilder(
+    stream: bloc.arcTimeDueFieldStream,
+    builder: (context, snapshot) {
+      // ----The following code is a WIP and is commented out for possible futrue use----
+      // return Container(
+      //   width: MediaQuery.of(context).size.width,
+      //   //width: double.infinity,
+      //   child: SizedBox( 
+      //     width: double.infinity,
+      //     child: FlatButton(
+      //       padding: EdgeInsets.all(0),
+      //       onPressed: () {
+      //         showCupertinoModalPopup(
+      //           context: context,
+      //           builder: (BuildContext builder) {
+      //             return CupertinoActionSheet(
+      //               cancelButton: CupertinoActionSheetAction(
+      //                 child: Text('Cancel'),
+      //                 isDefaultAction: true,
+      //                 onPressed: () {
+      //                   Navigator.pop(context, 'Cancel');
+      //                 },
+      //               ),
+      //               actions: <Widget>[  
+      //                 Container(
+      //                   height:MediaQuery.of(context).copyWith().size.height /5,
+      //                   child: time()
+      //                 ),
+      //               ],
+      //             );
+      //           });
+              
+      //         // DatePicker.showTimePicker(
+      //         //   context,
+      //         //   locale: LocaleType.en,
+      //         //   showTitleActions: true,
+      //         //   onConfirm: (time) {
+      //         //     bloc.changeArcTimeDue( DateFormat.jm().format(time).toString());
+      //         //   }, 
+      //         // );
+      //         //currentTime: DateTime.now(), locale: LocaleType.en);
+      //       },
+      //       child: TextField(
+      //         decoration: InputDecoration(
+      //           hintText: snapshot.hasData ? DateFormat.jm().format(DateTime.parse( snapshot.data )): 'Time Due',
+      //           hintStyle: TextStyle(
+      //             fontSize: 16,
+      //             color: Colors.black
+      //           ),
+      //           enabled: false,
+      //           disabledBorder: UnderlineInputBorder(
+      //             borderSide: new BorderSide(
+      //               color: Colors.grey[700],
+      //             ),
+      //           ),      
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // );
+
+      return new DateTimePickerFormField(
+        inputType: InputType.time,
+        format: DateFormat.jm(),
+        editable: false,
+        decoration: InputDecoration(
+          hintText: 'Time Due',
+          hintStyle: TextStyle(
+            fontSize: 16,
+            color: Colors.black
+          ),
+        ),
+        onChanged: (time) => bloc.changeArcTimeDue(time.toString()),
+      );
+    }
+  );
+}
+
 Widget descriptionField(){
   return StreamBuilder(
     stream: bloc.arcDescriptionFieldStream,
@@ -128,6 +210,7 @@ Widget descriptionField(){
         maxLines: 7,
         onChanged: bloc.changeArcDescription,
         keyboardType: TextInputType.multiline,
+        textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: 'Description',
@@ -195,5 +278,16 @@ void _openParentSelectDialog(BuildContext context) {
       },
       fullscreenDialog: true
     )
+  );
+}
+
+Widget time() {
+  return CupertinoDatePicker(
+      mode: CupertinoDatePickerMode.time,
+      minuteInterval: 5,
+      initialDateTime: DateTime.parse("1969-07-20 12:00:00"), 
+    onDateTimeChanged: (time) {
+      bloc.changeArcTimeDue(time.toString());
+    }, 
   );
 }

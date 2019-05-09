@@ -34,7 +34,7 @@ class TaskScreen extends StatelessWidget {
         margin: EdgeInsets.only(left: 10.0, right: 10.0),
         child: StreamBuilder(
           stream: bloc.taskStream,
-          initialData: new Task('', ''),
+          initialData: new Task(''),
           builder: (context, snapshot) {
             return  ListView(
               children:[
@@ -42,6 +42,8 @@ class TaskScreen extends StatelessWidget {
                 titleField(snapshot.data, context),
                 Divider(color: Colors.grey,),
                 dueDate(snapshot.data, context),
+                Divider(color: Colors.grey,),
+                timeDue(snapshot.data, context),
                 Divider(color: Colors.grey,),
                 locationField(snapshot.data, context),
                 Divider(color: Colors.grey,),
@@ -95,6 +97,26 @@ Widget dueDate(Task task, BuildContext context){
           Padding(padding: EdgeInsets.only(bottom: 5)),
           Text(
             (task.dueDate == 'null' || task.dueDate == null) ? 'No Due Date'  :DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
+            style: TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+          ),
+        ),
+      ],
+    ),  
+  ); 
+}
+
+Widget timeDue(Task task, BuildContext context){
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('Time Due'),
+          Padding(padding: EdgeInsets.only(bottom: 5)),
+          Text(
+            (task.timeDue == 'null' || task.timeDue == null) ? '11:59 PM'  :DateFormat.jm().format(DateTime.parse(task.timeDue)),
             style: TextStyle(
             fontSize: 16,
             color: Colors.black,

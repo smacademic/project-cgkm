@@ -113,6 +113,17 @@ Widget taskTile(Task task, BuildContext context) {
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    AutoSizeText(
+                        (task.timeDue == 'null' || task.timeDue == null) ? '' 
+                        : DateFormat.jm().format(DateTime.parse(task.timeDue)),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        maxFontSize: 14.0,
+                        minFontSize: 14.0,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     Text(task.completed == true ? 'Complete': ''),
                   ],
                 ),

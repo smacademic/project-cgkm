@@ -47,7 +47,9 @@ class HomeScreen extends StatelessWidget {
                       fontSize: 12.0,
                     ),
                   ),
-                  onPressed: _newTask,
+                  onPressed: () {
+                    Navigator.popAndPushNamed(context, '/addtask');
+                  },
                 ),
               ),
             ),
