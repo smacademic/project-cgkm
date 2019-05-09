@@ -458,6 +458,7 @@ class Bloc extends Object with Validators {
     // Close Add Task screen streams
     _taskDescriptionFieldController.close();
     _taskEndDateFieldController.close();
+    _taskTimeDueFieldController.close();
     _taskTitleFieldController.close();
     _taskLocationFieldController.close();
     _taskViewController.close();
