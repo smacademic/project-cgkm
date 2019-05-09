@@ -13,11 +13,15 @@
  */
 
 import 'package:flutter/material.dart';
+import '../blocs/bloc.dart';
 import '../model/task.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
+import 'arc_view_screen.dart';
+import 'package:arcplanner/src/ui/task_screen.dart';
 
 Widget taskTile(Task task, BuildContext context) {
+  ArcViewScreen.currentParent = task.aid;
   var description = task.description;
   if (description == null) {
     description = 'No Description';
@@ -26,6 +30,28 @@ Widget taskTile(Task task, BuildContext context) {
   var location = task.location;
   if (location == null) {
     location = '';
+  }
+
+  Widget getLocation() {
+    if (location != '') {
+      return Container(
+        padding: EdgeInsets.only(
+          top: 5.0,
+        ),
+        child: AutoSizeText(
+          'Location: $location',
+          style: TextStyle(
+            color: Colors.grey[800],
+          ),
+          maxFontSize: 14.0,
+          minFontSize: 10.0,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    } else {
+      return null;
+    }
   }
 
   return Container(
@@ -73,16 +99,33 @@ Widget taskTile(Task task, BuildContext context) {
                 ),
               ),
               Container(
-                child: AutoSizeText(
-                  (task.dueDate == 'null' || task.dueDate == null) ? '' 
-                     : DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
-                    style: TextStyle(
-                      color: Colors.black,
+                child: Column(
+                  children: <Widget>[   
+                    AutoSizeText(
+                      (task.dueDate == 'null' || task.dueDate == null)
+                          ? ''
+                          : DateFormat.yMEd().format(DateTime.parse(task.dueDate)),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                      maxFontSize: 14.0,
+                      minFontSize: 14.0,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxFontSize: 14.0,
-                    minFontSize: 14.0,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
+                    AutoSizeText(
+                        (task.timeDue == 'null' || task.timeDue == null) ? '' 
+                        : DateFormat.jm().format(DateTime.parse(task.timeDue)),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        maxFontSize: 14.0,
+                        minFontSize: 14.0,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    Text(task.completed == true ? 'Complete': ''),
+                  ],
                 ),
               ),
             ],
@@ -92,16 +135,7 @@ Widget taskTile(Task task, BuildContext context) {
               top: 0.0,
               bottom: 0.0,
             ),
-            child: AutoSizeText(
-              location,
-              style: TextStyle(
-                color: Colors.grey[800],
-              ),
-              maxFontSize: 18.0,
-              minFontSize: 12.0,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            child: getLocation(),
           ),
           Container(
             padding: EdgeInsets.only(
@@ -119,12 +153,94 @@ Widget taskTile(Task task, BuildContext context) {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          // onTap: () {
-          //   _toTaskView(task),
-          // }
-          // onLongPress: ,
+
         ],
       ),
+      onTap: () {
+        bloc.changeTask(task);
+        _openTaskScreen(context);},
+      onLongPress: () {
+        return showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  editTask(task),
+                  completeTask(task),
+                  deleteTask(task),
+                ],
+              ),
+            );
+          },
+        );
+      },
     ),
+  );
+}
+
+void _openTaskScreen(BuildContext context) {
+  Navigator.of(context).push(
+    new MaterialPageRoute<Null>(
+      builder: (BuildContext context) {
+        return new TaskScreen();
+      },
+      fullscreenDialog: true
+    )
+  );
+}
+
+Widget editTask(Task task) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.editTask(task);
+          // edit screen?
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
+}
+
+Widget completeTask(Task task) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Complete Task',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.completeTask(task);
+          bloc.arcViewInsert({ 'object' : task.aid, 'flag': 'getChildren'});
+          bloc.homeInsert({ 'object' : null, 'flag': 'getUpcomingItems'});
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
+}
+
+Widget deleteTask(Task task) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.deleteTask(task);
+          // TODO update current screen (arcview or home)
+          Navigator.of(context).pop();
+        },
+      );
+    },
   );
 }

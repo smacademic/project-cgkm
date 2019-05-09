@@ -20,7 +20,8 @@ dependencies:
   uuid: 2.0.0
   auto_size_text: ^1.1.1
   datetime_picker_formfield: ^0.1.8
-  table_calendar: ^1.1.4
+  flutter_datetime_picker: ^1.2.0
+  table_calendar: 1.1.4
   intl: ^0.15.8
 
 

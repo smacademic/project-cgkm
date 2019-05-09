@@ -4,7 +4,7 @@
  *
  *  Authors: 
  *    Primary: Matthew Chastain
- *    Contributors: Kevin Kelly
+ *    Contributors: Kevin Kelly, Jonathan Middleton
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
@@ -19,9 +19,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'arc_view_screen.dart';
 import 'package:intl/intl.dart';
 
-
 Widget arcTile(Arc arc, BuildContext context) {
-  
   var description = arc.description;
 
   ArcViewScreen.currentParent = arc.parentArc;
@@ -48,10 +46,6 @@ Widget arcTile(Arc arc, BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(
-              //top: 10.0,
-              bottom: 10.0,
-            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -59,7 +53,8 @@ Widget arcTile(Arc arc, BuildContext context) {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Arc',
+                      Text(
+                        'Arc',
                         style: TextStyle(
                           fontSize: 8.0,
                         ),
@@ -79,26 +74,44 @@ Widget arcTile(Arc arc, BuildContext context) {
                   ),
                 ),
                 Container(
-                  child: AutoSizeText(
-                    (arc.dueDate == 'null' || arc.dueDate == null) ? '' 
-                     : DateFormat.yMEd().format(DateTime.parse(arc.dueDate)),
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    maxFontSize: 14.0,
-                    minFontSize: 14.0,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    children: <Widget>[
+                      AutoSizeText(
+                        (arc.dueDate == 'null' || arc.dueDate == null) ? '' 
+                        : DateFormat.yMEd().format(DateTime.parse(arc.dueDate)),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        maxFontSize: 14.0,
+                        minFontSize: 14.0,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      AutoSizeText(
+                        (arc.timeDue == 'null' || arc.timeDue == null) ? '' 
+                        : DateFormat.jm().format(DateTime.parse(arc.timeDue)),
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        maxFontSize: 14.0,
+                        minFontSize: 14.0,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(arc.completed == true ? 'Complete': ''),
+                    ],
                   ),
-                ),
+                ),  
               ],
             ),
           ),
           Container(
             padding: EdgeInsets.only(
+              top: 5.0,
               bottom: 10.0,
             ),
-            child: AutoSizeText(description,
+            child: AutoSizeText(
+              description,
               style: TextStyle(
                 color: Colors.grey[600],
               ),
@@ -114,12 +127,101 @@ Widget arcTile(Arc arc, BuildContext context) {
         //If going to a screen that shows no children then set flag to true
         if (arc.childrenUUIDs?.isEmpty ?? true) {
           ArcViewScreen.atNoArcTaskScreen = true;
-          bloc.arcViewInsert({ 'object' : null, 'flag': 'clear'});
+          bloc.arcViewInsert({'object': null, 'flag': 'clear'});
         } else {
-          bloc.arcViewInsert({ 'object' : arc.aid, 'flag': 'getChildren'});
+          bloc.arcViewInsert({'object': arc.aid, 'flag': 'getChildren'});
         }
-      } 
-      //onLongPress: ,
+      },
+      onLongPress: () {
+        return showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  editArc(arc),
+                  completeArc(arc),
+                  deleteArc(arc),
+                ],
+              ),
+            );
+          },
+        );
+      },
     ),
+  );
+}
+
+Widget editArc(Arc arc) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Edit', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.editArc(arc);
+          // edit screen?
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
+}
+
+Widget completeArc(Arc arc) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child:
+            Text('Complete Arc', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          bloc.completeArc(arc);
+          bloc.arcViewInsert({ 'object' : arc.parentArc, 'flag': 'getChildren'});
+          bloc.homeInsert({ 'object' : null, 'flag': 'getUpcomingItems'});
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
+}
+
+Widget deleteArc(Arc arc) {
+  return StreamBuilder(
+    stream: bloc.arcTitleFieldStream,
+    builder: (context, snapshot) {
+      return FlatButton(
+        textColor: Colors.blue,
+        child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          if (arc.childrenUUIDs == null) {
+            bloc.deleteArc(arc);
+            // TODO update current screen (arcview or home)
+          } else {
+            return showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      content: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                        Text("Cannot delete Arc with existing tasks or arcs."),
+                        FlatButton(
+                            child: Text("OK"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            })
+                      ]));
+                });
+          }
+          Navigator.of(context).pop();
+        },
+      );
+    },
   );
 }

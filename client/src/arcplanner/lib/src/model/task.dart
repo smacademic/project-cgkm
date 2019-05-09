@@ -1,3 +1,4 @@
+import 'package:arcplanner/src/helpers/date.dart';
 /** 
  *  Team CGKM - Matthew Chastain, Justin Grabowski, Kevin Kelly, Jonathan Middleton
  *  CS298 Spring 2019 
@@ -21,41 +22,60 @@ class Task {
   String _title;
   String _description;
   String _dueDate; // SQLite will store the dueDate as TEXT type
+  String _timeDue; // SQLite will store the dueDate as TEXT type
   String _location;
   bool _completed;
 
-  // Constructor
-  Task(this._aid, this._title, {description, dueDate, location}) {
+  /// The default Constructor for Task object
+  /// @param aid The UUID of the parent Arc
+  /// @param description an optional parameter which is the description of Task.
+  ///   The default is null
+  /// @param dueDate an optional parameter which is the expected completion date
+  ///   of the Task. The default is null
+  /// @param location an optional parameter representing the location where
+  ///   task is to be completed. The default is null
+  Task(this._title, {aid, description, dueDate, timeDue, location}) {
+    this._aid = aid;
     this._tid = new Uuid().v4();
     this._description = description;
     this._dueDate = dueDate;
+
+    if (timeDue == null) {
+      timeDue = '23:59:59';
+    } else {
+      this._timeDue = timeDue;
+    }
+    
     this._location = location;
     this._completed = false;
   }
 
-  // Constructor to build object read from database
-  Task.read(this._tid, this._aid, this._title, 
-      {description, dueDate, location, completed}) {
+  /// The default Constructor for Task object
+  /// @param aid The UUID of the parent Arc
+  /// @param description an optional parameter which is the description of Task.
+  ///   The default is null
+  /// @param dueDate an optional parameter which is the expected completion date
+  ///   of the Task. The default is null
+  /// @param location an optional parameter representing the location where
+  ///   task is to be completed. The default is null
+  Task.read(this._tid, this._title, 
+      {aid, description, dueDate, location, timeDue, completed}) {
+    this._aid = aid;
     this._description = description;
     this._dueDate = dueDate;
+
+    if (timeDue == null) {
+      timeDue = '23:59:59';
+    } else {
+      this._timeDue = timeDue;
+    }
+
     this._location = location;
-    if (completed == 'true') {
+    if (completed == 1 || completed == 'true') {
       this._completed = true;
     } else {
       this._completed = false;
     }
-  }
-
-  // Defines a user map.  Helps with moving info betwen the db
-  //  and the app
-  Task.map(dynamic obj) {
-    _tid = obj["tid"]; // Represents the PK TID from SQLite db
-    _aid = obj["aid"];
-    _title = obj["title"];
-    _description = obj["description"];
-    _dueDate = obj["duedate"];
-    _location = obj["location"];
-    _completed = obj["completed"];
   }
 
   // Getters
@@ -64,16 +84,19 @@ class Task {
   String get title => _title;
   String get description => _description;
   String get dueDate => _dueDate;
+  String get timeDue => _timeDue;
   String get location => _location;
   bool get completed => _completed;
 
-  // Puts object data onto a user map
-  Map<String, dynamic> toMap() {
+  /// Puts object data onto a map and returns it
+  /// @returns A map of the Task
+  Map<String,dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map["aid"] = _aid;
     map["title"] = _title;
     map["description"] = _description;
     map["duedate"] = _dueDate;
+    map["timeDue"] = _timeDue;
     map["location"] = _location;
     map["completed"] = _completed;
 
@@ -90,6 +113,7 @@ class Task {
     _title = map["title"];
     _description = map["description"];
     _dueDate = map["duedate"];
+    _timeDue = map["timeDue"];
     _location = map["location"];
     _completed = map["completed"];
   }
@@ -98,11 +122,6 @@ class Task {
   * Description: Updates the SQLite related task completed field to true. It then also changes its on instance variable to true.
   */
   void completeTask() {
-    var db = new DatabaseHelper();
-
     _completed = true;
-    
-    // Update database with updated task
-    db.updateTask(this);
   } 
 }

@@ -3,20 +3,25 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: Kevin Kelly
+ *    Primary: Matthew Chastain, Kevin Kelly
  *    Contributors: 
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains ArcPlanner's home screen which will be displayed on 
- *  launch. The screen shows users a list of upcoming tasks along with a Task 
- *  quick-add button.
+ *  This file contains ArcPlanner's Calendar Screen which displays an on-screen 
+ *  Calendar which can be scrolled for different months. Below the Calendar is a
+ *  list of Arcs or Tasks that are set to be due on the selected day. Due to the 
+ *  scrolling nature of the Calendar, it is implemented as a exention of a 
+ *  StatefulWidget.
  */
 
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:date_utils/date_utils.dart';
 import 'drawer_menu.dart';
+import '../blocs/bloc.dart';
+import '../helpers/tile.dart';
+import '../model/task.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -25,45 +30,41 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixin { 
 
+  List<dynamic> _buildList;
+  Map<String, dynamic> _loadedEvents;
+  Map<String, dynamic> _dayEvents;
+  int _month;
+  int _year;
   DateTime _selectedDay;
   Map<DateTime, List> _events;
   Map<DateTime, List> _visibleEvents;
   List _selectedEvents;
   AnimationController _controller;
+  List<dynamic> snapshotData;
 
+  /// Establishes initial state of the Calendar Screen
   @override
-  void initState() {
+  void initState() {    
     super.initState();
+    _month = DateTime.now().month;
+    _year = DateTime.now().year;
     _selectedDay = DateTime.now();
-    _events = {
-      _selectedDay.subtract(Duration(days: 30)): ['Event A0', 'Event B0', 'Event C0'],
-      _selectedDay.subtract(Duration(days: 27)): ['Event A1'],
-      _selectedDay.subtract(Duration(days: 20)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
-      _selectedDay.subtract(Duration(days: 16)): ['Event A3', 'Event B3'],
-      _selectedDay.subtract(Duration(days: 10)): ['Event A4', 'Event B4', 'Event C4'],
-      _selectedDay.subtract(Duration(days: 4)): ['Event A5', 'Event B5', 'Event C5'],
-      _selectedDay.subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
-      _selectedDay: ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
-      _selectedDay.add(Duration(days: 1)): ['Event A8', 'Event B8', 'Event C8', 'Event D8'],
-      _selectedDay.add(Duration(days: 3)): Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
-      _selectedDay.add(Duration(days: 7)): ['Event A10', 'Event B10', 'Event C10'],
-      _selectedDay.add(Duration(days: 11)): ['Event A11', 'Event B11'],
-      _selectedDay.add(Duration(days: 17)): ['Event A12', 'Event B12', 'Event C12', 'Event D12'],
-      _selectedDay.add(Duration(days: 22)): ['Event A13', 'Event B13'],
-      _selectedDay.add(Duration(days: 26)): ['Event A14', 'Event B14', 'Event C14'],
-    };
-
+    _events = {};
+    _loadedEvents = Map<String, dynamic>();
+    _dayEvents = Map<String, dynamic>();
+    _buildList = List<dynamic>();
     _selectedEvents = _events[_selectedDay] ?? [];
     _visibleEvents = _events;
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
-
-    _controller.forward();
+    // _controller.forward();
   }
 
+  /// Changes the selected date in response to user event
+  /// @param day the day selected by the user
+  /// @param events list of events associated with that day
   void _onDaySelected(DateTime day, List events) {
     setState(() {
       _selectedDay = day;
@@ -71,33 +72,97 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     });
   }
 
-  void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
-    setState(() {
-      _visibleEvents = Map.fromEntries(
-        _events.entries.where(
-          (entry) =>
-              entry.key.isAfter(first.subtract(const Duration(days: 1))) &&
-              entry.key.isBefore(last.add(const Duration(days: 1))),
-        ),
-      );
-    });
+  /// Sends information to `bloc.dart` through bloc.calendarStream
+  /// @param month month to retrieve items for
+  /// @param year year to retrieve items for 
+  void _updateFromStream(int month, int year) {
+    bloc.calendarInsert({'month': month,'year': year, 'flag': 'getCalendarEvents'});
   }
 
+  /// Changes the current calendar view in response to user event
+  /// @param first the first day of new calendar view
+  /// @param last the last day of new calendar view
+  /// @param format the formatting of the calendar view
+  void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
+    _year = first.year;
+    _month = first.month;
+
+    _selectedDay = first;
+    _selectedEvents.clear();
+    _visibleEvents.clear();
+    _events.clear();
+    _loadedEvents.clear();
+    
+    setState(() {});
+  }
+
+  /// Build method for the Calendar Screen
+  /// @param context BuildContext for Calendar Screen
   @override
   Widget build(BuildContext context) {
+    bool firstTimeLoading = true;
+
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("Calendar"),
       ),
       
       body: Column(
-        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          // Switch out 2 lines below to play with TableCalendar's settings
-          //-----------------------
           _buildTableCalendarWithBuilders(),
           const SizedBox(height: 8.0),
-          Expanded(child: _buildEventList()),
+          Expanded(
+            child: StreamBuilder(
+              stream: bloc.calendarStream,
+              builder: (context, snapshot) {
+                _controller.forward(from: 0.0);
+                return new FutureBuilder(
+                  future: snapshot.data,
+                  builder: (context, snapshot) {
+                    if (firstTimeLoading) {
+                      _updateFromStream(_month, _year);
+                      firstTimeLoading = false;
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return _buildTileList();
+                    } else if (snapshot.connectionState == ConnectionState.done) {
+                      snapshotData = snapshot.data;
+
+                      if (snapshotData.toString() != '[]') {
+                        // adding objects from stream into _loadedEvents
+                        for (dynamic obj in snapshotData) {
+                          if (!_isInLoadedEvents(obj)) {
+                            if (_events[DateTime.parse(obj.dueDate)] == null) {
+                              _events[DateTime.parse(obj.dueDate)] = [];
+                            }
+                            _events[DateTime.parse(obj.dueDate)].add(obj);
+                            if (obj is Task) {
+                              _loadedEvents.addAll({obj.tid: obj});
+                            } else {
+                              _loadedEvents.addAll({obj.aid: obj});
+                            }
+                          }
+                        }
+
+                        _loadedEvents.removeWhere((String key, dynamic obj) {
+                          return DateTime.parse(obj.dueDate).month != _month;
+                        });
+
+                        _updateDayEvents();
+                        return _buildTileList();
+                      } else {
+                        return _noItemsWidget();
+                      }
+                    } else {
+                      return Container();
+                    }
+                  },
+                );
+              }
+            ),
+          ),
         ],
       ),
       
@@ -105,7 +170,83 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     );
   }
 
-  // More advanced TableCalendar configuration (using Builders & Styles)
+  /// Builds the list of items to display below the on-screen Calendar
+  void _populateBuildList() {
+    _buildList.clear();
+    _dayEvents.forEach((String key, dynamic obj) {
+      _buildList.add(obj);
+    });
+
+    //_buildList.sort((a, b) => a.timeDue.compareTo(b.timeDue));
+  }
+
+  /// Updates the list of events occuring on the selected day
+  void _updateDayEvents() {
+    _dayEvents.clear();
+
+    _loadedEvents.forEach((String key, dynamic obj) {
+      if (!_isInDayEvents(obj) &&
+      DateTime.parse(obj.dueDate).year == _selectedDay.year && 
+      DateTime.parse(obj.dueDate).month == _selectedDay.month && 
+      DateTime.parse(obj.dueDate).day == _selectedDay.day) {
+        _dayEvents.addAll({key: obj});
+      }
+    });
+  }
+
+  /// Checks if an obj is in the list of selected day events
+  /// @param obj Arc or Task to check for
+  bool _isInDayEvents(dynamic obj) {
+    if (obj is Task) {
+      if (_dayEvents.containsKey(obj.tid)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (_dayEvents.containsKey(obj.aid)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  /// Checks if an obj is in the list of currently loaded events
+  /// @param obj Arc or Task to check for
+  bool _isInLoadedEvents(dynamic obj) {
+    if (obj is Task) {
+      if (_loadedEvents.containsKey(obj.tid)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (_loadedEvents.containsKey(obj.aid)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  /// Build script for 'No Arcs/Tasks' message
+  Widget _noItemsWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'There are no items for this day',
+          style: TextStyle(
+            color: Colors.grey,
+          ),
+        ),
+      ],
+    );
+  }
+
+
+  /// Build roster for TableCalendar
   Widget _buildTableCalendarWithBuilders() {
     return TableCalendar(
       locale: 'en_US',
@@ -195,21 +336,18 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     );
   }
 
-  Widget _buildEventList() {
-    return ListView(
-      children: _selectedEvents
-          .map((event) => Container(
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.8),
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                child: ListTile(
-                  title: Text(event.toString()),
-                  onTap: () => print('$event tapped!'),
-                ),
-              ))
-          .toList(),
-    );
+  /// Builds the list of tiles displayed underneath the on-screen Calendar
+  Widget _buildTileList() {
+    if (_dayEvents.isNotEmpty) {
+      _populateBuildList();
+      return ListView.builder(
+        itemCount: _buildList.length,
+        itemBuilder: (context, index) {
+          return tile(_buildList[index], context);
+        },
+      );
+    } else {
+      return _noItemsWidget();
+    }
   }
 }

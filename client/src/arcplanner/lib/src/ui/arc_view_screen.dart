@@ -34,6 +34,27 @@ class ArcViewScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
 
+      appBar: AppBar(
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+           onPressed: () {
+              if (currentParent == null && !atNoArcTaskScreen) {
+                Navigator.pop(context);
+              } else {
+                if (atNoArcTaskScreen) {
+                  bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
+                  atNoArcTaskScreen = false;
+                } 
+                else
+                  bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
+              }
+            },
+          )
+        ],
+      ),
+
       body: Column(
         children: <Widget>[
           Expanded(
@@ -72,45 +93,28 @@ class ArcViewScreen extends StatelessWidget {
       bottomNavigationBar: BottomAppBar(
         color: Colors.blue[400],
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            RaisedButton(
-              child: Text('New Task'),
-              color: Colors.white,
-              textColor: Colors.blue[400],
-              // Needs to open New Task dialog
+            FlatButton.icon( 
+              icon: Icon(Icons.assignment),
+              color: Colors.blue[400],
               onPressed: () {
                 Navigator.popAndPushNamed(context, '/addtask');
               },
+              label: Text('Add Task'),
+              textColor: Colors.white,
             ),
-            RaisedButton(
-              child: Text('New Arc'),
-              color: Colors.white,
-              textColor: Colors.blue[400],
-              // Needs to open New Arc dialog
+            FlatButton.icon( 
+              icon: Icon(Icons.bubble_chart),
+              color: Colors.blue[400],
               onPressed: () {
                 Navigator.popAndPushNamed(context, '/addarc'); 
               },
+              label: Text('Add Arc'),
+              textColor: Colors.white,
             ),
           ],
         ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue[400],
-        child: Icon(Icons.arrow_back),
-        onPressed: () {
-          if (currentParent == null && !atNoArcTaskScreen) {
-            Navigator.pop(context);
-          } else {
-            if (atNoArcTaskScreen) {
-              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'getChildren'});
-              atNoArcTaskScreen = false;
-            } 
-            else
-              bloc.arcViewInsert({ 'object' : currentParent, 'flag': 'backButton'});
-          }
-        },
       ),
     );
   }
