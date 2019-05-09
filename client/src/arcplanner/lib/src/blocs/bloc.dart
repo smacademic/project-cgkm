@@ -119,8 +119,8 @@ class Bloc extends Object with Validators {
   Stream<String> get taskLocationFieldStream =>
       _taskLocationFieldController.stream;
 
-  Stream<bool> get submitValidTask => Observable.combineLatest2(
-      taskTitleFieldStream, arcParentFieldStream, (t, d) => true);
+
+  Stream<bool> get submitValidTask => taskTitleFieldStream.map((_) => true);
 
   // Change data for Add Task Screen
   Function(String) get changeTaskTitle => _taskTitleFieldController.sink.add;
@@ -206,7 +206,8 @@ class Bloc extends Object with Validators {
   /// @param map A map of a Task object
   /// @returns The Task object that was constructed 
   Task toTask(Map map) {
-    return Task.read(map['TID'], map['AID'], map['Title'],
+    return Task.read(map['TID'], map['Title'],
+        aid: map['AID'],
         description: map['Description'],
         dueDate: map['DueDate'],
         timeDue: map['TimeDue'],
@@ -390,13 +391,21 @@ class Bloc extends Object with Validators {
       formattedDueDate = formatter.format(parsedDueDate);
     }
 
-    Task tk = new Task(taskParent.aid, validTaskTitle,
+    if (taskParent == null) {
+      Task tk = new Task(validTaskTitle,
         description: taskDescription,
         dueDate: formattedDueDate,
         timeDue: taskTimeDue,
         location: taskLocation);
-
-    db.insertTask(tk);
+      db.insertTask(tk);
+    } else {
+      Task tk = new Task(validTaskTitle,
+        aid: taskParent.aid,
+        description: taskDescription,
+        dueDate: formattedDueDate,
+        location: taskLocation);
+      db.insertTask(tk);
+    }
 
     initializeAddTaskStreams();
   }
