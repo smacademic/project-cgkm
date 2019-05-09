@@ -15,7 +15,6 @@
 import 'dart:async';
 import '../model/arc.dart';
 import '../model/task.dart';
-import '../model/user.dart';
 import '../util/databaseHelper.dart';
 import '../blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';

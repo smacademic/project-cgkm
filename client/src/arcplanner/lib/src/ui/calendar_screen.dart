@@ -3,14 +3,16 @@
  *  CS298 Spring 2019 
  *
  *  Authors: 
- *    Primary: Kevin Kelly
+ *    Primary: Matthew Chastain, Kevin Kelly
  *    Contributors: 
  * 
  *  Provided as is. No warranties expressed or implied. Use at your own risk.
  *
- *  This file contains ArcPlanner's home screen which will be displayed on 
- *  launch. The screen shows users a list of upcoming tasks along with a Task 
- *  quick-add button.
+ *  This file contains ArcPlanner's Calendar Screen which displays an on-screen 
+ *  Calendar which can be scrolled for different months. Below the Calendar is a
+ *  list of Arcs or Tasks that are set to be due on the selected day. Due to the 
+ *  scrolling nature of the Calendar, it is implemented as a exention of a 
+ *  StatefulWidget.
  */
 
 import 'package:flutter/material.dart';
@@ -18,9 +20,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:date_utils/date_utils.dart';
 import 'drawer_menu.dart';
 import '../blocs/bloc.dart';
-import 'arc_tile.dart';
-import 'task_tile.dart';
-import '../model/arc.dart';
+import '../helpers/tile.dart';
 import '../model/task.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -42,7 +42,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   AnimationController _controller;
   List<dynamic> snapshotData;
 
-
+  /// Establishes initial state of the Calendar Screen
   @override
   void initState() {    
     super.initState();
@@ -62,7 +62,9 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     // _controller.forward();
   }
 
-
+  /// Changes the selected date in response to user event
+  /// @param day the day selected by the user
+  /// @param events list of events associated with that day
   void _onDaySelected(DateTime day, List events) {
     setState(() {
       _selectedDay = day;
@@ -70,12 +72,17 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     });
   }
 
-
+  /// Sends information to `bloc.dart` through bloc.calendarStream
+  /// @param month month to retrieve items for
+  /// @param year year to retrieve items for 
   void _updateFromStream(int month, int year) {
     bloc.calendarInsert({'month': month,'year': year, 'flag': 'getCalendarEvents'});
   }
 
-
+  /// Changes the current calendar view in response to user event
+  /// @param first the first day of new calendar view
+  /// @param last the last day of new calendar view
+  /// @param format the formatting of the calendar view
   void _onVisibleDaysChanged(DateTime first, DateTime last, CalendarFormat format) {
     _year = first.year;
     _month = first.month;
@@ -89,7 +96,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     setState(() {});
   }
 
-
+  /// Build method for the Calendar Screen
+  /// @param context BuildContext for Calendar Screen
   @override
   Widget build(BuildContext context) {
     bool firstTimeLoading = true;
@@ -162,7 +170,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     );
   }
 
-
+  /// Builds the list of items to display below the on-screen Calendar
   void _populateBuildList() {
     _buildList.clear();
     _dayEvents.forEach((String key, dynamic obj) {
@@ -172,7 +180,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     //_buildList.sort((a, b) => a.timeDue.compareTo(b.timeDue));
   }
 
-
+  /// Updates the list of events occuring on the selected day
   void _updateDayEvents() {
     _dayEvents.clear();
 
@@ -186,7 +194,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     });
   }
 
-
+  /// Checks if an obj is in the list of selected day events
+  /// @param obj Arc or Task to check for
   bool _isInDayEvents(dynamic obj) {
     if (obj is Task) {
       if (_dayEvents.containsKey(obj.tid)) {
@@ -203,7 +212,8 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     }
   }
 
-
+  /// Checks if an obj is in the list of currently loaded events
+  /// @param obj Arc or Task to check for
   bool _isInLoadedEvents(dynamic obj) {
     if (obj is Task) {
       if (_loadedEvents.containsKey(obj.tid)) {
@@ -220,7 +230,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     }
   }
 
-
+  /// Build script for 'No Arcs/Tasks' message
   Widget _noItemsWidget() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -236,7 +246,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
   }
 
 
-  // More advanced TableCalendar configuration (using Builders & Styles)
+  /// Build roster for TableCalendar
   Widget _buildTableCalendarWithBuilders() {
     return TableCalendar(
       locale: 'en_US',
@@ -326,7 +336,7 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     );
   }
 
-
+  /// Builds the list of tiles displayed underneath the on-screen Calendar
   Widget _buildTileList() {
     if (_dayEvents.isNotEmpty) {
       _populateBuildList();
@@ -339,16 +349,5 @@ class _CalendarScreen extends State<CalendarScreen> with TickerProviderStateMixi
     } else {
       return _noItemsWidget();
     }
-  }
-}
-
-
-Widget tile(dynamic obj, BuildContext context) {
-  if (obj is Arc) {
-    return arcTile(obj, context);
-  } else if (obj is Task) {
-    return taskTile(obj, context);
-  } else {
-    return Text('tile tried to build not an Arc or Task');
   }
 }
