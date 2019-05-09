@@ -86,6 +86,7 @@ class AddTaskScreen extends StatelessWidget {
       return TextField(
         onChanged: bloc.changeTaskTitle,
         keyboardType: TextInputType.text,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           hintText: 'Title',
           errorText: snapshot.error,
@@ -151,6 +152,7 @@ Widget descriptionField(){
         maxLines: 7,
         onChanged: bloc.changeTaskDescription,
         keyboardType: TextInputType.multiline,
+        textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: 'Description',
@@ -217,6 +219,7 @@ Widget submitTask() {
       return TextField(
         onChanged: bloc.changeTaskLocation,
         keyboardType: TextInputType.text,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           hintText: 'Location',
           errorText: snapshot.error,
