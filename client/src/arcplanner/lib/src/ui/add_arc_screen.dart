@@ -86,6 +86,7 @@ class AddArcScreen extends StatelessWidget {
       return TextField(
         onChanged: bloc.changeArcTitle,
         keyboardType: TextInputType.text,
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
           hintText: 'Title',
           errorText: snapshot.error,
@@ -209,6 +210,7 @@ Widget descriptionField(){
         maxLines: 7,
         onChanged: bloc.changeArcDescription,
         keyboardType: TextInputType.multiline,
+        textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           hintText: 'Description',
